@@ -1,0 +1,58 @@
+<html>
+  <head>
+    <title>Login</title>
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    <!-- jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <!-- Latest compiled JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+
+    <style>
+      .center_div{
+        margin: 0 auto;
+        width:30% /* value of your choice which suits your alignment */
+      }
+      footer{
+        text-align: center;
+        position: absolute;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        padding: 1rem;
+        border-top: double;
+      }
+    </style>
+  </head>
+
+  <body>
+    <nav class="navbar navbar-inverse">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <h2 class="navbar-text">Lecture Feedback System</h2>
+        </div>
+      </div>
+    </nav>
+
+    <div class="well center_div">
+      <form action="history.html">
+       <div class="form-group">
+         <label for="email">Email address:</label>
+         <input type="email" class="form-control" id="email">
+       </div>
+       <div class="form-group">
+         <label for="pwd">Password:</label>
+         <input type="password" class="form-control" id="pwd">
+       </div>
+       <div class="checkbox">
+         <label><input type="checkbox"> Remember me</label>
+       </div>
+       <button type="submit" class="btn btn-default">Submit</button>
+      </form>
+    </div>
+
+    <footer>
+      <p>FOOTER TEXT HERE, COPYRIGHT STUFF ..etc</P>
+    </footer>
+  </body>
+</html>
