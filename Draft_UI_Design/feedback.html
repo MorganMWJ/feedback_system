@@ -1,6 +1,6 @@
 <html>
   <head>
-    <title>Login</title>
+    <title>Feedback</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
@@ -21,13 +21,86 @@
         <div class="col">
           <center><h3>Give Feedback</h3></center>
           <hr class="mt-0"/>
-          <!-- <div class="" -->
-          <p>Give feedback on a slide</p>
-          <div class="btn-group d-flex justify-content-center" role="group" aria-label="Basic example">
-            <button type="button" class="btn btn-success">Green</button>
-            <button type="button" class="btn btn-danger">Red</button>
-            <button type="button" class="btn btn-warning">Amber</button>
-          </div>
+
+          <form class="px-4">
+            <div class="form-group">
+              <label for="feedbackButtons">Give overall feedback?</label>
+              <div class="btn-group d-flex justify-content-center" id="feedbackButtons" role="group" aria-label="Basic example">
+                <button type="button" class="btn btn-success">Good</button>
+                <button type="button" class="btn btn-danger">Bad</button>
+                <button type="button" class="btn btn-warning">So-So</button>
+              </div>
+              <label for="rateButttonGroups">Rate lecture aspects?</label>
+              <div class="container-fluid" id="rateButttonGroups">
+                <div class="row m-1">
+                  <div class="col">
+                    <label for="rate1">Delivery Speed</label>
+                  </div>
+                  <div class="col">
+                    <select class="form-control" id="rate1">
+                      <option disabled selected value> -- select an option -- </option>
+                      <option>Very Slow</option>
+                      <option>Little Slow</option>
+                      <option>Just Right</option>
+                      <option>Little Fast</option>
+                      <option>Too Fast</option>
+                    </select>
+                  </div>
+                  <div class="col">
+                    <label for="rate2">Content Complexity</label>
+                  </div>
+                  <div class="col">
+                    <select class="form-control" id="rate2">
+                      <option disabled selected value> -- select an option -- </option>
+                      <option>Very Difficult</option>
+                      <option>Slightly Difficult</option>
+                      <option>Normal</option>
+                      <option>Slightly Easy</option>
+                      <option>Very Easy</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="row m-1">
+                  <div class="col">
+                    <label for="rate3">Interest/Enagement</label>
+                  </div>
+                  <div class="col">
+                    <select class="form-control" id="rate3">
+                      <option disabled selected value> -- select an option -- </option>
+                      <option>Not Engaing/Interesting</option>
+                      <option>Some-What Engaing/Interesting</option>
+                      <option>Engaing/Interesting</option>
+                      <option>Very Engaging/Interesting</option>
+                    </select>
+                  </div>
+                  <div class="col">
+                    <label data-toggle="tooltip" data-placement="right" title="Is the slide presented in a consise way with a good visual structure?" for="rate4">Content Presentation</label>
+                  </div>
+                  <div class="col">
+                    <select class="form-control" id="rate4">
+                      <option disabled selected value> -- select an option -- </option>
+                      <option>No clear Consise structure</option>
+                      <option>Some-What Clear Consise Structure </option>
+                      <option>Clear Consise Structure</option>
+                      <option>Very Clear Consise Structure</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+              <div class="d-flex mt-4">
+                <select class="custom-select my-1 mr-sm-2">
+                  <option selected>Choose Slide...</option>
+                  <option value="1">1</option>
+                  <option value="2">2</option>
+                  <option value="3">3</option>
+                </select>
+                <button class="btn btn-light">Undo</button>
+              </div>
+              <small id="emailHelp" class="form-text text-muted">Submit feedback for each slide of the lecture (You can only choose one feedback option per slide)</small>
+            </div>
+          </form>
+
+          <hr class="m-4"/>
 
           <form class="px-4">
             <div class="form-group">
