@@ -1,0 +1,10 @@
+<h1>Session Title: {{lectureToDetail.lecture_title}}</h1>
+<h3>Start Time: {{lectureToDetail.start_time}}</h3>
+<h3>End Time: {{lectureToDetail.end_time}}</h3>
+<hr />
+<h3>Questions Asked</h3>
+<ul>
+{% for question in lectureToDetail.question_set.all %}
+  <li>{{question.question_text}}</li>
+{% endfor %}
+</ul>
