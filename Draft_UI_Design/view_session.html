@@ -29,7 +29,7 @@
 
     <div class="container-fluid bg-light p-4">
       <div class="row my-4">
-        <div class="col-sm-4">
+        <div class="col-sm-6">
           <table class="table table-bordered">
             <thead class="thead-dark">
               <tr>
@@ -51,22 +51,145 @@
             </tbody>
           </table>
         </div>
-        <div class="col-sm-4  d-flex justify-content-center">
-          <canvas id="canvas1" class="border border-dark w-75 m-4"></canvas>
-        </div>
-        <div class="col-sm-4  d-flex justify-content-center">
-          <canvas id="canvas2" class="border border-dark w-75 m-4"></canvas>
+        <div class="col-sm-6  d-flex justify-content-center flex-column">
+          <table class="table table-bordered">
+            <thead class="thead-dark">
+              <tr>
+                <th class="text-center" colspan="4">Overall Feeling</th>
+              </tr>
+              <tr>
+                <th scope="col"></th>
+                <th scope="col">Good</th>
+                <th scope="col">Bad</th>
+                <th scope="col">So-So</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th>Totals</th>
+                <td>13</td>
+                <td>7</td>
+                <td>9</td>
+              </tr>
+            </tbody>
+          </table>
+          <canvas id="canvas1" class="border border-dark m-4"></canvas>
         </div>
       </div>
       <div class="row my-4">
-        <div class="col-sm-4 d-flex justify-content-center">
-          <canvas id="canvas3" class="border border-dark w-75 m-4"></canvas>
+        <div class="col-sm-6  d-flex justify-content-center flex-column">
+          <table class="table table-bordered">
+            <thead class="thead-dark">
+              <tr>
+                <th class="text-center" colspan="6">Delivery Speed</th>
+              </tr>
+              <tr>
+                <th scope="col"></th>
+                <th scope="col">Very Slow</th>
+                <th scope="col">Little Slow</th>
+                <th scope="col">Just Right</th>
+                <th scope="col">Little Fast</th>
+                <th scope="col">Too Fast</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th>Totals</th>
+                <td>13</td>
+                <td>7</td>
+                <td>9</td>
+                <td>17</td>
+                <td>9</td>
+              </tr>
+            </tbody>
+          </table>
+          <canvas id="canvas2" class="border border-dark m-4"></canvas>
         </div>
-        <div class="col-sm-4 d-flex justify-content-center">
-          <canvas id="canvas4" class="border border-dark w-75 m-4"></canvas>
+        <div class="col-sm-6 d-flex justify-content-center flex-column">
+          <table class="table table-bordered">
+            <thead class="thead-dark">
+              <tr>
+                <th class="text-center" colspan="6">Content Complexity</th>
+              </tr>
+              <tr>
+                <th scope="col"></th>
+                <th scope="col">Very Hard</th>
+                <th scope="col">Slightly Hard</th>
+                <th scope="col">Normal</th>
+                <th scope="col">Slightly Easy</th>
+                <th scope="col">Very Easy</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th>Totals</th>
+                <td>13</td>
+                <td>7</td>
+                <td>9</td>
+                <td>17</td>
+                <td>9</td>
+              </tr>
+            </tbody>
+          </table>
+          <canvas id="canvas3" class="border border-dark  m-4"></canvas>
         </div>
-        <div class="col-sm-4 d-flex justify-content-center">
-          <canvas id="canvas5" class="border border-dark w-75 m-4"></canvas>
+      </div>
+      <div class="row my-4">
+        <div class="col-sm-6 d-flex justify-content-center flex-column">
+          <table class="table table-bordered">
+            <thead class="thead-dark">
+              <tr>
+                <th class="text-center" colspan="6">Interest/Enagement</th>
+              </tr>
+              <tr>
+                <th scope="col"></th>
+                <th scope="col">Very Slow</th>
+                <th scope="col">Little Slow</th>
+                <th scope="col">Just Right</th>
+                <th scope="col">Little Fast</th>
+                <th scope="col">Too Fast</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th>Totals</th>
+                <td>13</td>
+                <td>7</td>
+                <td>9</td>
+                <td>17</td>
+                <td>9</td>
+              </tr>
+            </tbody>
+          </table>
+          <canvas id="canvas4" class="border border-dark  m-4"></canvas>
+        </div>
+        <div class="col-sm-6 d-flex justify-content-center flex-column">
+          <table class="table table-bordered">
+            <thead class="thead-dark">
+              <tr>
+                <th class="text-center" colspan="6">Presentation Quality</th>
+              </tr>
+              <tr>
+                <th scope="col"></th>
+                <th scope="col">Very Slow</th>
+                <th scope="col">Little Slow</th>
+                <th scope="col">Just Right</th>
+                <th scope="col">Little Fast</th>
+                <th scope="col">Too Fast</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th>Totals</th>
+                <td>13</td>
+                <td>7</td>
+                <td>9</td>
+                <td>17</td>
+                <td>9</td>
+              </tr>
+            </tbody>
+          </table>
+          <canvas id="canvas5" class="border border-dark  m-4"></canvas>
         </div>
       </div>
     </div>
@@ -75,13 +198,15 @@
       for(var i=1; i<6; i++){
         var canvas = document.getElementById("canvas" + i.toString());
         var ctx = canvas.getContext("2d");
-        ctx.font = "30px Arial";
+        ctx.font = "35px Arial";
         ctx.fillText("JS Canvas Graph", 10, 50);
       }
     </script>
 
-    <footer class="footer bg-light text-dark">
-      <p>FOOTER TEXT HERE, COPYRIGHT STUFF ..etc</P>
+    <footer class="sticky-bottom bg-dark text-light border-top p-4">
+      <div class="container">
+        <p>FOOTER TEXT HERE, COPYRIGHT STUFF ..etc</P>
+      </div>
     </footer>
 
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
