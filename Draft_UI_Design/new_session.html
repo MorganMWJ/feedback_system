@@ -27,6 +27,189 @@
       </div>
     </nav>
 
+    <div class="container-fluid bg-light p-3">
+     <div class="row">
+       <div class="col-sm d-flex justify-content-center">
+         <center><h3 class="border border-dark rounded p-3">New Session by Chris Loftus (cwl@aber.ac.uk)</h3><center>
+       </div>
+     </div>
+     <div class="row">
+
+       <div class="col-sm-8">
+         <div class="row">
+           <div class="col-sm-6">
+             <form>
+              <div class="form-group">
+                <label for="exampleFormControlInput1">Lecture/Workshop Title</label>
+                <input class="form-control" id="exampleFormControlInput1" placeholder="Title here...">
+              </div>
+              <div class="form-inline">
+                <label for="exampleFormControlInput2">End Time</label>
+                <input class="form-control mx-1" id="exampleFormControlInput2" placeholder="End Time">
+                <label for="exampleFormControlInput3">Number of Slides</label>
+                <input class="form-control mx-1" id="exampleFormControlInput3" placeholder="Slide Count">
+              </div>
+              <div class="form-group">
+                <label for="exampleFormControlTextarea1">Extra Notes</label>
+                <textarea class="form-control" id="exampleFormControlTextarea1" rows="5" placeholder="Notes here..."></textarea>
+              </div>
+            </form>
+           </div>
+           <div class="col-sm-6 d-flex flex-column">
+             <center>
+             <h3>Session Code: <u>??????</u></h3>
+             <div>
+               <button type="button" class="btn btn-outline-success">Start Session</button>
+               <button type="button" class="btn btn-outline-danger">End Session</button>
+               <button type="bytton" class="btn btn-outline-secondary">Disable Feedback</button>
+             </div>
+             <center>
+             <table class="table table-bordered mt-4">
+               <thead class="thead-dark">
+                 <tr>
+                   <th class="text-center" colspan="4">Overall Feeling</th>
+                 </tr>
+                 <tr>
+                   <th scope="col"></th>
+                   <th scope="col">Good</th>
+                   <th scope="col">Bad</th>
+                   <th scope="col">So-So</th>
+                 </tr>
+               </thead>
+               <tbody>
+                 <tr>
+                   <th>Totals</th>
+                   <td>13</td>
+                   <td>7</td>
+                   <td>9</td>
+                 </tr>
+               </tbody>
+             </table>
+           </div>
+         </div>
+         <div class="row">
+           <div class="col-sm-6">
+             <table class="table table-bordered">
+               <thead class="thead-dark">
+                 <tr>
+                   <th class="text-center" colspan="6">Delivery Speed</th>
+                 </tr>
+                 <tr>
+                   <th scope="col"></th>
+                   <th scope="col">Very Slow</th>
+                   <th scope="col">Little Slow</th>
+                   <th scope="col">Just Right</th>
+                   <th scope="col">Little Fast</th>
+                   <th scope="col">Too Fast</th>
+                 </tr>
+               </thead>
+               <tbody>
+                 <tr>
+                   <th>Totals</th>
+                   <td>13</td>
+                   <td>7</td>
+                   <td>9</td>
+                   <td>17</td>
+                   <td>9</td>
+                 </tr>
+               </tbody>
+             </table>
+             <table class="table table-bordered">
+               <thead class="thead-dark">
+                 <tr>
+                   <th class="text-center" colspan="6">Interest/Enagement</th>
+                 </tr>
+                 <tr>
+                   <th scope="col"></th>
+                   <th scope="col">Very Slow</th>
+                   <th scope="col">Little Slow</th>
+                   <th scope="col">Just Right</th>
+                   <th scope="col">Little Fast</th>
+                   <th scope="col">Too Fast</th>
+                 </tr>
+               </thead>
+               <tbody>
+                 <tr>
+                   <th>Totals</th>
+                   <td>13</td>
+                   <td>7</td>
+                   <td>9</td>
+                   <td>17</td>
+                   <td>9</td>
+                 </tr>
+               </tbody>
+             </table>
+           </div>
+           <div class="col-sm-6">
+             <table class="table table-bordered">
+               <thead class="thead-dark">
+                 <tr>
+                   <th class="text-center" colspan="6">Content Complexity</th>
+                 </tr>
+                 <tr>
+                   <th scope="col"></th>
+                   <th scope="col">Very Hard</th>
+                   <th scope="col">Slightly Hard</th>
+                   <th scope="col">Normal</th>
+                   <th scope="col">Slightly Easy</th>
+                   <th scope="col">Very Easy</th>
+                 </tr>
+               </thead>
+               <tbody>
+                 <tr>
+                   <th>Totals</th>
+                   <td>13</td>
+                   <td>7</td>
+                   <td>9</td>
+                   <td>17</td>
+                   <td>9</td>
+                 </tr>
+               </tbody>
+             </table>
+             <table class="table table-bordered">
+               <thead class="thead-dark">
+                 <tr>
+                   <th class="text-center" colspan="6">Presentation Quality</th>
+                 </tr>
+                 <tr>
+                   <th scope="col"></th>
+                   <th scope="col">Very Slow</th>
+                   <th scope="col">Little Slow</th>
+                   <th scope="col">Just Right</th>
+                   <th scope="col">Little Fast</th>
+                   <th scope="col">Too Fast</th>
+                 </tr>
+               </thead>
+               <tbody>
+                 <tr>
+                   <th>Totals</th>
+                   <td>13</td>
+                   <td>7</td>
+                   <td>9</td>
+                   <td>17</td>
+                   <td>9</td>
+                 </tr>
+               </tbody>
+             </table>
+           </div>
+         </div>
+       </div>
+       <div class="col-sm-4">
+         <center><h3>Current Questions</h3></center>
+         <hr class="mt-0"/>
+
+         <ul class="list-group list-group-flush">
+           <li class="list-group-item d-flex justify-content-between align-items-center">Why is the sky blue? <button type="button" class="btn btn-danger ml-1">Delete</button></li>
+           <li class="list-group-item d-flex justify-content-between align-items-center">I really like this lecture.<button type="button" class="btn btn-danger ml-1">Delete</button></li>
+           <li class="list-group-item d-flex justify-content-between align-items-center">Can you go over the part about responsive web design? pls<button type="button" class="btn btn-danger ml-1">Delete</button></li>
+           <li class="list-group-item d-flex justify-content-between align-items-center">Why is the sky blue? <button type="button" class="btn btn-danger ml-1">Delete</button></li>
+           <li class="list-group-item d-flex justify-content-between align-items-center">I really like this lecture.<button type="button" class="btn btn-danger ml-1">Delete</button></li>
+           <li class="list-group-item d-flex justify-content-between align-items-center">Can you go over the part about responsive web design? pls<button type="button" class="btn btn-danger ml-1">Delete</button></li>
+         </ul>
+       </div>
+     </div>
+   </div>
+
     <footer class="fixed-bottom bg-dark text-light border-top p-4">
       <div class="container">
         <p>FOOTER TEXT HERE, COPYRIGHT STUFF ..etc</P>
