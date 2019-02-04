@@ -8,3 +8,12 @@
   <li>{{question.question_text}}</li>
 {% endfor %}
 </ul>
+
+{% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+
+<form action="{% url 'student_feedback:ask' lectureToDetail.id %}" method="post">
+{% csrf_token %}
+<input name="question_asked" id="input1">
+<label for="input1">Ask Question</label><br>
+<input type="submit" value="Ask">
+</form>

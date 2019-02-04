@@ -12,5 +12,7 @@ urlpatterns = [
     #/student_feedback/history/lectures
     path('history/lectures', views.index, name='index'),
     #/student_feedback/history/lecture/5
-    path('history/lecture/<int:lecture_id>/', views.detail, name='detail')
+    path('history/lecture/<int:lecture_id>/', views.detail, name='detail'),
+
+    path('history/lecture/<int:lecture_id>/ask/', views.ask, name='ask'),
 ]

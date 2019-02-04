@@ -1,7 +1,7 @@
 {% if latest_lecture_list %}
     <ul>
     {% for lecture in latest_lecture_list %}
-        <li><a href="{% url 'detail' lecture.id %}">{{ lecture.lecture_title }}</a></li>
+        <li><a href="{% url 'student_feedback:detail' lecture.id %}">{{ lecture.lecture_title }}</a></li>
     {% endfor %}
     </ul>
 {% else %}
