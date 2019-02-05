@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils import timezone
-# Create your models here.
+from django.core.validators import MinValueValidator
+# Create your models here. These are the classes for Obeject Relational Mapping(ORM)
 #class name = relation NAME
 #variable name = field/attribute name
 #models.FieldType = attribute/column datatype
@@ -9,8 +10,13 @@ from django.utils import timezone
 #
 #if python manage.py migrate says there are no migration to apply
 #try removing any possible conflicts in the django_migrations table :-)
+#
+#
+#good practice for each obejct/relation class to have (__str__) toString
+
 class Lecture(models.Model):
     lecture_title = models.CharField('title', max_length=200)
+    slide_count = models.PositiveSmallIntegerField(default=1, validators=[MinValueValidator(1)])
     start_time = models.DateTimeField('start_time')
     end_time = models.DateTimeField('end_time')
 
