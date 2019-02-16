@@ -1,18 +1,19 @@
 <html>
-  <head>
-    <title>View Session</title>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<head>
+  <title>View Session</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-    <link rel="stylesheet" href="style.css">
-  </head>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 
-  <body>
-    <script>
-      window.onbeforeunload = function(){
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <script>
+    window.onbeforeunload = function(){
         //alert('Session is still active. Are you sure you want to leave?'); - doesnt work most of the time
         //my text isnt being displayed browsers display default messages
         return 'Session is still active. Are you sure you want to leave?';
@@ -25,172 +26,161 @@
       });
     </script>
 
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-      <span class="navbar-brand mb-0 h1">Lecture Feedback System - View Session</span>
-      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <span class="navbar-brand mb-0 h1">Lecture Feedback System - View Session</span>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
 
-      <div class="collapse navbar-collapse" id="navbarContent">
-        <ul class="navbar-nav mr-auto">
-          <li class="nav-item">
-            <a class="nav-link btn btn-outline-light mr-1" href="session_history.html" role="button">History</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link btn btn-outline-light ml-1" href="lecturer_login.html" role="button">Logout</a>
-          </li>
-        </ul>
-        <button class="btn" type="button" id="toggleGraphBtn">Toggle Graphs</button>
-      </div>
-    </nav>
+    <div class="collapse navbar-collapse" id="navbarContent">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item">
+          <a class="nav-link btn btn-outline-light mr-1" href="session_history.html" role="button">History</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link btn btn-outline-light ml-1" href="lecturer_login.html" role="button">Logout</a>
+        </li>
+      </ul>
+      <button class="btn" type="button" id="toggleGraphBtn">Toggle Graphs</button>
+    </div>
+  </nav>
 
-    <div class="container-fluid bg-light p-4">
+  <div class="container-fluid bg-light p-4">
+    <form>
       <div class="row my-4 d-flex justify-content-center">
-        <div class="col-sm-auto">
-			<center>
-		   <h3>Session Code: <u>??????</u></h3>
-		   <div class="mb-3">
-			   <button type="button" class="btn btn-outline-success">Run Session</button>
-			   <button type="button" class="btn btn-outline-danger">Stop Session</button>
-			   <button type="button" class="btn btn-outline-secondary">Disable Questions</button>
-			</div>
-			<center>
-          <table class="table table-bordered">
-            <thead class="thead-dark">
-              <tr>
-                <th scope="col">Session Title</th>
-                <th scope="col">No. Slides</th>
-                <th scope="col">Author Forname</th>
-				        <th scope="col">Author Surname</th>
-                <th scope="col">Author Username</th>
-                <th scope="col">Startime</th>
-                <th scope="col">Endtime</th>
-                <th scope="col">Duration</th>
-                <th scope="col">Start Date</th>
-                <th scope="col">End Date</th>
-                <th scope="col">Session Running</th>
-                <th scope="col">Questions Enabled</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>Illustration of Computer Systems</td>
-                <td>23</td>
-        				<td>Chris</td>
-        				<td>Loftus</td>
-                <td>cwl</td>
-                <td>10:08</td>
-                <td>11:00</td>
-                <td>0hrs 52m 5s</td>
-                <td>30/10/2019</td>
-                <td>30/10/2019</td>
-                <td>Yes</td>
-                <td>Yes</td>
-              </tr>
-            </tbody>
-          </table>
-
-        </div>
-      </div>
-      <div class="row my-4  d-flex justify-content-center">
         <div class="col-sm-6">
-          <center><h3>Session Sections</h3></center>
-         <hr class="mt-0"/>
-         <table class="table table-bordered">
-           <thead class="thead-dark">
-             <tr>
-               <th scope="col">Section</th>
-               <th scope="col">Startime</th>
-               <th scope="col">Endtime</th>
-               <th scope="col">Runtime</th>
-               <th scope="col">Total Runtime</th>
-               <th scope="col">Start Date</th>
-               <th scope="col">End Date</th>
-             </tr>
-           </thead>
-           <tbody>
-             <tr>
-               <th>1</th>
-               <td>10:08</td>
-               <td>10:12</td>
-               <td>0hrs 4m 23s</td>
-               <td>0hrs 4m 23s</td>
-               <td>30/10/2019</td>
-               <td>30/10/2019</td>
-             </tr>
-             <tr>
-               <th>2</th>
-               <td>10:20</td>
-               <td>10:25</td>
-               <td>0hrs 5m 2s</td>
-               <td>0hrs 9m 25s</td>
-               <td>30/10/2019</td>
-               <td>30/10/2019</td>
-             </tr>
-             <tr>
-               <th>3</th>
-               <td>10:41</td>
-               <td>11:00</td>
-               <td>0hrs 19m 5s</td>
-               <td>0hrs 28m 30s</td>
-               <td>30/10/2019</td>
-               <td>30/10/2019</td>
-             </tr>
-           </tbody>
-         </table>
+          <hr />
+          <div class="d-flex justify-content-between">
+            <div>
+              <h2>Session Code: XE34W2</h2>
+              <h4>Session Running: Yes</h4>
+              <h4>Questions Enabled: Yes</h4>
+              <!-- <input type="checkbox" data-toggle="toggle"> -->
+            </div>
+            <div>
+              <button type="button" class="btn btn-lg btn-outline-success m-2">Run Session</button>
+              <button type="button" class="btn btn-lg btn-outline-danger m-2">Stop Session</button>
+              <button type="button" class="btn btn-lg btn-outline-primary m-2">Toggle Overlay</button>
+              <br />
+              <button type="button" class="btn btn-lg btn-outline-secondary m-2">Disable Questions</button>
+              <button type="button" class="btn btn-lg btn-outline-secondary m-2">Generate New Session Code</button>
+            </div>
+          </div>
         </div>
-		    <div class="col-sm-6">
-          <center><h3>Current Questions</h3></center>
-         <hr class="mt-0"/>
+        <div class="col-sm-3">
+          <div class="form-group">
+            <label for="exampleFormControl1">Session Title</label>
+            <input class="form-control" id="exampleFormControl1" type="text" placeholder="Illustration of Computer Systems" readonly>
+            <label for="exampleFormControl2">Session Author</label>
+            <input class="form-control" id="exampleFormControl2" type="text" placeholder="Chris Loftus cwl@aber.ac.uk" readonly>
+            <label for="exampleFormControl3">No. Slides</label>
+            <input class="form-control" id="exampleFormControl3" type="text" placeholder="23" readonly>
+          </div>
+        </div>
+        <div class="col-sm-3">
+          <div class="form-group">
+            <label for="exampleFormControl8">First Started</label>
+            <input class="form-control" id="exampleFormControl8" type="text" placeholder="20/03/2019 15:10:05" readonly>
+            <label for="exampleFormControl7">Last Ended</label>
+            <input class="form-control" id="exampleFormControl7" type="text" placeholder="20/03/2019 16:20:32" readonly>
+            <label for="exampleFormControl6">Total Runtime</label>
+            <input class="form-control" id="exampleFormControl6" type="text" placeholder="0hrs 28mins 30secs" readonly>
+          </div>
+        </div>
+    </form>
+  </div>
+  <div class="row my-4  d-flex justify-content-center">
+    <div class="col-sm-6">
+      <center>
+        <h3>Session Sections</h3>
+      </center>
+      <hr class="mt-0" />
+      <table class="table table-bordered">
+        <thead class="thead-dark">
+          <tr>
+            <th scope="col">Section</th>
+            <th scope="col">Startime</th>
+            <th scope="col">Endtime</th>
+            <th scope="col">Runtime</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th>1</th>
+            <td>30/10/2019 10:08:00</td>
+            <td>30/10/2019 10:12:00</td>
+            <td>0hrs 4m 23s</td>
+          </tr>
+          <tr>
+            <th>2</th>
+            <td>30/10/2019 10:20:00</td>
+            <td>30/10/2019 10:25:00</td>
+            <td>0hrs 5m 2s</td>
+          </tr>
+          <tr>
+            <th>3</th>
+            <td>30/10/2019 10:41:00</td>
+            <td>30/10/2019 11:00:00</td>
+            <td>0hrs 19m 5s</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="col-sm-6">
+      <center>
+        <h3>Current Questions</h3>
+      </center>
+      <hr class="mt-0" />
 
-         <ul class="list-group list-group-flush">
-           <li class="list-group-item d-flex justify-content-between align-items-center">Why is the sky blue? <button type="button" class="btn btn-danger ml-1">Delete</button></li>
-           <li class="list-group-item d-flex justify-content-between align-items-center">I really like this lecture.<button type="button" class="btn btn-danger ml-1">Delete</button></li>
-           <li class="list-group-item d-flex justify-content-between align-items-center">Can you go over the part about responsive web design? pls<button type="button" class="btn btn-danger ml-1">Delete</button></li>
-           <li class="list-group-item d-flex justify-content-between align-items-center">Why is the sky blue? <button type="button" class="btn btn-danger ml-1">Delete</button></li>
-           <li class="list-group-item d-flex justify-content-between align-items-center">I really like this lecture.<button type="button" class="btn btn-danger ml-1">Delete</button></li>
-           <li class="list-group-item d-flex justify-content-between align-items-center">Can you go over the part about responsive web design? pls<button type="button" class="btn btn-danger ml-1">Delete</button></li>
-         </ul>
-        </div>
-      </div>
-      <div class="row my-4  d-flex justify-content-center">
-		<div class="col-sm-auto">
-          <canvas id="canvas1" class="border border-dark  m-1"></canvas>
-        </div>
-        <div class="col-sm-auto">
-          <canvas id="canvas2" class="border border-dark  m-1"></canvas>
-        </div>
-		<div class="col-sm-auto">
-          <canvas id="canvas3" class="border border-dark  m-1"></canvas>
-        </div>
-		<div class="col-sm-auto">
-          <canvas id="canvas4" class="border border-dark  m-1"></canvas>
-        </div>
-		<div class="col-sm-auto">
-          <canvas id="canvas5" class="border border-dark  m-1"></canvas>
-        </div>
-
-        </div>
-      </div>
+      <ul class="list-group list-group-flush">
+        <li class="list-group-item d-flex justify-content-between align-items-center">Why is the sky blue? <button type="button" class="btn btn-danger ml-1">Delete</button></li>
+        <li class="list-group-item d-flex justify-content-between align-items-center">I really like this lecture.<button type="button" class="btn btn-danger ml-1">Delete</button></li>
+        <li class="list-group-item d-flex justify-content-between align-items-center">Can you go over the part about responsive web design? pls<button type="button" class="btn btn-danger ml-1">Delete</button></li>
+        <li class="list-group-item d-flex justify-content-between align-items-center">Why is the sky blue? <button type="button" class="btn btn-danger ml-1">Delete</button></li>
+        <li class="list-group-item d-flex justify-content-between align-items-center">I really like this lecture.<button type="button" class="btn btn-danger ml-1">Delete</button></li>
+        <li class="list-group-item d-flex justify-content-between align-items-center">Can you go over the part about responsive web design? pls<button type="button" class="btn btn-danger ml-1">Delete</button></li>
+      </ul>
+    </div>
+  </div>
+  <div class="row my-4  d-flex justify-content-center">
+    <div class="col-sm-auto">
+      <canvas id="canvas1" class="border border-dark  m-1"></canvas>
+    </div>
+    <div class="col-sm-auto">
+      <canvas id="canvas2" class="border border-dark  m-1"></canvas>
+    </div>
+    <div class="col-sm-auto">
+      <canvas id="canvas3" class="border border-dark  m-1"></canvas>
+    </div>
+    <div class="col-sm-auto">
+      <canvas id="canvas4" class="border border-dark  m-1"></canvas>
+    </div>
+    <div class="col-sm-auto">
+      <canvas id="canvas5" class="border border-dark  m-1"></canvas>
     </div>
 
-    <script>
-      for(var i=1; i<6; i++){
-        var canvas = document.getElementById("canvas" + i.toString());
-        var ctx = canvas.getContext("2d");
-        ctx.font = "35px Arial";
-        ctx.fillText("JS Canvas Graph", 10, 50);
-      }
-    </script>
+  </div>
+  </div>
+  </div>
 
-    <footer class="sticky-bottom bg-dark text-light border-top p-4">
-      <div class="container">
-        <p>FOOTER TEXT HERE, COPYRIGHT STUFF ..etc</P>
-      </div>
-    </footer>
+  <script>
+    for (var i = 1; i < 6; i++) {
+      var canvas = document.getElementById("canvas" + i.toString());
+      var ctx = canvas.getContext("2d");
+      ctx.font = "35px Arial";
+      ctx.fillText("JS Canvas Graph", 10, 50);
+    }
+  </script>
 
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-  </body>
+  <footer class="sticky-bottom bg-dark text-light border-top p-4">
+    <div class="container">
+      <p>FOOTER TEXT HERE, COPYRIGHT STUFF ..etc</P>
+    </div>
+  </footer>
+
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+</body>
+
 </html>
