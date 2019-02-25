@@ -1,17 +1,15 @@
 from ldap3 import Server, Connection, ALL, NTLM, ALL_ATTRIBUTES, core
-import re, string, getpass
+import re, string
 
 #get login details
 uid = input("Enter username: ")
 password = input("Enter password: ")
-#password = getpass.getpass('Enter password: ')
 dn = "uid=" + uid + ",ou=People,dc=dcs,dc=aber,dc=ac,dc=uk"
 
 
 try:
     #connect to server via ldap
     server = Server('ldap.dcs.aber.ac.uk', get_info=ALL, port=636, use_ssl=True)
-    print("done")
     conn = Connection(server, dn, password, auto_bind=True)
     print('done')
 

@@ -1,0 +1,40 @@
+ERROR:django.request:Internal Server Error: /staff/session/index
+Traceback (most recent call last):
+  File "C:\Users\Morgan\DOCUME~1\ABERYS~1\YEAR4_~1\MAJORP~1\venv\lib\site-packages\django\core\handlers\exception.py", line 34, in inner
+    response = get_response(request)
+  File "C:\Users\Morgan\DOCUME~1\ABERYS~1\YEAR4_~1\MAJORP~1\venv\lib\site-packages\django\core\handlers\base.py", line 126, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "C:\Users\Morgan\DOCUME~1\ABERYS~1\YEAR4_~1\MAJORP~1\venv\lib\site-packages\django\core\handlers\base.py", line 124, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\Morgan\Documents\Aberystwyth University\Year 4_2nd\Major Project\feedback_system\staff_sessions\views.py", line 34, in index
+    logger.debug("At start of index() view. request.session['name'] == '" + request.session['name'] + "' ")
+  File "C:\Users\Morgan\DOCUME~1\ABERYS~1\YEAR4_~1\MAJORP~1\venv\lib\site-packages\django\contrib\sessions\backends\base.py", line 55, in __getitem__
+    return self._session[key]
+KeyError: 'name'
+ERROR:django.request:Internal Server Error: /staff/session/index
+Traceback (most recent call last):
+  File "C:\Users\Morgan\DOCUME~1\ABERYS~1\YEAR4_~1\MAJORP~1\venv\lib\site-packages\django\core\handlers\exception.py", line 34, in inner
+    response = get_response(request)
+  File "C:\Users\Morgan\DOCUME~1\ABERYS~1\YEAR4_~1\MAJORP~1\venv\lib\site-packages\django\core\handlers\base.py", line 126, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "C:\Users\Morgan\DOCUME~1\ABERYS~1\YEAR4_~1\MAJORP~1\venv\lib\site-packages\django\core\handlers\base.py", line 124, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\Morgan\Documents\Aberystwyth University\Year 4_2nd\Major Project\feedback_system\staff_sessions\views.py", line 34, in index
+    logger.debug("At start of index() view. request.session['name'] == '" + request.session['name'] + "' ")
+  File "C:\Users\Morgan\DOCUME~1\ABERYS~1\YEAR4_~1\MAJORP~1\venv\lib\site-packages\django\contrib\sessions\backends\base.py", line 55, in __getitem__
+    return self._session[key]
+KeyError: 'name'
+ERROR:django.request:Internal Server Error: /staff/session/index
+Traceback (most recent call last):
+  File "C:\Users\Morgan\DOCUME~1\ABERYS~1\YEAR4_~1\MAJORP~1\venv\lib\site-packages\django\core\handlers\exception.py", line 34, in inner
+    response = get_response(request)
+  File "C:\Users\Morgan\DOCUME~1\ABERYS~1\YEAR4_~1\MAJORP~1\venv\lib\site-packages\django\core\handlers\base.py", line 126, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "C:\Users\Morgan\DOCUME~1\ABERYS~1\YEAR4_~1\MAJORP~1\venv\lib\site-packages\django\core\handlers\base.py", line 124, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\Morgan\Documents\Aberystwyth University\Year 4_2nd\Major Project\feedback_system\staff_sessions\views.py", line 37, in index
+    logger.debug("At start of index() view. request.session['name'] == '" + request.session['name'] + "' ")
+  File "C:\Users\Morgan\DOCUME~1\ABERYS~1\YEAR4_~1\MAJORP~1\venv\lib\site-packages\django\contrib\sessions\backends\base.py", line 55, in __getitem__
+    return self._session[key]
+KeyError: 'name'
+DEBUG:root:At start of login() view. request.session['name'] == 'Morgan the Moon' 
