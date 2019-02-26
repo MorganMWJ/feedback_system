@@ -7,9 +7,8 @@ class LDAPBackend():
         dn = "uid=" + username + ",ou=People,dc=dcs,dc=aber,dc=ac,dc=uk"
         try:
             #connect to server via ldap
-            server = Server('ldap.dcs.aber.ac.uk', get_info=ALL, port=636, use_ssl=True)
+            server = Server('ldap.dcs.aber.ac.uk', get_info=ALL, port=636, use_ssl=True, connect_timeout=5)
             conn = Connection(server, dn, password, auto_bind=True)
-            print('done')
 
             #search for the entry reperesenting the logged in user
             conn.search(dn, '(objectClass=*)', attributes=ALL_ATTRIBUTES)
@@ -20,10 +19,17 @@ class LDAPBackend():
 
             #extarct the part of the gecos field we are interested in
             gecos = "[????]"
+            mail = ""
+            forename = ""
+            surname = ""
             for line in str(entry).splitlines():
-                if re.search("^gecos", line.strip()):
+                if re.search("^gecos:", line.strip()):
                     gecos = line.strip()[-6:]
-                    tempResult = line.strip()
+                    forname = line.strip().split(" ")[1]
+                elif re.search("^mail:", line.strip()):
+                    mail = line.strip().split("mail: ",1)[1]
+                elif re.search("^sn:", line.strip()):
+                    surname = line.strip().split("sn: ",1)[1]
 
             #display user role
             if gecos[-3:]=="SM]":
@@ -32,7 +38,7 @@ class LDAPBackend():
                     user = User.objects.get(username=username)
                 except User.DoesNotExist:
                     #create a new user
-                    user = User(username=username) #todo could add email,first,last name from gecos field
+                    user = User(username=username, first_name=forename, last_name=surname, email=mail)
                     user.save()
                 return user
             elif gecos[-3:]=="UG]":
@@ -42,7 +48,7 @@ class LDAPBackend():
                     user = User.objects.get(username=username)
                 except User.DoesNotExist:
                     #create a new user
-                    user = User(username=username) #todo could add email,first,last name from gecos field
+                    user = User(username=username, first_name=forename, last_name=surname, email=mail)
                     user.save()
                 return user
             elif gecos=="[????]":
@@ -53,6 +59,11 @@ class LDAPBackend():
                 return None
         except core.exceptions.LDAPBindError as e:
             #LDAP bind failure perhaps due to authentication error
+            print("LDAP bind failure perhaps due to authentication error") #should be log messages
+            return None
+        except core.exceptions.LDAPSocketOpenError as e:
+            #server did not respond - cannot find server probably because not on univerity network
+            print("Failed to open socket to server probably becasue not on univerity network")
             return None
 
     def get_user(self, user_id):

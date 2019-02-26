@@ -9,7 +9,8 @@ dn = "uid=" + uid + ",ou=People,dc=dcs,dc=aber,dc=ac,dc=uk"
 
 try:
     #connect to server via ldap
-    server = Server('ldap.dcs.aber.ac.uk', get_info=ALL, port=636, use_ssl=True)
+    server = Server('ldap.dcs.aber.ac.uk', get_info=ALL,
+                    port=636, use_ssl=True, connect_timeout=5)
     conn = Connection(server, dn, password, auto_bind=True)
     print('done')
 

@@ -6,37 +6,37 @@ from django.contrib.auth import authenticate
 from django.contrib.auth import login as auth_login
 from django.contrib.auth.decorators import login_required
 
+from ldap3 import core
 from .forms import LoginForm
 
-import pdb
+import pdb #pdb.set_trace() to start
 
 # Create your views here.
 def login(request):
-    #pdb.set_trace()
+    context = {}
     #if POST request
     if request.method == 'POST':
         #create a form instance populated with the data sent in the form
         form = LoginForm(request.POST)
+        context['form'] = form
         #check provided data is valid
         if form.is_valid():
             #process data form.cleaned_data (ldap authenticate)
-            #ldapDetails = staff_auth(form.cleaned_data.get('uid'),form.cleaned_data.get('pswd'))
-            #ldapDetails = {'uid': 'mwj7', 'name': 'Morgan Jones', 'role': 'Staff', 'access': True}
-            username = request.POST['uid']
-            password = request.POST['pswd']
+            username = form.cleaned_data.get('uid')
+            password = form.cleaned_data.get('pswd')
             user = authenticate(request, username=username, password=password)
             if user is not None:
                 auth_login(request, user)
-                #redirect to session history
-                return HttpResponseRedirect(reverse('staff_sessions:index'))
+                return HttpResponseRedirect(reverse('staff_sessions:index')) #redirect to session history
             else:
                 # Return an 'invalid login' error message.
-                pass
+                context['errors'] = "Invalid Staff Login Details"
     else:
-        form = LoginForm()
+        context['form'] = LoginForm()
 
-    return render(request, 'staff_sessions/login.html', {'form': form})
+    return render(request, 'staff_sessions/login.html', context)
 
-@login_required
+@login_required(login_url='/staff/login/')
 def index(request):
+    print(request.user.email)
     return render(request, 'staff_sessions/session_history.html')

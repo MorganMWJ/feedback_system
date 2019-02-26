@@ -12,5 +12,5 @@ urlpatterns = [
     #/staff/login/
     path('login/', views.login, name='login'),
     #/staff/session/index
-    path('session/index', views.index, name='index'),
+    path('index/', views.index, name='index'),
 ]
