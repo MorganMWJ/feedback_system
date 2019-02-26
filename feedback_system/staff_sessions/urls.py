@@ -11,6 +11,8 @@ app_name= 'staff_sessions'
 urlpatterns = [
     #/staff/login/
     path('login/', views.login, name='login'),
+    #/staff/logout/
+    path('logout/', views.logout, name='logout'),
     #/staff/session/index
     path('index/', views.index, name='index'),
 ]

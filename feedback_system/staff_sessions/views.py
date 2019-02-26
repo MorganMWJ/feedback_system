@@ -1,9 +1,11 @@
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
 from django.urls import reverse
+from django.template import RequestContext
 
 from django.contrib.auth import authenticate
 from django.contrib.auth import login as auth_login
+from django.contrib.auth import logout as auth_logout
 from django.contrib.auth.decorators import login_required
 
 from ldap3 import core
@@ -30,13 +32,19 @@ def login(request):
                 return HttpResponseRedirect(reverse('staff_sessions:index')) #redirect to session history
             else:
                 # Return an 'invalid login' error message.
-                context['errors'] = "Invalid Staff Login Details"
+                context['login_error'] = True
     else:
         context['form'] = LoginForm()
 
     return render(request, 'staff_sessions/login.html', context)
 
+def logout(request):
+    auth_logout(request)
+    return HttpResponseRedirect(reverse('staff_sessions:login'))
+
 @login_required(login_url='/staff/login/')
 def index(request):
-    print(request.user.email)
+    context = context = RequestContext(request, {
+        'title': 'Your IP Address',
+    })
     return render(request, 'staff_sessions/session_history.html')

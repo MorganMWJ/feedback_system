@@ -25,7 +25,7 @@ class LDAPBackend():
             for line in str(entry).splitlines():
                 if re.search("^gecos:", line.strip()):
                     gecos = line.strip()[-6:]
-                    forname = line.strip().split(" ")[1]
+                    forename = line.strip().split(" ")[1]
                 elif re.search("^mail:", line.strip()):
                     mail = line.strip().split("mail: ",1)[1]
                 elif re.search("^sn:", line.strip()):
