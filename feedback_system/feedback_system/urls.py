@@ -14,12 +14,19 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
+from django.conf.urls.i18n import i18n_patterns
 from django.urls import include, path
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
 urlpatterns = [
-    path('staff/', include('staff_sessions.urls')),
     path('admin/', admin.site.urls),
+    path('i18n/', include('django.conf.urls.i18n')),
+    #path('staff/', include('staff_sessions.urls')),
 ]
-#append url patterns for all cross-app static files
+#append url patterns for different locales
+urlpatterns += i18n_patterns(
+    path('staff/', include('staff_sessions.urls')),
+    prefix_default_language=False
+)
+# #append url patterns for all cross-app static files
 urlpatterns += staticfiles_urlpatterns()

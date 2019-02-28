@@ -8,7 +8,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     {% load static %}
-    {% load i18n %} 
+    {% load i18n %}
     <style>
       .navbar-brand small {
       display:block;
@@ -33,7 +33,25 @@
 
   <footer class="fixed-bottom bg-dark text-light border-top p-4">
     <div class="container">
-      <p>FOOTER TEXT HERE, COPYRIGHT STUFF ..etc</P>
+      <p class="float-left">FOOTER TEXT HERE, COPYRIGHT STUFF ..etc </P>
+      {% get_current_language as LANGUAGE_CODE %}
+      <!-- Current language: {{ LANGUAGE_CODE }} -->
+      {% if LANGUAGE_CODE == "en" %}
+        <form action="{% url 'set_language' %}" method="post" class="float-right">
+          {% csrf_token %}
+          <input name="next" type="hidden" value="{{ request.get_full_path }}" />
+          <input name="language" type="hidden" value="cy" />
+          <input type="submit" value="Newid i'r Gymraeg"/>
+        </form>
+      {% else %}
+        <form action="{% url 'set_language' %}" method="post" class="float-right">
+          {% csrf_token %}
+          <!--  Need slice:'3:' becasue need to remove /cy prefix when going back to english version of site-->
+          <input name="next" type="hidden" value="{{ request.get_full_path|slice:'3:' }}" />
+          <input name="language" type="hidden" value="en" />
+          <input type="submit" value="Switch to English"/>
+        </form>
+      {% endif %}
     </div>
   </footer>
 
