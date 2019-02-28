@@ -1,12 +1,13 @@
 {% extends 'base_layout.html' %}
+{% load i18n %}
 
 {% block title %}
-  Session History
+  {% trans "Session History" %}
 {% endblock %}
 
 {% block content %}
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-      <span class="navbar-brand mb-0">Lecture Feedback System <small>{% if user.is_authenticated %}<strong><u>User</u>:</strong> {{user.get_full_name}} ({{user.email}}){% endif %}</small></span>
+      <span class="navbar-brand mb-0">{% trans "Lecture Feedback System" %} <small>{% if user.is_authenticated %}<strong><u>User</u>:</strong> {{user.get_full_name}} ({{user.email}}){% endif %}</small></span>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>

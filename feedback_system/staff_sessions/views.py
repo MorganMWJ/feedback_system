@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
 from django.urls import reverse
+from django.utils import translation
 from django.template import RequestContext
 
 from django.contrib.auth import authenticate

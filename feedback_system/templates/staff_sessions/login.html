@@ -1,13 +1,14 @@
 {% extends 'base_layout.html' %}
+{% load i18n %}
 {% load bootstrap3 %}
 
 {% block title %}
-  Staff Login
+  {% trans "Staff Login" %}
 {% endblock %}
 
 {% block content %}
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-  <span class="navbar-brand mb-0">Lecture Feedback System <small>{% if user.is_authenticated %}<strong><u>User</u>:</strong> {{user.get_full_name}} ({{user.email}}){% endif %}</small></span>
+  <span class="navbar-brand mb-0">{% trans "Lecture Feedback System" %} <small>{% if user.is_authenticated %}<strong><u>User</u>:</strong> {{user.get_full_name}} ({{user.email}}){% endif %}</small></span>
 </nav>
 
 <div class="container-fluid p-3"">
@@ -20,7 +21,7 @@
         {% bootstrap_form form %}
         {% buttons %}
           <button type="submit" class="btn btn-default" data-toggle="tooltip" data-placement="top" title="Login here if you are a member of staff wishing to start a new feedback session or review a previous one :-)">
-            {% bootstrap_icon "star" %} Login
+            {% bootstrap_icon "star" %} {% trans "Login" %}
           </button>
         {% endbuttons %}
       </form>
@@ -33,7 +34,7 @@
     <div class="col">
     </div>
     <div class="col-6">
-      <div class="alert alert-primary text-center" role="alert">You are already Logged In</div>
+      <div class="alert alert-primary text-center" role="alert">{% trans "You are already Logged In" %}</div>
     </div>
     <div class="col">
     </div>
@@ -44,7 +45,7 @@
     <div class="col">
     </div>
     <div class="col-6">
-      <div class="alert alert-danger text-center" role="alert">"Invalid Staff Login Details"</div>
+      <div class="alert alert-danger text-center" role="alert">{% trans "Invalid Staff Login Details" %}</div>
     </div>
     <div class="col">
     </div>
