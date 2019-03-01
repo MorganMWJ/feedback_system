@@ -1,5 +1,5 @@
 from ldap3 import Server, Connection, ALL, NTLM, ALL_ATTRIBUTES, core
-from django.contrib.auth.models import Permission, User
+from django.contrib.auth.models import User
 import re, string
 
 class LDAPBackend():
@@ -48,8 +48,7 @@ class LDAPBackend():
                     user = User.objects.get(username=username)
                 except User.DoesNotExist:
                     #create a new user
-                    user = User(username=username, first_name=forename, last_name=surname, email=mail)
-                    user.save()
+                    user = User.objects.create(username=username, first_name=forename, last_name=surname, email=mail)
                 return user
             elif gecos=="[????]":
                 print("Gecos field could not be found")

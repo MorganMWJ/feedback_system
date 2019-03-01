@@ -1,0 +1,36 @@
+Connect to view database:
+	psql -U postgres -h localhost (major_project)
+	\c majorprojectdb
+	\dt
+	
+Copy table data from psql into csv files:
+	\copy <table_name> to 'C:\Users\Morgan\Desktop\<filename>.csv' csv header
+
+Project Superuser Account:
+	username = morgan
+	password = surf_snake54
+	
+PostgreSQL Superuser Account:
+	password = major_project
+	port = 5432
+	
+Make migration files based off changes to models.py:
+	python manage.py makemigratons <app_name>
+
+Print the SQL django will apply for the given migration:	
+	python manage.py sqlmigrate <app_name> <migration id>
+	
+Change database based of unapplied migration files:
+	python manage.py migrate <app_name>
+
+To create message files you use: django-admin makemessages(.po)
+To produce the binary .mo files that are used by gettext you use: django-admin compilemessages(.mo)
+locale/cy/LC_MESSAGES/django.(po|mo)
+
+How to do translation hooks:
+	In Templates: {% trnas "<text_to_translate>" %}
+	In python files: import getText() as _ ; _("<text_to_translate>")
+	
+Run python shell:
+	python manage.py shell
+	

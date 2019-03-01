@@ -34,6 +34,8 @@ def login(request):
             else:
                 # Return an 'invalid login' error message.
                 context['login_error'] = True
+        else:
+            context['invalid_form_error'] = True
     else:
         context['form'] = LoginForm()
 
@@ -45,7 +47,4 @@ def logout(request):
 
 @login_required(login_url='/staff/login/')
 def index(request):
-    context = context = RequestContext(request, {
-        'title': 'Your IP Address',
-    })
     return render(request, 'staff_sessions/session_history.html')
