@@ -31,29 +31,24 @@
     {% block content %}
     {% endblock %}
 
-  <footer class="fixed-bottom bg-dark text-light border-top p-4">
-    <div class="container">
-      <p class="float-left">FOOTER TEXT HERE, COPYRIGHT STUFF ..etc </P>
-      {% get_current_language as LANGUAGE_CODE %}
-      <!-- Current language: {{ LANGUAGE_CODE }} -->
-      {% if LANGUAGE_CODE == "en" %}
-        <form action="{% url 'set_language' %}" method="post" class="float-right">
-          {% csrf_token %}
-          <input name="next" type="hidden" value="{{ request.get_full_path }}" />
-          <input name="language" type="hidden" value="cy" />
-          <input type="submit" value="Newid i'r Gymraeg"/>
-        </form>
-      {% else %}
-        <form action="{% url 'set_language' %}" method="post" class="float-right">
-          {% csrf_token %}
-          <!--  Need slice:'3:' becasue need to remove /cy prefix when going back to english version of site-->
-          <input name="next" type="hidden" value="{{ request.get_full_path|slice:'3:' }}" />
-          <input name="language" type="hidden" value="en" />
-          <input type="submit" value="Switch to English"/>
-        </form>
-      {% endif %}
-    </div>
-  </footer>
+    {% get_current_language as LANGUAGE_CODE %}
+    <!-- Current language: {{ LANGUAGE_CODE }} -->
+    {% if LANGUAGE_CODE == "en" %}
+      <form action="{% url 'set_language' %}" method="post" class="float-right">
+        {% csrf_token %}
+        <input name="next" type="hidden" value="{{ request.get_full_path }}" />
+        <input name="language" type="hidden" value="cy" />
+        <input class="fixed-bottom ml-4 mb-4 btn btn-info" type="submit" value="Newid i'r Gymraeg"/>
+      </form>
+    {% else %}
+      <form action="{% url 'set_language' %}" method="post" class="float-right">
+        {% csrf_token %}
+        <!--  Need slice:'3:' becasue need to remove /cy prefix when going back to english version of site-->
+        <input name="next" type="hidden" value="{{ request.get_full_path|slice:'3:' }}" />
+        <input name="language" type="hidden" value="en" />
+        <input class="fixed-bottom ml-4 mb-4 btn btn-info" type="submit" value="Switch to English"/>
+      </form>
+    {% endif %}
 
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
