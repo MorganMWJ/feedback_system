@@ -33,4 +33,7 @@ How to do translation hooks:
 	
 Run python shell:
 	python manage.py shell
+
+Initialise database with data from fixtures:
+	python manage.py loaddata <fixturename>
 	

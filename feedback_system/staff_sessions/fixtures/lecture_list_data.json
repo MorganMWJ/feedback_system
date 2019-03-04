@@ -1,0 +1,236 @@
+[
+  {
+    "model": "staff_sessions.lecture",
+    "pk": 1,
+    "fields": {
+      "title": "Lecture Awesome",
+      "slide_count": 5,
+      "author_username": "mwj7",
+      "author_forename": "William",
+      "author_surname": "Jones",
+      "session_code": "XCT234"
+    }
+  },
+  {
+    "model": "staff_sessions.lecture",
+    "pk": 2,
+    "fields": {
+      "title": "Lecture2",
+      "slide_count": 13,
+      "author_username": "mwj7",
+      "author_forename": "Morgan",
+      "author_surname": "Jones",
+      "session_code": "X76234"
+    }
+  },
+  {
+    "model": "staff_sessions.lecture",
+    "pk": 3,
+    "fields": {
+      "title": "Lecture3 - Shouldnt be displayed for me",
+      "slide_count": 15,
+      "author_username": "cwl",
+      "author_forename": "Chris",
+      "author_surname": "Loftus",
+      "session_code": "CTR235"
+    }
+  },
+  {
+    "model": "staff_sessions.lecture",
+    "pk": 4,
+    "fields": {
+      "title": "Data Dump Lecture",
+      "slide_count": 15,
+      "author_username": "mwj7",
+      "author_forename": "Morgan",
+      "author_surname": "Jones",
+      "session_code": "AAA123"
+    }
+  },
+  {
+    "model": "staff_sessions.lecture",
+    "pk": 5,
+    "fields": {
+      "title": "Data Dump Lecture",
+      "slide_count": 15,
+      "author_username": "mwj7",
+      "author_forename": "Morgan",
+      "author_surname": "Jones",
+      "session_code": "BBB123"
+    }
+  },
+  {
+    "model": "staff_sessions.lecture",
+    "pk": 6,
+    "fields": {
+      "title": "Data Dump Lecture",
+      "slide_count": 15,
+      "author_username": "mwj7",
+      "author_forename": "Morgan",
+      "author_surname": "Jones",
+      "session_code": "CCC123"
+    }
+  },
+  {
+    "model": "staff_sessions.lecture",
+    "pk": 7,
+    "fields": {
+      "title": "Data Dump Lecture",
+      "slide_count": 15,
+      "author_username": "mwj7",
+      "author_forename": "Morgan",
+      "author_surname": "Jones",
+      "session_code": "DDD123"
+    }
+  },
+  {
+    "model": "staff_sessions.lecture",
+    "pk": 8,
+    "fields": {
+      "title": "Data Dump Lecture",
+      "slide_count": 15,
+      "author_username": "mwj7",
+      "author_forename": "Morgan",
+      "author_surname": "Jones",
+      "session_code": "DDD023"
+    }
+  },
+  {
+    "model": "staff_sessions.lecture",
+    "pk": 9,
+    "fields": {
+      "title": "Data Dump Lecture",
+      "slide_count": 15,
+      "author_username": "mwj7",
+      "author_forename": "Morgan",
+      "author_surname": "Jones",
+      "session_code": "EEE123"
+    }
+  },
+  {
+    "model": "staff_sessions.lecture",
+    "pk": 10,
+    "fields": {
+      "title": "Data Dump Lecture",
+      "slide_count": 15,
+      "author_username": "mwj7",
+      "author_forename": "Morgan",
+      "author_surname": "Jones",
+      "session_code": "FFF123"
+    }
+  },
+  {
+    "model": "staff_sessions.lecture",
+    "pk": 11,
+    "fields": {
+      "title": "Data Dump Lecture",
+      "slide_count": 15,
+      "author_username": "mwj7",
+      "author_forename": "Morgan",
+      "author_surname": "Jones",
+      "session_code": "AAA321"
+    }
+  },
+  {
+    "model": "staff_sessions.lecture",
+    "pk": 12,
+    "fields": {
+      "title": "Data Dump Lecture",
+      "slide_count": 15,
+      "author_username": "mwj7",
+      "author_forename": "Morgan",
+      "author_surname": "Jones",
+      "session_code": "BBB321"
+    }
+  },
+  {
+    "model": "staff_sessions.lecture",
+    "pk": 13,
+    "fields": {
+      "title": "Data Dump Lecture",
+      "slide_count": 15,
+      "author_username": "mwj7",
+      "author_forename": "Morgan",
+      "author_surname": "Jones",
+      "session_code": "CCC321"
+    }
+  },
+  {
+    "model": "staff_sessions.lecture",
+    "pk": 14,
+    "fields": {
+      "title": "Data Dump Lecture",
+      "slide_count": 15,
+      "author_username": "mwj7",
+      "author_forename": "Morgan",
+      "author_surname": "Jones",
+      "session_code": "DDD321"
+    }
+  },
+  {
+    "model": "staff_sessions.lecture",
+    "pk": 15,
+    "fields": {
+      "title": "Data Dump Lecture",
+      "slide_count": 15,
+      "author_username": "mwj7",
+      "author_forename": "Morgan",
+      "author_surname": "Jones",
+      "session_code": "EEE321"
+    }
+  },
+  {
+    "model": "staff_sessions.lecture",
+    "pk": 16,
+    "fields": {
+      "title": "Data Dump Lecture",
+      "slide_count": 15,
+      "author_username": "mwj7",
+      "author_forename": "Morgan",
+      "author_surname": "Jones",
+      "session_code": "FFEEWW"
+    }
+  },
+  {
+    "model": "staff_sessions.lecture",
+    "pk": 17,
+    "fields": {
+      "title": "Data Dump Lecture",
+      "slide_count": 15,
+      "author_username": "mwj7",
+      "author_forename": "Morgan",
+      "author_surname": "Jones",
+      "session_code": "324EWS"
+    }
+  },
+  {
+    "model": "staff_sessions.lecture",
+    "pk": 18,
+    "fields": {
+      "title": "Data Dump Lecture",
+      "slide_count": 15,
+      "author_username": "mwj7",
+      "author_forename": "Morgan",
+      "author_surname": "Jones",
+      "session_code": "HHHTRT"
+    }
+  },
+  {
+    "model": "staff_sessions.session",
+    "pk": 1,
+    "fields": {
+      "start_time": "2011-09-02T13:20:30+03:00",
+      "end_time": "2011-09-02T13:20:30+03:00",
+      "lecture_id": 1
+    }
+  },
+  {
+    "model": "staff_sessions.session",
+    "pk": 2,
+    "fields": {
+      "start_time": "2011-09-03T13:20:30+03:00",
+      "end_time": "2011-09-03T13:20:30+03:00",
+      "lecture_id": 1
+    }
+  }
+]

@@ -1,8 +1,9 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.utils import translation
 from django.template import RequestContext
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 from django.contrib.auth import authenticate
 from django.contrib.auth import login as auth_login
@@ -11,6 +12,7 @@ from django.contrib.auth.decorators import login_required
 
 from ldap3 import core
 from .forms import LoginForm
+from staff_sessions.models import Lecture, Session
 
 import pdb #pdb.set_trace() to start
 
@@ -47,4 +49,22 @@ def logout(request):
 
 @login_required(login_url='/staff/login/')
 def index(request):
-    return render(request, 'staff_sessions/session_history.html')
+    previous_lectures = Lecture.objects.filter(author_username=request.user.username)
+    paginator = Paginator(previous_lectures, 10)
+
+    page = request.GET.get('page')
+    try:
+        previous_lectures = paginator.page(page)
+    except PageNotAnInteger:
+        previous_lectures = paginator.page(1)
+    except EmptyPage:
+        previous_lectures = paginator.page(paginator.num_pages)
+
+    context = {'lecture_list': previous_lectures}
+    return render(request, 'staff_sessions/lecture_list.html', context)
+
+@login_required(login_url='/staff/login/')
+def lecture_delete(request, id=None):
+    instance = get_object_or_404(Lecture, id=id)
+    instance.delete()
+    return redirect(reverse('staff_sessions:index'))
