@@ -1,3 +1,5 @@
+import random
+import string
 from django.db import models
 from django.core.validators import MinValueValidator
 
@@ -21,6 +23,13 @@ class Lecture(models.Model):
     #don't think this function is good or needed, remove?
     def getFirstStartDate_displayStr(self):
         return getFirstStartDate().strftime("%d/%m/%Y, %H:%M")
+
+    @staticmethod
+    def getCode():
+        code = ""
+        for i in range(6):
+            code += random.choice(string.ascii_uppercase + string.digits)
+        return code
 
 class Session(models.Model):
     start_time = models.DateTimeField()

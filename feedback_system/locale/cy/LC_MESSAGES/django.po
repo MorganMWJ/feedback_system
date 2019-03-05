@@ -63,7 +63,3 @@ msgstr "Rydych chi eisoes wedi Mewngofnodi"
 #: .\templates\staff_sessions\login.html:48
 msgid "Invalid Staff Login Details"
 msgstr "Manylion Mewngofnodi Staff Annilys"
-
-#: .\templates\staff_sessions\session_history.html:5
-msgid "Session History"
-msgstr "Hanes Sesiwn"

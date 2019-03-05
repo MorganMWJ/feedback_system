@@ -13,8 +13,10 @@ urlpatterns = [
     path('login/', views.login, name='login'),
     #/staff/logout/
     path('logout/', views.logout, name='logout'),
-    #/staff/lectures
+    #/staff/lectures/
     path('lectures/', views.index, name='index'),
+    #/staff/lectures/new/
+    path('lectures/new/', views.lecture_new, name='lecture_new'),
     #/staff/lectures/delete/?
-    path('lectures/delete/<int:id>', views.lecture_delete, name='lecture_delete')
+    path('lectures/delete/<int:id>/', views.lecture_delete, name='lecture_delete'),
 ]
