@@ -33,7 +33,7 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('start_time', models.DateTimeField()),
                 ('end_time', models.DateTimeField()),
-                ('lecture_id', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='staff_sessions.Lecture')),
+                ('lecture_id', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='staff.Lecture')),
             ],
         ),
     ]

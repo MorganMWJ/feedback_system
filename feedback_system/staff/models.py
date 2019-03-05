@@ -14,6 +14,7 @@ class Lecture(models.Model):
     session_code = models.CharField(max_length=6, unique=True)
     is_running = models.BooleanField(default=False)
     is_taking_questions = models.BooleanField(default=True)
+    notes = models.TextField(null=True)
 
     def getFirstStartDate(self):
         sessions = self.session_set.all()
@@ -27,8 +28,9 @@ class Lecture(models.Model):
     @staticmethod
     def getCode():
         code = ""
-        for i in range(6):
-            code += random.choice(string.ascii_uppercase + string.digits)
+        while code=="": #and code already in db
+            for i in range(6):
+                code += random.choice(string.ascii_uppercase + string.digits)
         return code
 
 class Session(models.Model):

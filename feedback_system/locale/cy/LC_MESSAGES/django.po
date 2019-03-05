@@ -27,39 +27,39 @@ msgstr "Saesneg"
 msgid "Welsh"
 msgstr "Cymraeg"
 
-#: .\staff_sessions\forms.py:5
+#: .\staff\forms.py:5
 msgid "Username"
 msgstr "Enw Defnyddiwr"
 
-#: .\staff_sessions\forms.py:5
+#: .\staff\forms.py:5
 msgid "Your Username"
 msgstr "Eich Enw Defnyddiwr"
 
-#: .\staff_sessions\forms.py:6
+#: .\staff\forms.py:6
 msgid "Password"
 msgstr "Cyfrinair"
 
-#: .\staff_sessions\forms.py:6
+#: .\staff\forms.py:6
 msgid "Your Password"
 msgstr "Eich Cyfrinair"
 
-#: .\templates\staff_sessions\login.html:6
+#: .\templates\staff\login.html:6
 msgid "Staff Login"
 msgstr "Mewngofnodi Staff"
 
-#: .\templates\staff_sessions\login.html:11
-#: .\templates\staff_sessions\session_history.html:10
+#: .\templates\staff\login.html:11
+#: .\templates\staff\session_history.html:10
 msgid "Lecture Feedback System"
 msgstr "System Adborth Darlithoedd"
 
-#: .\templates\staff_sessions\login.html:24
+#: .\templates\staff\login.html:24
 msgid "Login"
 msgstr "Mewngofnodi"
 
-#: .\templates\staff_sessions\login.html:37
+#: .\templates\staff\login.html:37
 msgid "You are already Logged In"
 msgstr "Rydych chi eisoes wedi Mewngofnodi"
 
-#: .\templates\staff_sessions\login.html:48
+#: .\templates\staff\login.html:48
 msgid "Invalid Staff Login Details"
 msgstr "Manylion Mewngofnodi Staff Annilys"

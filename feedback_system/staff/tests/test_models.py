@@ -2,7 +2,7 @@ import datetime
 
 from django.test import TestCase
 from django.utils import timezone
-from staff_sessions.models import Lecture, Session
+from staff.models import Lecture, Session
 
 class TestModels(TestCase):
     def test_get_first_start_date(self):

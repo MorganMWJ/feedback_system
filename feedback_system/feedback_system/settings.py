@@ -31,7 +31,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    'staff_sessions.apps.StaffSessionsConfig',
+    'staff.apps.StaffSessionsConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -55,8 +55,8 @@ MIDDLEWARE = [
 ]
 
 #custom authentication backend - in this class I connetc to ldap server
-AUTHENTICATION_BACKENDS = ['staff_sessions.ldap_backend.LDAPBackend']
-LOGIN_URL = 'staff_sessions.views.login'
+AUTHENTICATION_BACKENDS = ['staff.ldap_backend.LDAPBackend']
+LOGIN_URL = 'staff.views.login'
 
 ROOT_URLCONF = 'feedback_system.urls'
 

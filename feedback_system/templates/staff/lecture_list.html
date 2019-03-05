@@ -7,7 +7,7 @@
 
 {% block content %}
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-      <span class="navbar-brand mb-0">{% trans "Lecture Feedback System" %} <small>{% if user.is_authenticated %}<strong><u>User</u>:</strong> {{user.get_full_name}} ({{user.email}}){% endif %}</small></span>
+      <span class="navbar-brand mb-0">{% trans "Lecture Feedback System" %} <small>{% if user.is_authenticated %}{{user.get_full_name}} ({{user.email}}){% endif %}</small></span>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
@@ -15,15 +15,15 @@
       <div class="collapse navbar-collapse" id="navbarContent">
         <ul class="navbar-nav mr-auto">
           <li class="nav-item">
-            <a class="nav-link btn btn-outline-light mr-1" href="{% url 'staff_sessions:lecture_new' %}" role="button">New Session</a>
+            <a class="nav-link btn btn-outline-light mr-1" href="{% url 'staff:lecture_new' %}" role="button">New Session</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link btn btn-outline-light ml-1" href="{% url 'staff_sessions:logout' %}" role="button">Logout</a>
+            <a class="nav-link btn btn-outline-light ml-1" href="{% url 'staff:logout' %}" role="button">Logout</a>
           </li>
         </ul>
         <!-- <div class="navbar-nav">
           <a class="nav-link mr-1" href="">New Session</a>
-          <a class="nav-link ml-1" href="{% url 'staff_sessions:logout' %}">Logout</a>
+          <a class="nav-link ml-1" href="{% url 'staff:logout' %}">Logout</a>
         </div> -->
         <form class="form-inline my-2 my-lg-0">
           <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
@@ -49,7 +49,7 @@
                      </div>
                    </div>
                    <div class="col-sm-auto">
-                     <a href="{% url 'staff_sessions:lecture_delete' lecture.id %}" type="button" class="btn btn-danger my-2 mx-1">Delete</a>
+                     <a href="{% url 'staff:lecture_delete' lecture.id %}" type="button" class="btn btn-danger my-2 mx-1">Delete</a>
                    </div>
                  </div>
                </li>

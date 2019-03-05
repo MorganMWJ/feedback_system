@@ -8,7 +8,7 @@
 
 {% block content %}
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-  <span class="navbar-brand mb-0">{% trans "Lecture Feedback System" %} <small>{% if user.is_authenticated %}<strong><u>User</u>:</strong> {{user.get_full_name}} ({{user.email}}){% endif %}</small></span>
+  <span class="navbar-brand mb-0">{% trans "Lecture Feedback System" %} <small>{% if user.is_authenticated %}{{user.get_full_name}} ({{user.email}}){% endif %}</small></span>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
@@ -16,10 +16,10 @@
   <div class="collapse navbar-collapse" id="navbarContent">
     <ul class="navbar-nav mr-auto">
       <li class="nav-item">
-        <a class="nav-link btn btn-outline-light mr-1" href="{% url 'staff_sessions:index' %}" role="button">History</a>
+        <a class="nav-link btn btn-outline-light mr-1" href="{% url 'staff:index' %}" role="button">History</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link btn btn-outline-light ml-1" href="{% url 'staff_sessions:logout' %}" role="button">Logout</a>
+        <a class="nav-link btn btn-outline-light ml-1" href="{% url 'staff:logout' %}" role="button">Logout</a>
       </li>
     </ul>
   </div>
@@ -28,7 +28,7 @@
 <div class="container p-3">
   <div class="row d-flex justify-content-center">
     <div class="col-sm-8">
-      <form action="{% url 'staff_sessions:lecture_new' %}" method="post" class="bg-light border rounded p-2">
+      <form action="{% url 'staff:lecture_new' %}" method="post" class="bg-light border rounded p-2">
         {% csrf_token %}
         {% bootstrap_form form %}
         {% buttons %}

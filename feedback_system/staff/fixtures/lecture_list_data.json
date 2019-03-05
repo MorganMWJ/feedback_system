@@ -1,6 +1,6 @@
 [
   {
-    "model": "staff_sessions.lecture",
+    "model": "staff.lecture",
     "pk": 1,
     "fields": {
       "title": "Lecture Awesome",
@@ -12,7 +12,7 @@
     }
   },
   {
-    "model": "staff_sessions.lecture",
+    "model": "staff.lecture",
     "pk": 2,
     "fields": {
       "title": "Lecture2",
@@ -24,7 +24,7 @@
     }
   },
   {
-    "model": "staff_sessions.lecture",
+    "model": "staff.lecture",
     "pk": 3,
     "fields": {
       "title": "Lecture3 - Shouldnt be displayed for me",
@@ -36,7 +36,7 @@
     }
   },
   {
-    "model": "staff_sessions.lecture",
+    "model": "staff.lecture",
     "pk": 4,
     "fields": {
       "title": "Data Dump Lecture",
@@ -48,7 +48,7 @@
     }
   },
   {
-    "model": "staff_sessions.lecture",
+    "model": "staff.lecture",
     "pk": 5,
     "fields": {
       "title": "Data Dump Lecture",
@@ -60,7 +60,7 @@
     }
   },
   {
-    "model": "staff_sessions.lecture",
+    "model": "staff.lecture",
     "pk": 6,
     "fields": {
       "title": "Data Dump Lecture",
@@ -72,7 +72,7 @@
     }
   },
   {
-    "model": "staff_sessions.lecture",
+    "model": "staff.lecture",
     "pk": 7,
     "fields": {
       "title": "Data Dump Lecture",
@@ -84,7 +84,7 @@
     }
   },
   {
-    "model": "staff_sessions.lecture",
+    "model": "staff.lecture",
     "pk": 8,
     "fields": {
       "title": "Data Dump Lecture",
@@ -96,7 +96,7 @@
     }
   },
   {
-    "model": "staff_sessions.lecture",
+    "model": "staff.lecture",
     "pk": 9,
     "fields": {
       "title": "Data Dump Lecture",
@@ -108,7 +108,7 @@
     }
   },
   {
-    "model": "staff_sessions.lecture",
+    "model": "staff.lecture",
     "pk": 10,
     "fields": {
       "title": "Data Dump Lecture",
@@ -120,7 +120,7 @@
     }
   },
   {
-    "model": "staff_sessions.lecture",
+    "model": "staff.lecture",
     "pk": 11,
     "fields": {
       "title": "Data Dump Lecture",
@@ -132,7 +132,7 @@
     }
   },
   {
-    "model": "staff_sessions.lecture",
+    "model": "staff.lecture",
     "pk": 12,
     "fields": {
       "title": "Data Dump Lecture",
@@ -144,7 +144,7 @@
     }
   },
   {
-    "model": "staff_sessions.lecture",
+    "model": "staff.lecture",
     "pk": 13,
     "fields": {
       "title": "Data Dump Lecture",
@@ -156,7 +156,7 @@
     }
   },
   {
-    "model": "staff_sessions.lecture",
+    "model": "staff.lecture",
     "pk": 14,
     "fields": {
       "title": "Data Dump Lecture",
@@ -168,7 +168,7 @@
     }
   },
   {
-    "model": "staff_sessions.lecture",
+    "model": "staff.lecture",
     "pk": 15,
     "fields": {
       "title": "Data Dump Lecture",
@@ -180,7 +180,7 @@
     }
   },
   {
-    "model": "staff_sessions.lecture",
+    "model": "staff.lecture",
     "pk": 16,
     "fields": {
       "title": "Data Dump Lecture",
@@ -192,7 +192,7 @@
     }
   },
   {
-    "model": "staff_sessions.lecture",
+    "model": "staff.lecture",
     "pk": 17,
     "fields": {
       "title": "Data Dump Lecture",
@@ -204,7 +204,7 @@
     }
   },
   {
-    "model": "staff_sessions.lecture",
+    "model": "staff.lecture",
     "pk": 18,
     "fields": {
       "title": "Data Dump Lecture",
@@ -216,7 +216,7 @@
     }
   },
   {
-    "model": "staff_sessions.session",
+    "model": "staff.session",
     "pk": 1,
     "fields": {
       "start_time": "2011-09-02T13:20:30+03:00",
@@ -225,7 +225,7 @@
     }
   },
   {
-    "model": "staff_sessions.session",
+    "model": "staff.session",
     "pk": 2,
     "fields": {
       "start_time": "2011-09-03T13:20:30+03:00",

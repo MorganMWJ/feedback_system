@@ -12,7 +12,7 @@ from django.contrib.auth.decorators import login_required
 
 from ldap3 import core
 from .forms import LoginForm, NewLectureForm
-from staff_sessions.models import Lecture, Session
+from staff.models import Lecture, Session
 
 import pdb #pdb.set_trace() to start
 
@@ -32,7 +32,7 @@ def login(request):
             user = authenticate(request, username=username, password=password)
             if user is not None:
                 auth_login(request, user)
-                return HttpResponseRedirect(reverse('staff_sessions:index'))
+                return HttpResponseRedirect(reverse('staff:index'))
             else:
                 # Return an 'invalid login' error message.
                 context['login_error'] = True
@@ -41,11 +41,11 @@ def login(request):
     else:
         context['form'] = LoginForm()
 
-    return render(request, 'staff_sessions/login.html', context)
+    return render(request, 'staff/login.html', context)
 
 def logout(request):
     auth_logout(request)
-    return HttpResponseRedirect(reverse('staff_sessions:login'))
+    return HttpResponseRedirect(reverse('staff:login'))
 
 @login_required(login_url='/staff/login/')
 def index(request):
@@ -62,13 +62,13 @@ def index(request):
         previous_lectures = paginator.page(paginator.num_pages)
 
     context = {'lecture_list': previous_lectures}
-    return render(request, 'staff_sessions/lecture_list.html', context)
+    return render(request, 'staff/lecture_list.html', context)
 
 @login_required(login_url='/staff/login/')
 def lecture_delete(request, id=None):
     instance = get_object_or_404(Lecture, id=id)
     instance.delete()
-    return redirect(reverse('staff_sessions:index'))
+    return redirect(reverse('staff:index'))
 
 @login_required(login_url='/staff/login/')
 def lecture_new(request):
@@ -80,7 +80,6 @@ def lecture_new(request):
         context['form'] = form
         #check provided data is valid
         if form.is_valid():
-            #process data form.cleaned_data
             #create new lecture from cleaned_data
             title = form.cleaned_data.get('title')
             slide_count = form.cleaned_data.get('slide_count')
@@ -91,12 +90,13 @@ def lecture_new(request):
                                 author_username=request.user.username,
                                 author_forename=request.user.first_name,
                                 author_surname=request.user.last_name,
-                                session_code=Lecture.getCode())
-            #redirect to view lecture page (currently back to index)
-            return HttpResponseRedirect(reverse('staff_sessions:index'))
+                                session_code=Lecture.getCode(),
+                                notes=notes)
+            #redirect to view lecture index
+            return HttpResponseRedirect(reverse('staff:index'))
         else:
             context['invalid_form_error'] = True
     else:
         context['form'] = NewLectureForm()
 
-    return render(request, 'staff_sessions/lecture_new.html', context)
+    return render(request, 'staff/lecture_new.html', context)

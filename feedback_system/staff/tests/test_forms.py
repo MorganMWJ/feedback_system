@@ -1,5 +1,5 @@
 from django.test import TestCase
-from staff_sessions.forms import LoginForm
+from staff.forms import LoginForm
 
 class TestForms(TestCase):
     #Login Form Tests

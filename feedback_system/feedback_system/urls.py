@@ -21,11 +21,11 @@ from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('i18n/', include('django.conf.urls.i18n')),
-    #path('staff/', include('staff_sessions.urls')),
+    #path('staff/', include('staff.urls')),
 ]
 #append url patterns for different locales
 urlpatterns += i18n_patterns(
-    path('staff/', include('staff_sessions.urls')),
+    path('staff/', include('staff.urls')),
     prefix_default_language=False
 )
 # #append url patterns for all cross-app static files

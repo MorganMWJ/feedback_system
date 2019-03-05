@@ -1,5 +1,5 @@
 from django.test import TestCase
-from staff_sessions.ldap_backend import LDAPBackend
+from staff.ldap_backend import LDAPBackend
 from django.contrib.auth.models import User
 
 class TestLDAPBackend(TestCase):
