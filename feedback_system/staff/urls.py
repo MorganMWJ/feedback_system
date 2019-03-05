@@ -17,6 +17,8 @@ urlpatterns = [
     path('lectures/', views.index, name='index'),
     #/staff/lectures/new/
     path('lectures/new/', views.lecture_new, name='lecture_new'),
+    #/staff/lectures/?
+    path('lectures/<int:id>/', views.lecture_detail, name='lecture_detail'),
     #/staff/lectures/delete/?
     path('lectures/delete/<int:id>/', views.lecture_delete, name='lecture_delete'),
 ]

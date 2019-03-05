@@ -22,7 +22,7 @@
 
 <div class="container-fluid bg-light pb-3">
   <div class="row">
-    <div class="col-sm-auto bg-dark d-flex flex-row"">
+    <div class="col-sm-auto bg-dark d-flex flex-row rounded-bottom-right">
       <form method="GET" action="" class="form-inline my-2 my-lg-0">
         <input class="form-control mr-sm-2" type="search" name="q" placeholder="{% trans 'Search' %}" value="{{ request.GET.q }}" aria-label="Search">
         <button class="btn btn-outline-success my-2 my-sm-0" type="submit">{% trans "Search" %}</button>
@@ -39,7 +39,7 @@
           <div class="row d-flex justify-content-between">
             <div class="col-sm-auto d-flex flex-column">
               <div>
-                <a href="#" class="mr-2 h4">{{ lecture.title }}</a>
+                <a href="{% url 'staff:lecture_detail' lecture.id %}" class="mr-2 h4">{{ lecture.title }}</a>
               </div>
               <div>
                 <span class="h5">{{ lecture.getFirstStartDate }}</span>

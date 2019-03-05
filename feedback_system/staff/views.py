@@ -72,6 +72,11 @@ def index(request):
     return render(request, 'staff/lecture_list.html', context)
 
 @login_required(login_url='/staff/login/')
+def lecture_detail(request, id=None):
+    instance = get_object_or_404(Lecture, id=id)
+    return render(request, 'staff/lecture_detail.html', {'lecture': instance})
+
+@login_required(login_url='/staff/login/')
 def lecture_delete(request, id=None):
     instance = get_object_or_404(Lecture, id=id)
     instance.delete()
