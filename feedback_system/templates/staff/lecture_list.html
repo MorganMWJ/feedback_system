@@ -11,10 +11,10 @@
   <div>
     <ul class="navbar-nav mr-auto d-flex flex-row">
       <li class="nav-item">
-        <a class="nav-link border-right border-white p-3" href="{% url 'staff:lecture_new' %}" role="button">New Session</a>
+        <a class="nav-link border-right border-white p-3" href="{% url 'staff:lecture_new' %}" role="button">{% trans "New Lecture" %}</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link border-left border-white p-3" href="{% url 'staff:logout' %}" role="button">Logout</a>
+        <a class="nav-link border-left border-white p-3" href="{% url 'staff:logout' %}" role="button">{% trans "Logout" %}</a>
       </li>
     </ul>
   </div>
@@ -23,9 +23,9 @@
 <div class="container-fluid bg-light pb-3">
   <div class="row">
     <div class="col-sm-auto bg-dark d-flex flex-row"">
-        <form class=" form-inline my-2 my-lg-0">
-      <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-      <button class="btn btn-outline-success my-2 my-sm-0" type="submit">{% trans "Search" %}</button>
+      <form method="GET" action="" class="form-inline my-2 my-lg-0">
+        <input class="form-control mr-sm-2" type="search" name="q" placeholder="{% trans 'Search' %}" value="{{ request.GET.q }}" aria-label="Search">
+        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">{% trans "Search" %}</button>
       </form>
       <button href="" type="button" class="btn btn-danger my-2 mx-1">{% trans "Delete Selected" %}</button>
     </div>
@@ -46,7 +46,7 @@
               </div>
             </div>
             <div class="col-sm-auto">
-              <a href="{% url 'staff:lecture_delete' lecture.id %}" type="button" class="btn btn-danger my-2 mx-1">Delete</a>
+              <a href="{% url 'staff:lecture_delete' lecture.id %}" type="button" class="btn btn-danger my-2 mx-1">{% trans "Delete" %}</a>
             </div>
           </div>
         </li>
@@ -54,7 +54,7 @@
       </ul>
       {% else %}
       <h3>
-        <center>There are currently no lecture feedback sessions for the logged in user</center>
+        <center>{% trans "There are currently no lecture feedback sessions to display" %}</center>
       </h3>
       {% endif %}
     </div>

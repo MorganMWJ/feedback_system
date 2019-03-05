@@ -3,6 +3,7 @@ from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.utils import translation
 from django.template import RequestContext
+from django.db.models import Q
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 from django.contrib.auth import authenticate
@@ -51,6 +52,11 @@ def logout(request):
 @login_required(login_url='/staff/login/')
 def index(request):
     previous_lectures = Lecture.objects.filter(author_username=request.user.username).order_by('session__start_time')
+
+    #if we have a search query filter previous_lectures that match the query
+    query = request.GET.get("q")
+    if query:
+        previous_lectures = previous_lectures.filter(title__icontains=query)
 
     #pagination code
     paginator = Paginator(previous_lectures, 10)
