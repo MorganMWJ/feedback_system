@@ -11,8 +11,9 @@ from django.contrib.auth import logout as auth_logout
 from django.contrib.auth.decorators import login_required
 
 from ldap3 import core
-from .forms import LoginForm, NewLectureForm
+from staff.forms import LoginForm, NewLectureForm, PDFUploadForm
 from staff.models import Lecture, Session
+from staff.pdf_extractor import get_info
 
 import pdb #pdb.set_trace() to start
 
@@ -72,13 +73,15 @@ def lecture_delete(request, id=None):
 
 @login_required(login_url='/staff/login/')
 def lecture_new(request):
+    #pdb.set_trace()
     context = {}
-    #if POST request
     if request.method == 'POST':
         #create a form instance populated with the data sent in the form
         form = NewLectureForm(request.POST)
         context['form'] = form
-        #check provided data is valid
+        pdf_form = PDFUploadForm(request.POST, request.FILES)
+        context['pdf_form'] = pdf_form
+        #check new lecture data is valid
         if form.is_valid():
             #create new lecture from cleaned_data
             title = form.cleaned_data.get('title')
@@ -94,9 +97,15 @@ def lecture_new(request):
                                 notes=notes)
             #redirect to view lecture index
             return HttpResponseRedirect(reverse('staff:index'))
+        #check pdf is valid
+        elif pdf_form.is_valid():
+            #if so extarct it from there
+            info = get_info(request.FILES['lecture_pdf_file'])
+            context['form'] = NewLectureForm(initial={'title': info['title'], 'slide_count': info['pageCount']})
         else:
             context['invalid_form_error'] = True
     else:
         context['form'] = NewLectureForm()
+        context['pdf_form'] = PDFUploadForm()
 
     return render(request, 'staff/lecture_new.html', context)

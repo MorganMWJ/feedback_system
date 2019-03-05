@@ -4,7 +4,7 @@ from django.db import models
 from django.core.validators import MinValueValidator
 
 class Lecture(models.Model):
-    title = models.CharField(max_length=50)
+    title = models.CharField(max_length=150)
     slide_count = models.IntegerField(
                     default=1,
                     validators=[MinValueValidator(1)])

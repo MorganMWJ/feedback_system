@@ -36,4 +36,6 @@ Run python shell:
 
 Initialise database with data from fixtures:
 	python manage.py loaddata <fixturename>
+
+
 	
