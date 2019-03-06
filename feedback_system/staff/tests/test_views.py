@@ -57,4 +57,4 @@ class TestViews(TestCase):
     #Index View Tests
     def test_index_redirect_if_not_logged_in(self):
         response = self.cli.get(reverse('staff:index'))
-        self.assertRedirects(response, '/staff/login/?next=/staff/index/')
+        self.assertRedirects(response, '/staff/login/?next=/staff/lectures/')

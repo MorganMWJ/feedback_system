@@ -29,4 +29,7 @@ urlpatterns = [
     path('lectures/<int:id>/generate_session_code/', views.lecture_generate_session_code, name='lecture_generate_session_code'),
     #/staff/lectures/?/toggle_questions/
     path('lectures/<int:id>/toggle_questions/', views.lecture_toggle_questions, name='lecture_toggle_questions'),
+    #/staff/questions/?/review/
+    path('questions/<int:id>/review/', views.question_mark_reviewed, name='question_mark_reviewed'),
+
 ]

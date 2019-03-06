@@ -45,7 +45,7 @@
       if($("#questionDiv").is(":visible")){
         localStorage.setItem("questionsDisplayed", 1);
       }
-      elseif($("#questionDiv").is(":hidden")){
+      else if($("#questionDiv").is(":hidden")){
         localStorage.setItem("questionsDisplayed", 0);
       }
     });
@@ -55,10 +55,6 @@
       $("canvas").toggle();
     });
   });
-
-  if(localStorage.getItem("questionsDisplayed")){
-      $("#questionDiv").show();
-  }
 
 </script>
 
@@ -144,18 +140,20 @@
     </div>
     <div class="col-sm-6" id="questionDiv">
       <center>
-        <h3>Current Questions</h3>
+        <h3>{% trans "Current Questions" %}</h3>
       </center>
       <hr class="mt-0" />
-
-      <ul class="list-group list-group-flush">
-        <li class="list-group-item d-flex justify-content-between align-items-center">Why is the sky blue?<button type="button" class="btn btn-success ml-1">Mark Reviewed</button></li>
-        <li class="list-group-item d-flex justify-content-between align-items-center">I really like this lecture.<button type="button" class="btn btn-success ml-1">Mark Reviewed</button></li>
-        <li class="list-group-item d-flex justify-content-between align-items-center">Can you go over the part about responsive web design? pls<button type="button" class="btn btn-success ml-1">Mark Reviewed</button></li>
-        <li class="list-group-item d-flex justify-content-between align-items-center">Why is the sky blue?<button type="button" class="btn btn-success ml-1">Mark Reviewed</button></li>
-        <li class="list-group-item d-flex justify-content-between align-items-center">I really like this lecture.<button type="button" class="btn btn-success ml-1">Mark Reviewed</button></li>
-        <li class="list-group-item d-flex justify-content-between align-items-center">Can you go over the part about responsive web design? pls<button type="button" class="btn btn-success ml-1">Mark Reviewed</button></li>
-      </ul>
+      {% if questions %}
+        <ul class="list-group list-group-flush">
+          {% for question in questions %}
+            <li class="list-group-item d-flex justify-content-between align-items-center">{{ question.question_text }}<a href="{% url 'staff:question_mark_reviewed' question.id %}" role="button" class="btn btn-success ml-1">{% trans "Mark Reviewed" %}</a></li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <center>
+          <h4>{% trans "No Questions for this Session" %}</h4>
+        </center>
+      {% endif %}
     </div>
   </div>
   <div class="row my-4  d-flex justify-content-center">

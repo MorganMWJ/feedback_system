@@ -13,8 +13,9 @@ from django.contrib.auth import logout as auth_logout
 from django.contrib.auth.decorators import login_required
 
 from ldap3 import core
+from itertools import chain
 from staff.forms import LoginForm, NewLectureForm, PDFUploadForm
-from staff.models import Lecture, Session
+from staff.models import Lecture, Session, Question
 from staff.pdf_extractor import get_info
 
 import pdb #pdb.set_trace() to start
@@ -76,7 +77,13 @@ def index(request):
 def lecture_detail(request, id=None):
     instance = get_object_or_404(Lecture, id=id)
     sessions = instance.session_set.all().order_by("start_time")
-    return render(request, 'staff/lecture_detail.html', {'lecture': instance, 'sessions': sessions})
+
+    #combine all this lecture's sessions' questions
+    allQuestions = []
+    for s in sessions:
+        allQuestions = list(chain(allQuestions, s.question_set.filter(is_reviewed=False).order_by("time_posted")))
+
+    return render(request, 'staff/lecture_detail.html', {'lecture': instance, 'sessions': sessions, 'questions': allQuestions})
 
 @login_required(login_url='/staff/login/')
 def lecture_start_feedback_session(self, id=None):
@@ -158,3 +165,12 @@ def lecture_new(request):
         context['pdf_form'] = PDFUploadForm()
 
     return render(request, 'staff/lecture_new.html', context)
+
+@login_required(login_url='/staff/login/')
+def question_mark_reviewed(self, id=None):
+    pdb.set_trace()
+    instance = get_object_or_404(Question, id=id)
+    instance.is_reviewed = True
+    instance.save()
+    lecture = instance.session_id.lecture_id
+    return redirect(reverse('staff:lecture_detail', kwargs={'id': lecture.id}))

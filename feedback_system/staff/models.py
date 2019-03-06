@@ -1,5 +1,6 @@
 import random
 import string
+import datetime
 from django.db import models
 from django.core.validators import MinValueValidator
 
@@ -48,10 +49,12 @@ class Lecture(models.Model):
             return None
 
     def getTotalRuntime(self):
-        end = self.getLastEnded()
-        start = self.getFirstStarted()
-        if end!=None and start!=None:
-            return (end-start)
+        sessions = self.session_set.all()
+        runtimes = [session.getRuntime() for session in sessions]
+        return sum(runtimes, datetime.timedelta())
+
+    def __str__(self):
+        return self.title
 
     @staticmethod
     def getCode():
@@ -78,3 +81,6 @@ class Question(models.Model):
     time_posted = models.DateTimeField()
     is_reviewed = models.BooleanField(default=False)
     session_id = models.ForeignKey(Session, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.question_text
