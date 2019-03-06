@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.utils import translation
+from django.utils import timezone
 from django.template import RequestContext
 from django.db.models import Q
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
@@ -74,7 +75,45 @@ def index(request):
 @login_required(login_url='/staff/login/')
 def lecture_detail(request, id=None):
     instance = get_object_or_404(Lecture, id=id)
-    return render(request, 'staff/lecture_detail.html', {'lecture': instance})
+    sessions = instance.session_set.all().order_by("start_time")
+    return render(request, 'staff/lecture_detail.html', {'lecture': instance, 'sessions': sessions})
+
+@login_required(login_url='/staff/login/')
+def lecture_start_feedback_session(self, id=None):
+    instance = get_object_or_404(Lecture, id=id)
+    if not instance.is_running:
+        #create a new feedback session and set lecture to be running
+        Session.objects.create(start_time=timezone.now(),lecture_id=instance)
+        instance.is_running = True
+        instance.save()
+    return redirect(reverse('staff:lecture_detail', kwargs={'id': instance.id}))
+
+@login_required(login_url='/staff/login/')
+def lecture_stop_feedback_session(self, id=None):
+    #pdb.set_trace()
+    instance = get_object_or_404(Lecture, id=id)
+    if instance.is_running:
+        #set lecture as no longer running and update feedback session end_time
+        session_instance = instance.session_set.order_by("start_time").last()
+        session_instance.end_time = timezone.now()
+        session_instance.save()
+        instance.is_running = False
+        instance.save()
+    return redirect(reverse('staff:lecture_detail', kwargs={'id': instance.id}))
+
+@login_required(login_url='/staff/login/')
+def lecture_generate_session_code(request, id=None):
+    instance = get_object_or_404(Lecture, id=id)
+    instance.session_code = Lecture.getCode()
+    instance.save()
+    return redirect(reverse('staff:lecture_detail', kwargs={'id': instance.id}))
+
+@login_required(login_url='/staff/login/')
+def lecture_toggle_questions(request, id=None):
+    instance = get_object_or_404(Lecture, id=id)
+    instance.is_taking_questions = not instance.is_taking_questions
+    instance.save()
+    return redirect(reverse('staff:lecture_detail', kwargs={'id': instance.id}))
 
 @login_required(login_url='/staff/login/')
 def lecture_delete(request, id=None):

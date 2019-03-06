@@ -19,6 +19,14 @@ urlpatterns = [
     path('lectures/new/', views.lecture_new, name='lecture_new'),
     #/staff/lectures/?
     path('lectures/<int:id>/', views.lecture_detail, name='lecture_detail'),
-    #/staff/lectures/delete/?
-    path('lectures/delete/<int:id>/', views.lecture_delete, name='lecture_delete'),
+    #/staff/lectures/?/delete/
+    path('lectures/<int:id>/delete/', views.lecture_delete, name='lecture_delete'),
+    #/staff/lectures/?/start_session/
+    path('lectures/<int:id>/start_session/', views.lecture_start_feedback_session, name='lecture_start_feedback_session'),
+    #/staff/lectures/?/stop_session/
+    path('lectures/<int:id>/stop_session/', views.lecture_stop_feedback_session, name='lecture_stop_feedback_session'),
+    #/staff/lectures/?/generate_session_code/
+    path('lectures/<int:id>/generate_session_code/', views.lecture_generate_session_code, name='lecture_generate_session_code'),
+    #/staff/lectures/?/toggle_questions/
+    path('lectures/<int:id>/toggle_questions/', views.lecture_toggle_questions, name='lecture_toggle_questions'),
 ]

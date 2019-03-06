@@ -70,73 +70,65 @@
           <h4>{% trans "Questions Enabled" %}: {{ lecture.is_taking_questions }}</h4>
         </div>
         <div>
-          <button type="button" class="btn btn-lg btn-outline-success m-2">Run Session</button>
-          <button type="button" class="btn btn-lg btn-outline-danger m-2">Stop Session</button>
-          <button type="button" class="btn btn-lg btn-outline-primary m-2">Toggle Overlay</button>
+          <a href="{% url 'staff:lecture_start_feedback_session' lecture.id %}" role="button" class="btn btn-lg btn-outline-success m-2">Run Session</a>
+          <a href="{% url 'staff:lecture_stop_feedback_session' lecture.id %}" role="button" class="btn btn-lg btn-outline-danger m-2">Stop Session</a>
+          <a href="" role="button" class="btn btn-lg btn-outline-primary m-2">Toggle Overlay</a>
           <br />
-          <button type="button" class="btn btn-lg btn-outline-secondary m-2">Disable Questions</button>
-          <button type="button" class="btn btn-lg btn-outline-secondary m-2">Generate New Session Code</button>
+          <a href="{% url 'staff:lecture_toggle_questions' lecture.id %}" role="button" class="btn btn-lg btn-outline-secondary m-2">{% if lecture.is_taking_questions %}{% trans "Disable" %}{% else %}{% trans "Enable" %}{% endif %} {% trans "Questions" %}</a>
+          <a href="{% url 'staff:lecture_generate_session_code' lecture.id %}" role="button" class="btn btn-lg btn-outline-secondary m-2">{% trans "Generate New Session Code" %}</a>
         </div>
       </div>
     </div>
-    <div class="col-sm-3" id="detailDiv1">
-      <form>
+      <div class="col-sm-3" id="detailDiv1">
+        <form>
+          <div class="form-group">
+            <label for="exampleFormControl1">{% trans "Lecture Title" %}</label>
+            <input class="form-control" id="exampleFormControl1" type="text" placeholder="{{lecture.title}}" readonly>
+            <label for="exampleFormControl2">{% trans "Lecture Author" %}</label>
+            <input class="form-control" id="exampleFormControl2" type="text" placeholder="{{user.get_full_name}} {{user.email}}" readonly>
+            <label for="exampleFormControl3">{% trans "No. Slides" %}</label>
+            <input class="form-control" id="exampleFormControl3" type="text" placeholder="{{lecture.slide_count}}" readonly>
+          </div>
+        </form>
+      </div>
+      <div class="col-sm-3" id="detailDiv2">
         <div class="form-group">
-          <label for="exampleFormControl1">Session Title</label>
-          <input class="form-control" id="exampleFormControl1" type="text" placeholder="Illustration of Computer Systems" readonly>
-          <label for="exampleFormControl2">Session Author</label>
-          <input class="form-control" id="exampleFormControl2" type="text" placeholder="Chris Loftus cwl@aber.ac.uk" readonly>
-          <label for="exampleFormControl3">No. Slides</label>
-          <input class="form-control" id="exampleFormControl3" type="text" placeholder="23" readonly>
+          <label for="exampleFormControl8">{% trans "First Started" %}</label>
+          <input class="form-control" id="exampleFormControl8" type="text" placeholder="{{lecture.getFirstStarted_datetime}}" readonly>
+          <label for="exampleFormControl7">{% trans "Last Ended" %}</label>
+          <input class="form-control" id="exampleFormControl7" type="text" placeholder="{{lecture.getLastEnded_datetime}}" readonly>
+          <label for="exampleFormControl6">{% trans "Total Runtime" %}</label>
+          <input class="form-control" id="exampleFormControl6" type="text" placeholder="{{lecture.getTotalRuntime}}" readonly>
         </div>
-    </div>
-    <div class="col-sm-3" id="detailDiv2">
-      <div class="form-group">
-        <label for="exampleFormControl8">First Started</label>
-        <input class="form-control" id="exampleFormControl8" type="text" placeholder="20/03/2019 15:10:05" readonly>
-        <label for="exampleFormControl7">Last Ended</label>
-        <input class="form-control" id="exampleFormControl7" type="text" placeholder="20/03/2019 16:20:32" readonly>
-        <label for="exampleFormControl6">Total Runtime</label>
-        <input class="form-control" id="exampleFormControl6" type="text" placeholder="0hrs 28mins 30secs" readonly>
       </div>
-    </div>
-    </form>
   </div>
   <div class="row my-4  d-flex justify-content-center">
     <div class="col-sm-6" id="sessionDiv">
       <center>
-        <h3>Session Sections</h3>
+        <h3>{% trans "Feedback Sessions" %}</h3>
       </center>
       <hr class="mt-0" />
       <table class="table table-bordered">
         <thead class="thead-dark">
           <tr>
-            <th scope="col">Section</th>
-            <th scope="col">Startime</th>
-            <th scope="col">Endtime</th>
-            <th scope="col">Runtime</th>
+            <th scope="col">{% trans "Section" %}</th>
+            <th scope="col">{% trans "Startime" %}</th>
+            <th scope="col">{% trans "Endtime" %}</th>
+            <th scope="col">{% trans "Runtime" %}</th>
           </tr>
         </thead>
-        <tbody>
-          <tr>
-            <th>1</th>
-            <td>30/10/2019 10:08:00</td>
-            <td>30/10/2019 10:12:00</td>
-            <td>0hrs 4m 23s</td>
-          </tr>
-          <tr>
-            <th>2</th>
-            <td>30/10/2019 10:20:00</td>
-            <td>30/10/2019 10:25:00</td>
-            <td>0hrs 5m 2s</td>
-          </tr>
-          <tr>
-            <th>3</th>
-            <td>30/10/2019 10:41:00</td>
-            <td>30/10/2019 11:00:00</td>
-            <td>0hrs 19m 5s</td>
-          </tr>
-        </tbody>
+        {% if sessions %}
+          <tbody>
+            {% for session in sessions %}
+              <tr>
+                <th>{{ forloop.counter }}</th>
+                <td>{{ session.start_time }}</td>
+                <td>{{ session.end_time }}</td>
+                <td>{{ session.getRuntime }}</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        {% endif %}
       </table>
     </div>
     <div class="col-sm-6" id="questionDiv">
@@ -146,12 +138,12 @@
       <hr class="mt-0" />
 
       <ul class="list-group list-group-flush">
-        <li class="list-group-item d-flex justify-content-between align-items-center">Why is the sky blue? <button type="button" class="btn btn-danger ml-1">Delete</button></li>
-        <li class="list-group-item d-flex justify-content-between align-items-center">I really like this lecture.<button type="button" class="btn btn-danger ml-1">Delete</button></li>
-        <li class="list-group-item d-flex justify-content-between align-items-center">Can you go over the part about responsive web design? pls<button type="button" class="btn btn-danger ml-1">Delete</button></li>
-        <li class="list-group-item d-flex justify-content-between align-items-center">Why is the sky blue? <button type="button" class="btn btn-danger ml-1">Delete</button></li>
-        <li class="list-group-item d-flex justify-content-between align-items-center">I really like this lecture.<button type="button" class="btn btn-danger ml-1">Delete</button></li>
-        <li class="list-group-item d-flex justify-content-between align-items-center">Can you go over the part about responsive web design? pls<button type="button" class="btn btn-danger ml-1">Delete</button></li>
+        <li class="list-group-item d-flex justify-content-between align-items-center">Why is the sky blue?<button type="button" class="btn btn-success ml-1">Mark Reviewed</button></li>
+        <li class="list-group-item d-flex justify-content-between align-items-center">I really like this lecture.<button type="button" class="btn btn-success ml-1">Mark Reviewed</button></li>
+        <li class="list-group-item d-flex justify-content-between align-items-center">Can you go over the part about responsive web design? pls<button type="button" class="btn btn-success ml-1">Mark Reviewed</button></li>
+        <li class="list-group-item d-flex justify-content-between align-items-center">Why is the sky blue?<button type="button" class="btn btn-success ml-1">Mark Reviewed</button></li>
+        <li class="list-group-item d-flex justify-content-between align-items-center">I really like this lecture.<button type="button" class="btn btn-success ml-1">Mark Reviewed</button></li>
+        <li class="list-group-item d-flex justify-content-between align-items-center">Can you go over the part about responsive web design? pls<button type="button" class="btn btn-success ml-1">Mark Reviewed</button></li>
       </ul>
     </div>
   </div>

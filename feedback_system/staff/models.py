@@ -16,24 +16,65 @@ class Lecture(models.Model):
     is_taking_questions = models.BooleanField(default=True)
     notes = models.TextField(null=True)
 
-    def getFirstStartDate(self):
+    def getFirstStarted(self):
         sessions = self.session_set.all()
         if sessions.exists():
             return sessions.order_by('start_time').first().start_time
 
-    #don't think this function is good or needed, remove?
-    def getFirstStartDate_displayStr(self):
-        return getFirstStartDate().strftime("%d/%m/%Y, %H:%M")
+    def getFirstStarted_datetime(self):
+        sessions = self.session_set.all()
+        if sessions.exists():
+            return sessions.order_by('start_time').first().start_time.strftime("%d/%m/%Y %H:%M:%S")
+
+    def getFirstStarted_date(self):
+        sessions = self.session_set.all()
+        if sessions.exists():
+            return sessions.order_by('start_time').first().start_time.strftime("%d/%m/%Y")
+
+    def getLastEnded(self):
+        sessions = self.session_set.all()
+        try:
+            if sessions.exists():
+                return sessions.order_by('end_time').last().end_time
+        except AttributeError:
+            return None
+
+    def getLastEnded_datetime(self):
+        sessions = self.session_set.all()
+        try:
+            if sessions.exists():
+                return sessions.order_by('end_time').last().end_time.strftime("%d/%m/%Y %H:%M:%S")
+        except AttributeError:
+            return None
+
+    def getTotalRuntime(self):
+        end = self.getLastEnded()
+        start = self.getFirstStarted()
+        if end!=None and start!=None:
+            return (end-start)
 
     @staticmethod
     def getCode():
         code = ""
-        while code=="": #and code already in db
+        #while code is empty or code already in db
+        while code=="" or Lecture.objects.filter(session_code=code).count()>0:
             for i in range(6):
                 code += random.choice(string.ascii_uppercase + string.digits)
         return code
 
 class Session(models.Model):
     start_time = models.DateTimeField()
-    end_time = models.DateTimeField()
+    end_time = models.DateTimeField(null=True)
     lecture_id = models.ForeignKey(Lecture, on_delete=models.CASCADE)
+
+    def getRuntime(self):
+        if self.end_time is None:
+            return "On Going"
+        else:
+            return (self.end_time-self.start_time)
+
+class Question(models.Model):
+    question_text = models.CharField(max_length=300)
+    time_posted = models.DateTimeField()
+    is_reviewed = models.BooleanField(default=False)
+    session_id = models.ForeignKey(Session, on_delete=models.CASCADE)

@@ -5,7 +5,7 @@ from django.utils import timezone
 from staff.models import Lecture, Session
 
 class TestModels(TestCase):
-    def test_get_first_start_date(self):
+    def test_get_first_started(self):
         newLecture = Lecture.objects.create(title="test", slide_count=4,
                         author_username='why6',
                         author_forename='fiona',
@@ -24,4 +24,4 @@ class TestModels(TestCase):
                         start_time=(timezone.now()-datetime.timedelta(days=28)),
                         end_time=(timezone.now()-datetime.timedelta(days=27)))
 
-        self.assertEqual(newLecture.getFirstStartDate(), earliestTime)
+        self.assertEqual(newLecture.getFirstStarted(), earliestTime)
