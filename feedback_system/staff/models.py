@@ -1,6 +1,7 @@
 import random
 import string
 import datetime
+from django.utils import timezone
 from django.db import models
 from django.core.validators import MinValueValidator
 
@@ -72,9 +73,21 @@ class Session(models.Model):
 
     def getRuntime(self):
         if self.end_time is None:
-            return "On Going"
+            return (timezone.now()-self.start_time)
         else:
             return (self.end_time-self.start_time)
+
+    def getRuntime_timestr(self):
+        time = None
+        if self.end_time is None:
+            time = (timezone.now()-self.start_time)
+        else:
+            time = (self.end_time-self.start_time)
+
+        total_seconds = int(time.total_seconds())
+        hours, remainder = divmod(total_seconds,60*60)
+        minutes, seconds = divmod(remainder,60)
+        return '{} hrs {} mins {} secs'.format(hours,minutes,seconds)
 
 class Question(models.Model):
     question_text = models.CharField(max_length=300)
