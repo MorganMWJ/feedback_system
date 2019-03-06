@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-03-05 20:03+0000\n"
+"POT-Creation-Date: 2019-03-06 01:03+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -67,24 +67,103 @@ msgstr "Nodiadau Ychwanegol"
 msgid "Notes here..."
 msgstr "Nodiadau yma..."
 
-#: .\templates\staff\lecture_list.html:5 .\templates\staff\lecture_new.html:15
-#: .\templates\staff\login.html:16
-msgid "Lecture History"
-msgstr "Hanes y Ddarlith"
+#: .\templates\staff\lecture_detail.html:5
+msgid "Lecture Feedback Detail"
+msgstr "Manylion Adborth Darlithoedd"
 
+#: .\templates\staff\lecture_detail.html:10
 #: .\templates\staff\lecture_list.html:10
 #: .\templates\staff\lecture_new.html:11 .\templates\staff\login.html:11
 msgid "Lecture Feedback System"
 msgstr "System Adborth Darlithoedd"
 
-#: .\templates\staff\lecture_list.html:14
-msgid "New Lecture"
-msgstr "Darlith Newydd"
+#: .\templates\staff\lecture_detail.html:14
+#: .\templates\staff\lecture_list.html:5 .\templates\staff\lecture_new.html:15
+#: .\templates\staff\login.html:16
+msgid "Lecture History"
+msgstr "Hanes y Ddarlith"
 
+#: .\templates\staff\lecture_detail.html:17
 #: .\templates\staff\lecture_list.html:17
 #: .\templates\staff\lecture_new.html:18 .\templates\staff\login.html:19
 msgid "Logout"
 msgstr "Allgofnodi"
+
+#: .\templates\staff\lecture_detail.html:79
+msgid "Session Code"
+msgstr "Cod Sesiwn"
+
+#: .\templates\staff\lecture_detail.html:80
+msgid "Session Running"
+msgstr "Rhedeg Sesiwn"
+
+#: .\templates\staff\lecture_detail.html:81
+msgid "Questions Enabled"
+msgstr "Cwestiynau wedi'u Hwyluso"
+
+#: .\templates\staff\lecture_detail.html:88
+msgid "Disable"
+msgstr "Analluoga"
+
+#: .\templates\staff\lecture_detail.html:88
+msgid "Enable"
+msgstr "Galluogi"
+
+#: .\templates\staff\lecture_detail.html:88
+msgid "Questions"
+msgstr "Cwestiynau"
+
+#: .\templates\staff\lecture_detail.html:89
+msgid "Generate New Session Code"
+msgstr "Cynhyrchu Cod Sesiwn Newydd"
+
+#: .\templates\staff\lecture_detail.html:96
+msgid "Lecture Title"
+msgstr "Teitl y Ddarlith"
+
+#: .\templates\staff\lecture_detail.html:98
+msgid "Lecture Author"
+msgstr "Darlith Awdur"
+
+#: .\templates\staff\lecture_detail.html:100
+msgid "No. Slides"
+msgstr "Sleidiau Nifer"
+
+#: .\templates\staff\lecture_detail.html:107
+msgid "First Started"
+msgstr "Cychwyn Cyntaf"
+
+#: .\templates\staff\lecture_detail.html:109
+msgid "Last Ended"
+msgstr "Wedi Gorffen"
+
+#: .\templates\staff\lecture_detail.html:111
+msgid "Total Runtime"
+msgstr "Cyfanswm amser rhedeg"
+
+#: .\templates\staff\lecture_detail.html:119
+msgid "Feedback Sessions"
+msgstr "Sesiynau Adborth"
+
+#: .\templates\staff\lecture_detail.html:125
+msgid "Section"
+msgstr "Adran"
+
+#: .\templates\staff\lecture_detail.html:126
+msgid "Startime"
+msgstr "Amser cychwyn"
+
+#: .\templates\staff\lecture_detail.html:127
+msgid "Endtime"
+msgstr "Amser olaf"
+
+#: .\templates\staff\lecture_detail.html:128
+msgid "Runtime"
+msgstr "Amser rhedeg"
+
+#: .\templates\staff\lecture_list.html:14 .\templates\staff\lecture_new.html:6
+msgid "New Lecture"
+msgstr "Darlith Newydd"
 
 #: .\templates\staff\lecture_list.html:27
 #: .\templates\staff\lecture_list.html:28

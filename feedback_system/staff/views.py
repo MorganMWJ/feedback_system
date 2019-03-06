@@ -90,7 +90,6 @@ def lecture_start_feedback_session(self, id=None):
 
 @login_required(login_url='/staff/login/')
 def lecture_stop_feedback_session(self, id=None):
-    #pdb.set_trace()
     instance = get_object_or_404(Lecture, id=id)
     if instance.is_running:
         #set lecture as no longer running and update feedback session end_time

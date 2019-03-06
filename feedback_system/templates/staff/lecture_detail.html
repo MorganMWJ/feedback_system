@@ -2,7 +2,7 @@
 {% load i18n %}
 
 {% block title %}
-{% trans "Lecture History" %}
+{% trans "Lecture Feedback Detail" %}
 {% endblock %}
 
 {% block content %}
@@ -42,6 +42,12 @@
   $(document).ready(function(){
     $("#toggleQuestionBtn").click(function(){
       $("#questionDiv").toggle();
+      if($("#questionDiv").is(":visible")){
+        localStorage.setItem("questionsDisplayed", 1);
+      }
+      elseif($("#questionDiv").is(":hidden")){
+        localStorage.setItem("questionsDisplayed", 0);
+      }
     });
   });
   $(document).ready(function(){
@@ -49,6 +55,11 @@
       $("canvas").toggle();
     });
   });
+
+  if(localStorage.getItem("questionsDisplayed")){
+      $("#questionDiv").show();
+  }
+
 </script>
 
 <div class="container-fluid bg-light pb-3">
