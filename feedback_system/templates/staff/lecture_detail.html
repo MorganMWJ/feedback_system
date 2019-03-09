@@ -20,39 +20,55 @@
   </div>
 </nav>
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
 <script>
-  // window.onbeforeunload = function(){
-  //   //alert('Session is still active. Are you sure you want to leave?'); - doesnt work most of the time
-  //   //my text isnt being displayed browsers display default messages
-  //   return 'Session is still active. Are you sure you want to leave?';
-  // };
+
+  //save the panels user has open
+  function savePanels() {
+    var hiddenPanels = [];
+    $(".remember_visibility").each(function(index){
+      if($(this).is(':hidden')){
+        hiddenPanels.push("#" + $(this).attr('id'));
+      }
+    });
+    localStorage.setItem("hiddenPanelList", hiddenPanels);
+  }
+
 
   $(document).ready(function(){
+
+    // $("body").on("load", function(e) {
+      //show the panels the user previously had open
+      var hiddenPanels = JSON.parse(localStorage.getItem("hiddenPanelList"));
+      if(hiddenPanels!=null && hiddenPanels!=undefined){
+        for(i=0; i<hiddenPanels.length; i++) {
+          console.log(hiddenPanels[i]);
+          $(hiddenPanels[i]).hide();
+        }
+      }
+    // });
+
     $("#toggleDetailBtn").click(function(){
-      $("#detailDiv1").toggle();
-      $("#detailDiv2").toggle();
+      $("#detailDiv1").toggle("slow");
+      $("#detailDiv2").toggle("slow");
+      savePanels();
     });
-  });
-  $(document).ready(function(){
+
     $("#toggleSessionBtn").click(function(){
-      $("#sessionDiv").toggle();
+      $("#sessionDiv").toggle("slow");
+      savePanels();
     });
-  });
-  $(document).ready(function(){
+
     $("#toggleQuestionBtn").click(function(){
-      $("#questionDiv").toggle();
-      if($("#questionDiv").is(":visible")){
-        localStorage.setItem("questionsDisplayed", 1);
-      }
-      else if($("#questionDiv").is(":hidden")){
-        localStorage.setItem("questionsDisplayed", 0);
-      }
+      $("#questionDiv").toggle("slow", function(e){
+        //complete
+      });
+      savePanels();
     });
-  });
-  $(document).ready(function(){
+
     $("#toggleGraphBtn").click(function(){
-      $("canvas").toggle();
+      $("canvas").toggle("slow");
+      savePanels();
     });
   });
 
@@ -86,7 +102,7 @@
         </div>
       </div>
     </div>
-      <div class="col-sm-3" id="detailDiv1">
+      <div class="col-sm-3 remember_visibility" id="detailDiv1">
         <form>
           <div class="form-group">
             <label for="exampleFormControl1">{% trans "Lecture Title" %}</label>
@@ -98,7 +114,7 @@
           </div>
         </form>
       </div>
-      <div class="col-sm-3" id="detailDiv2">
+      <div class="col-sm-3 remember_visibility" id="detailDiv2">
         <div class="form-group">
           <label for="exampleFormControl8">{% trans "First Started" %}</label>
           <input class="form-control" id="exampleFormControl8" type="text" placeholder="{{lecture.getFirstStarted_datetime}}" readonly>
@@ -110,7 +126,7 @@
       </div>
   </div>
   <div class="row my-4  d-flex justify-content-center">
-    <div class="col-sm-6" id="sessionDiv">
+    <div class="col-sm-6 remember_visibility" id="sessionDiv">
       <center>
         <h3>{% trans "Feedback Sessions" %}</h3>
       </center>
@@ -138,7 +154,7 @@
         {% endif %}
       </table>
     </div>
-    <div class="col-sm-6" id="questionDiv">
+    <div class="col-sm-6 remember_visibility" id="questionDiv">
       <center>
         <h3>{% trans "Current Questions" %}</h3>
       </center>
