@@ -1,0 +1,15 @@
+/*Code to get user under navbar title*/
+.navbar-brand small {
+display:block;
+font-size:12px;
+}
+#id_lecture_pdf_file{
+  margin-left: 1rem;
+}
+.rounded-bottom-right{
+  border-bottom-right-radius: 15px
+}
+/*Code to set background image*/
+/* body{
+  background-image: url("{% static "img/aber_landscape12.jpg" %}");
+} */

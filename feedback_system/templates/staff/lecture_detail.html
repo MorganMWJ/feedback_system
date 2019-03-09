@@ -1,9 +1,7 @@
 {% extends 'base_layout.html' %}
 {% load i18n %}
 
-{% block title %}
-{% trans "Lecture Feedback Detail" %}
-{% endblock %}
+{% block title %}{% trans "Lecture Feedback Detail" %}{% endblock %}
 
 {% block content %}
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark d-flex justify-content-between">
@@ -20,9 +18,8 @@
   </div>
 </nav>
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
-<script>
 
+<script>
   //save the panels user has open
   function savePanels() {
     var hiddenPanels = [];
@@ -31,43 +28,37 @@
         hiddenPanels.push("#" + $(this).attr('id'));
       }
     });
-    localStorage.setItem("hiddenPanelList", hiddenPanels);
+    localStorage.setItem("hiddenPanelList", JSON.stringify(hiddenPanels));
   }
 
 
   $(document).ready(function(){
-
-    // $("body").on("load", function(e) {
-      //show the panels the user previously had open
-      var hiddenPanels = JSON.parse(localStorage.getItem("hiddenPanelList"));
-      if(hiddenPanels!=null && hiddenPanels!=undefined){
-        for(i=0; i<hiddenPanels.length; i++) {
-          console.log(hiddenPanels[i]);
-          $(hiddenPanels[i]).hide();
-        }
+    //hide the panels the user previously had hidden
+    var hiddenPanels = JSON.parse(localStorage.getItem("hiddenPanelList"));
+    if(hiddenPanels!=null && hiddenPanels!=undefined){
+      for(i=0; i<hiddenPanels.length; i++) {
+        $(hiddenPanels[i]).hide();
       }
-    // });
+    }
 
     $("#toggleDetailBtn").click(function(){
-      $("#detailDiv1").toggle("slow");
-      $("#detailDiv2").toggle("slow");
+      $("#detailDiv1").toggle("fast");
+      $("#detailDiv2").toggle("fast");
       savePanels();
     });
 
     $("#toggleSessionBtn").click(function(){
-      $("#sessionDiv").toggle("slow");
+      $("#sessionDiv").toggle("medium");
       savePanels();
     });
 
     $("#toggleQuestionBtn").click(function(){
-      $("#questionDiv").toggle("slow", function(e){
-        //complete
-      });
+      $("#questionDiv").toggle("fast");
       savePanels();
     });
 
     $("#toggleGraphBtn").click(function(){
-      $("canvas").toggle("slow");
+      $("#feedbackDiv").toggle("fast");
       savePanels();
     });
   });
@@ -172,7 +163,7 @@
       {% endif %}
     </div>
   </div>
-  <div class="row my-4  d-flex justify-content-center">
+  <div id="feedbackDiv" class="row my-4 d-flex justify-content-center remember_visibility">
     <div class="col-sm-auto">
       <canvas id="canvas1" class="border border-dark  m-1"></canvas>
     </div>
