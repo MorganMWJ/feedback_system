@@ -71,7 +71,7 @@ class Lecture(models.Model):
 class Session(models.Model):
     start_time = models.DateTimeField()
     end_time = models.DateTimeField(null=True)
-    lecture_id = models.ForeignKey(Lecture, on_delete=models.CASCADE)
+    lecture = models.ForeignKey(Lecture, on_delete=models.CASCADE)
 
     def getRuntime(self):
         if self.end_time is None:
@@ -95,7 +95,56 @@ class Question(models.Model):
     question_text = models.CharField(max_length=300)
     time_posted = models.DateTimeField()
     is_reviewed = models.BooleanField(default=False)
-    session_id = models.ForeignKey(Session, on_delete=models.CASCADE)
+    session = models.ForeignKey(Session, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.question_text
+
+class Feedback(models.Model):
+    OVERALL_FEEDBACK_CHOICES = (
+        ('POSITIVE', 'Good'),
+        ('NEGATIVE', 'Bad'),
+        ('NEUTRAL', 'So-So'),
+    )
+    DELIVERY_SPEED_CHOICES = (
+        ('V-SLOW', 'Very Slow'),
+        ('SLOW', 'Little Slow'),
+        ('NORMAL', 'Just Right'),
+        ('FAST', 'Little Fast'),
+        ('V-FAST', 'Very Fast'),
+    )
+    CONTENT_COMPLEXITY_CHOICES = (
+        ('V-HARD', 'Very Difficult'),
+        ('HARD', 'Slightly Difficult'),
+        ('NORMAL', 'Normal'),
+        ('EASY', 'Slightly Easy'),
+        ('V-EASY', 'Very Easy'),
+    )
+    CONTENT_PRESENTATION_CHOICES = (
+        ('NEGATIVE','Not Well Presented'),
+        ('NEUTRAL','Well Presented'),
+        ('POSITIVE','Very Well Presented'),
+    )
+    LEVEL_OF_ENGAGMENT_CHOICES = (
+        ('NEGATIVE','Not Engaging/Interesting'),
+        ('NEUTRAL','Engaging/Interesting'),
+        ('POSITIVE','Very Engaging/Interesting'),
+    )
+
+    time_posted = models.DateTimeField()
+    overall_feedback = models.CharField(max_length=30,
+                                        choices=OVERALL_FEEDBACK_CHOICES,
+                                        default='')
+    delivery_speed = models.CharField(max_length=30,
+                                        choices=DELIVERY_SPEED_CHOICES,
+                                        default='NORMAL')
+    content_complexity = models.CharField(max_length=30,
+                                        choices=CONTENT_COMPLEXITY_CHOICES,
+                                        default='')
+    content_presentation = models.CharField(max_length=30,
+                                        choices=CONTENT_PRESENTATION_CHOICES,
+                                        default='')
+    level_of_engagement = models.CharField(max_length=30,
+                                        choices=LEVEL_OF_ENGAGMENT_CHOICES,
+                                        default='')
+    session = models.ForeignKey(Session, on_delete=models.CASCADE)
