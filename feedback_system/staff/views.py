@@ -193,11 +193,9 @@ def connect(request):
                 else:
                     messages.error(request, 'Lecture is not active')
             except Lecture.DoesNotExist:
-                # context['error'] = "Invalid lecture feedback code"
                 messages.error(request, 'Invalid lecture feedback code')
         else:
-            form = ConnectForm()
-            context['form'] = form
+            messages.error(request, 'Malformed lecture feedback code - alphanumeric only')
     else:
         form = ConnectForm()
         context['form'] = form

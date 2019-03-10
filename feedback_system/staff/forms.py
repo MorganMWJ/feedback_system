@@ -18,4 +18,4 @@ class PDFUploadForm(forms.Form):
     lecture_pdf_file = forms.FileField(required=False, validators=[validate_file_extension])
 
 class ConnectForm(forms.Form):
-    code = forms.CharField(label=_('Session Code'), min_length=6, max_length=6, validators=[RegexValidator(r'^[0-9a-zA-Z]*$', 'Only alphanumeric characters are allowed.')], widget=forms.TextInput(attrs={'placeholder': _("Code here...")}))
+    code = forms.CharField(label=_('Session Code'), min_length=6, max_length=6, validators=[alphanumeric], widget=forms.TextInput(attrs={'placeholder': _("Code here...")}))

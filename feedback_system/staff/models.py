@@ -3,7 +3,9 @@ import string
 import datetime
 from django.utils import timezone
 from django.db import models
-from django.core.validators import MinValueValidator
+from django.core.validators import MinValueValidator, RegexValidator
+
+alphanumeric = RegexValidator(r'^[0-9a-zA-Z]*$', 'Only alphanumeric characters allowed.')
 
 class Lecture(models.Model):
     title = models.CharField(max_length=150)
@@ -13,7 +15,7 @@ class Lecture(models.Model):
     author_username = models.CharField(max_length=10)
     author_forename = models.CharField(max_length=30)
     author_surname = models.CharField(max_length=30)
-    session_code = models.CharField(max_length=6, unique=True)
+    session_code = models.CharField(max_length=6, unique=True, validators=[alphanumeric])
     is_running = models.BooleanField(default=False)
     is_taking_questions = models.BooleanField(default=True)
     notes = models.TextField(null=True)
