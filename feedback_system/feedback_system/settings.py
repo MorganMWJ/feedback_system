@@ -43,6 +43,8 @@ INSTALLED_APPS = [
 
 SESSION_SAVE_EVERY_REQUEST = True
 
+MESSAGE_STORAGE = 'django.contrib.messages.storage.session.SessionStorage'
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -56,7 +58,7 @@ MIDDLEWARE = [
 
 #custom authentication backend - in this class I connetc to ldap server
 AUTHENTICATION_BACKENDS = ['staff.ldap_backend.LDAPBackend']
-LOGIN_URL = 'staff.views.login'
+#LOGIN_URL = 'login/' WONT WORK
 
 ROOT_URLCONF = 'feedback_system.urls'
 

@@ -2,25 +2,22 @@
 {% load i18n %}
 {% load bootstrap3 %}
 
-{% block title %}
-  {% trans "New Lecture" %}
+{% block title %}{% trans "New Lecture" %}{% endblock %}
+
+{% block nav_options %}
+<div>
+  <ul class="navbar-nav mr-auto d-flex flex-row">
+    <li class="nav-item">
+      <a class="nav-link border-right border-white p-3" href="{% url 'staff:index' %}" role="button">{% trans "Lecture History" %}</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link border-left border-white p-3" href="{% url 'staff:logout' %}" role="button">{% trans "Logout" %}</a>
+    </li>
+  </ul>
+</div>
 {% endblock %}
 
 {% block content %}
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark d-flex justify-content-between">
-  <span class="navbar-brand h2 mb-0">{% trans "Lecture Feedback System" %} <small>{% if user.is_authenticated %}{{user.get_full_name}} ({{user.email}}){% endif %}</small></span>
-  <div>
-    <ul class="navbar-nav mr-auto d-flex flex-row">
-      <li class="nav-item">
-        <a class="nav-link border-right border-white p-3" href="{% url 'staff:index' %}" role="button">{% trans "Lecture History" %}</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link border-left border-white p-3" href="{% url 'staff:logout' %}" role="button">{% trans "Logout" %}</a>
-      </li>
-    </ul>
-  </div>
-</nav>
-
 <div class="container p-3">
   <div class="row d-flex justify-content-center">
     <div class="col-sm-8">

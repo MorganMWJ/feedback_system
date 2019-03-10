@@ -6,9 +6,7 @@
   {% trans "Staff Login" %}
 {% endblock %}
 
-{% block content %}
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark d-flex justify-content-between">
-  <span class="navbar-brand h2 mb-0">{% trans "Lecture Feedback System" %} <small>{% if user.is_authenticated %}{{user.get_full_name}} ({{user.email}}){% endif %}</small></span>
+{% block nav_options %}
   {% if user.is_authenticated %}
   <div>
     <ul class="navbar-nav mr-auto d-flex flex-row">
@@ -21,8 +19,9 @@
     </ul>
   </div>
   {% endif %}
-</nav>
+{% endblock %}
 
+{% block content %}
 <div class="container-fluid p-3"">
   <div class="row">
     <div class="col">

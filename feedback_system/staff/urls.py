@@ -9,6 +9,10 @@ app_name= 'staff'
 
 #name variable is used to refer to URls to make links in view templates
 urlpatterns = [
+    #/
+    path('', views.connect, name='connect'),
+    path('connect/', views.connect, name='connect'),
+    path('feedback/', views.feedback, name='feedback'),
     #/staff/login/
     path('login/', views.login, name='login'),
     #/staff/logout/
@@ -31,5 +35,4 @@ urlpatterns = [
     path('lectures/<int:id>/toggle_questions/', views.lecture_toggle_questions, name='lecture_toggle_questions'),
     #/staff/questions/?/review/
     path('questions/<int:id>/review/', views.question_mark_reviewed, name='question_mark_reviewed'),
-
 ]

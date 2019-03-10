@@ -1,7 +1,10 @@
+#web_app_title{
+  font-size: 200%;
+}
 /*Code to get user under navbar title*/
-.navbar-brand small {
-display:block;
-font-size:12px;
+#web_app_title small{
+  display:block;
+  font-size: 50%;
 }
 #id_lecture_pdf_file{
   margin-left: 1rem;
