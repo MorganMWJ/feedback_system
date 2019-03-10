@@ -1,4 +1,5 @@
 from django import forms
+from staff.models import Feedback
 from staff.validators import validate_file_extension
 from django.core.validators import RegexValidator
 from django.utils.translation import ugettext_lazy as _
@@ -19,3 +20,18 @@ class PDFUploadForm(forms.Form):
 
 class ConnectForm(forms.Form):
     code = forms.CharField(label=_('Session Code'), min_length=6, max_length=6, validators=[alphanumeric], widget=forms.TextInput(attrs={'placeholder': _("Code here...")}))
+
+class QuestionForm(forms.Form):
+    question = forms.CharField(label=_('Ask a question?'), max_length=250, widget=forms.Textarea(attrs={'placeholder': _("Enter a question or comment")}))
+
+class FeedbackForm(forms.Form):
+
+    def __init__(self, lecture, *args, **kwargs):
+        super(FeedbackForm, self).__init__(*args, **kwargs)
+        self.fields['slide_options'] = forms.ChoiceField(label=_('Feedback for which slide'), choices=[(x, x) for x in range(1,lecture.slide_count+1)])
+
+    overall_option = forms.ChoiceField(label=_('Overall Feedback'), choices=Feedback.OVERALL_FEEDBACK_CHOICES)
+    speed_options = forms.ChoiceField(label=_('Delivery Speed'), choices=Feedback.DELIVERY_SPEED_CHOICES)
+    complexity_options = forms.ChoiceField(label=_('Content Complexity'), choices=Feedback.CONTENT_COMPLEXITY_CHOICES)
+    presentation_options = forms.ChoiceField(label=_('Interest/Enagement'), choices=Feedback.CONTENT_PRESENTATION_CHOICES)
+    engagment_options = forms.ChoiceField(label=_('Content Presentation'), choices=Feedback.LEVEL_OF_ENGAGMENT_CHOICES)

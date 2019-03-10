@@ -5,103 +5,67 @@
 {% block title %}{% trans "Lecture Feedback" %}{% endblock %}
 
 {% block content %}
-<div class="container-fluid bg-light pb-3">
+<div class="container-fluid bg-light py-3">
+  {% if messages %}
+  {% for message in messages %}
+    <div class="alert alert-danger text-center" role="alert">{{ message }}</div>
+  {% endfor %}
+  {% endif %}
   <div class="row">
-    <div class="col-sm-6">
-      <center><h3>Give Feedback</h3></center>
+    <div class="col-sm-auto">
+      <center><h3>{% trans "Lecture Detail" %}</h3></center>
       <hr class="mt-0"/>
-      <form class="px-4">
+      <form>
         <div class="form-group">
-          <label for="feedbackButtons">Give overall feedback?</label>
-          <div class="btn-group d-flex justify-content-center" id="feedbackButtons" role="group" aria-label="Basic example">
-            <button type="button" class="btn btn-success">Good</button>
-            <button type="button" class="btn btn-danger">Bad</button>
-            <button type="button" class="btn btn-warning">So-So</button>
-          </div>
-          <label for="rateButttonGroups">Rate lecture aspects?</label>
-          <div class="container-fluid" id="rateButttonGroups">
-            <div class="row m-1">
-              <div class="col">
-                <label for="rate1">Delivery Speed</label>
-              </div>
-              <div class="col">
-                <select class="form-control" id="rate1">
-                  <option disabled selected value> -- select an option -- </option>
-                  <option>Very Slow</option>
-                  <option>Little Slow</option>
-                  <option>Just Right</option>
-                  <option>Little Fast</option>
-                  <option>Too Fast</option>
-                </select>
-              </div>
-              <div class="col">
-                <label for="rate2">Content Complexity</label>
-              </div>
-              <div class="col">
-                <select class="form-control" id="rate2">
-                  <option disabled selected value> -- select an option -- </option>
-                  <option>Very Difficult</option>
-                  <option>Slightly Difficult</option>
-                  <option>Normal</option>
-                  <option>Slightly Easy</option>
-                  <option>Very Easy</option>
-                </select>
-              </div>
-            </div>
-            <div class="row m-1">
-              <div class="col">
-                <label for="rate3">Interest/Enagement</label>
-              </div>
-              <div class="col">
-                <select class="form-control" id="rate3">
-                  <option disabled selected value> -- select an option -- </option>
-                  <option>Not Engaing/Interesting</option>
-                  <option>Some-What Engaing/Interesting</option>
-                  <option>Engaing/Interesting</option>
-                  <option>Very Engaging/Interesting</option>
-                </select>
-              </div>
-              <div class="col">
-                <label data-toggle="tooltip" data-placement="right" title="Is the slide presented in a consise way with a good visual structure?" for="rate4">Content Presentation</label>
-              </div>
-              <div class="col">
-                <select class="form-control" id="rate4">
-                  <option disabled selected value> -- select an option -- </option>
-                  <option>No clear Consise structure</option>
-                  <option>Some-What Clear Consise Structure </option>
-                  <option>Clear Consise Structure</option>
-                  <option>Very Clear Consise Structure</option>
-                </select>
-              </div>
-            </div>
-          </div>
-          <div class="d-flex mt-4">
-            <select class="custom-select my-1 mr-sm-2">
-              <option selected>Choose Slide...</option>
-              <option value="1">1</option>
-              <option value="2">2</option>
-              <option value="3">3</option>
-            </select>
-            <button class="btn btn-primary">Submit</button>
-            <button class="btn btn-light">Undo</button>
-          </div>
-          <small id="emailHelp" class="form-text text-muted">Submit feedback for each slide of the lecture (You can only choose one feedback option per slide)</small>
+          <label for="exampleFormControl0">{% trans "Code" %}</label>
+          <input class="form-control" id="exampleFormControl0" type="text" placeholder="{{lecture.session_code}}" readonly>
+          <label for="exampleFormControl1">{% trans "Lecture Title" %}</label>
+          <input class="form-control" id="exampleFormControl1" type="text" placeholder="{{lecture.title}}" readonly>
+          <label for="exampleFormControl2">{% trans "Lecture Author" %}</label>
+          <input class="form-control" id="exampleFormControl2" type="text" placeholder="{{user.get_full_name}} {{user.email}}" readonly>
+          <label for="exampleFormControl3">{% trans "No. Slides" %}</label>
+          <input class="form-control" id="exampleFormControl3" type="text" placeholder="{{lecture.slide_count}}" readonly>
+          <label for="exampleFormControl6">{% trans "Total Runtime" %}</label>
+          <input class="form-control" id="exampleFormControl6" type="text" placeholder="{{lecture.getTotalRuntime}}" readonly>
         </div>
       </form>
     </div>
-    <div class="col-sm-6">
-      <center><h3>Ask Questions</h3></center>
+    <div class="col-sm-auto">
+      <center><h3>{% trans "Give Feedback" %}</h3></center>
       <hr class="mt-0"/>
-      <form class="px-4">
-        <div class="form-group">
-          <label for="exampleInputEmail1">Ask a quesion?</label>
-          <div class="d-flex">
-            <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter question or comment">
-            <button type="submit" class="btn btn-primary">Post</button>
-          </div>
-          <small id="emailHelp" class="form-text text-muted">Send a question or comment to the lecturer here :-)</small>
-        </div>
+      <form action="{% url 'staff:feedback' %}" method="post" class="px-4">
+        {% csrf_token %}
+        {% bootstrap_form feedback_form %}
+        {% buttons %}
+        <button type="submit" class="btn btn-primary">
+          {% trans "Submit" %}
+        </button>
+        {% endbuttons %}
       </form>
+    </div>
+    <div class="col-sm-auto">
+      <center><h3>{% trans "Ask Questions" %}</h3></center>
+      <hr class="mt-0"/>
+      <form action="{% url 'staff:question_new' %}" method="post" class="px-4">
+        {% csrf_token %}
+        {% bootstrap_form question_form %}
+        {% buttons %}
+        <button type="submit" class="btn btn-primary">
+          {% trans "Post" %}
+        </button>
+        {% endbuttons %}
+      </form>
+      <center><h3>{% trans "Your Questions" %}</h3></center>
+      <hr class="mt-0"/>
+      {% if questions %}
+        <ul class="list-group list-group-flush">
+          {% for question in questions %}
+            <li class="list-group-item d-flex justify-content-between align-items-center">{{ question.question_text }}<a href="{% url 'staff:question_delete' question.id %}" role="button" class="btn btn-danger ml-1">{% trans "Remove" %}</a></li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <p>No questions asked</p>
+      {% endif %}
     </div>
   </div>
 </div>

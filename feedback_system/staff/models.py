@@ -20,6 +20,11 @@ class Lecture(models.Model):
     is_taking_questions = models.BooleanField(default=True)
     notes = models.TextField(null=True)
 
+    def getLastSession(self):
+        sessions = self.session_set.all()
+        if sessions.exists():
+            return sessions.order_by('end_time').last()
+
     def getFirstStarted(self):
         sessions = self.session_set.all()
         if sessions.exists():

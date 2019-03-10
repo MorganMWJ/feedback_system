@@ -35,4 +35,8 @@ urlpatterns = [
     path('lectures/<int:id>/toggle_questions/', views.lecture_toggle_questions, name='lecture_toggle_questions'),
     #/staff/questions/?/review/
     path('questions/<int:id>/review/', views.question_mark_reviewed, name='question_mark_reviewed'),
+    #/staff/questions/?/delete/
+    path('questions/<int:id>/delete/', views.question_delete, name='question_delete'),
+    #/staff/questions/new/
+    path('questions/new/', views.question_new, name='question_new'),
 ]

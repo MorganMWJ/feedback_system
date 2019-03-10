@@ -15,7 +15,7 @@ from django.contrib import messages
 
 from ldap3 import core
 from itertools import chain
-from staff.forms import LoginForm, NewLectureForm, PDFUploadForm, ConnectForm
+from staff.forms import LoginForm, NewLectureForm, PDFUploadForm, ConnectForm, FeedbackForm, QuestionForm
 from staff.models import Lecture, Session, Question
 from staff.pdf_extractor import get_info
 
@@ -91,7 +91,7 @@ def lecture_start_feedback_session(self, id=None):
     instance = get_object_or_404(Lecture, id=id)
     if not instance.is_running:
         #create a new feedback session and set lecture to be running
-        Session.objects.create(start_time=timezone.now(),lecture_id=instance)
+        Session.objects.create(start_time=timezone.now(),lecture=instance)
         instance.is_running = True
         instance.save()
     return redirect(reverse('staff:lecture_detail', kwargs={'id': instance.id}))
@@ -168,11 +168,10 @@ def lecture_new(request):
 
 @login_required(login_url='/login/')
 def question_mark_reviewed(request, id=None):
-    pdb.set_trace()
     instance = get_object_or_404(Question, id=id)
     instance.is_reviewed = True
     instance.save()
-    lecture = instance.session_id.lecture_id
+    lecture = instance.session.lecture
     return redirect(reverse('staff:lecture_detail', kwargs={'id': lecture.id}))
 
 def connect(request):
@@ -195,7 +194,7 @@ def connect(request):
             except Lecture.DoesNotExist:
                 messages.error(request, 'Invalid lecture feedback code')
         else:
-            messages.error(request, 'Malformed lecture feedback code - alphanumeric only')
+            messages.error(request, 'Invlaid POST Data')
     else:
         form = ConnectForm()
         context['form'] = form
@@ -204,20 +203,64 @@ def connect(request):
 
 def feedback(request):
     context = {}
-    pdb.set_trace()
+    # pdb.set_trace()
     try:
         lecture = Lecture.objects.get(pk=request.session['connected_lecture_id'])
-        #ensure that lecture is active (running a session)
-        if lecture.is_running:
-            context['connected_lecture'] = lecture
-        else:
-            messages.error(request, 'Lecture is not active')
-            return HttpResponseRedirect(reverse('staff:connect'))
-    except KeyError:
+    except (KeyError, Lecture.DoesNotExist):
         messages.error(request, 'Please connect to active lecture with valid feedback code')
-        return HttpResponseRedirect(reverse('staff:connect'))
-    except Lecture.DoesNotExist:
-        messages.error(request, 'Please connect to active lecture with valid feedback code')
+        return redirect(reverse('staff:connect'))
+
+    #ensure that lecture is active (running a session)
+    if lecture.is_running:
+        context['lecture'] = lecture
+        context['feedback_form'] = FeedbackForm(lecture)
+        context['question_form'] = QuestionForm()
+        if 'questions_asked' in request.session:
+            context['questions'] = Question.objects.filter(pk__in=request.session['questions_asked'])
+    else:
+        messages.error(request, 'Lecture is not active')
         return HttpResponseRedirect(reverse('staff:connect'))
 
     return render(request, 'staff/feedback.html', context)
+
+def question_new(request):
+    # pdb.set_trace()
+    try:
+        lecture = Lecture.objects.get(pk=request.session['connected_lecture_id'])
+    except (KeyError, Lecture.DoesNotExist):
+        messages.error(request, 'Please connect to active lecture with valid feedback code')
+        return redirect(reverse('staff:connect'))
+
+    if lecture.is_running and lecture.is_taking_questions:
+        if request.method == 'POST':
+            form = QuestionForm(request.POST)
+            if form.is_valid():
+                question = form.cleaned_data.get('question')
+                newQuestion = Question.objects.create(question_text=question, time_posted=timezone.now(), session=lecture.getLastSession())
+                if 'questions_asked' in request.session:
+                    request.session['questions_asked'].append(newQuestion.id)
+                else:
+                    request.session['questions_asked'] = [newQuestion.id]
+            else:
+                messages.error(request, 'Invlaid POST Data')
+    else:
+        messages.error(request, 'Lecture not currently taking questions')
+    return redirect(reverse('staff:feedback'))
+
+#currently assumes staff cannot delete questions only those who post them during their sesssion
+def question_delete(request, id=None):
+    try:
+        lecture = Lecture.objects.get(pk=request.session['connected_lecture_id'])
+    except (KeyError, Lecture.DoesNotExist):
+        messages.error(request, 'Please connect to active lecture with valid feedback code')
+        return redirect(reverse('staff:connect'))
+
+    if 'questions_asked' in request.session:
+        if id in request.session['questions_asked']:
+            questionToDelete = get_object_or_404(Question, id=id)
+            questionToDelete.delete()
+        else:
+            messages.error(request, 'You can only delete questions you have posted')
+    else:
+        messages.error(request, 'You can only delete questions you have posted')
+    return redirect(reverse('staff:feedback'))
