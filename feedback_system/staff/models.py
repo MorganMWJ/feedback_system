@@ -19,6 +19,7 @@ class Lecture(models.Model):
     is_running = models.BooleanField(default=False)
     is_taking_questions = models.BooleanField(default=True)
     notes = models.TextField(null=True)
+    date_created = models.DateTimeField()
 
     def getLastSession(self):
         sessions = self.session_set.all()
@@ -29,16 +30,8 @@ class Lecture(models.Model):
         sessions = self.session_set.all()
         if sessions.exists():
             return sessions.order_by('start_time').first().start_time
-
-    def getFirstStarted_datetime(self):
-        sessions = self.session_set.all()
-        if sessions.exists():
-            return sessions.order_by('start_time').first().start_time.strftime("%d/%m/%Y %H:%M:%S")
-
-    def getFirstStarted_date(self):
-        sessions = self.session_set.all()
-        if sessions.exists():
-            return sessions.order_by('start_time').first().start_time.strftime("%d/%m/%Y")
+        else:
+            return None
 
     def getLastEnded(self):
         sessions = self.session_set.all()
@@ -48,18 +41,16 @@ class Lecture(models.Model):
         except AttributeError:
             return None
 
-    def getLastEnded_datetime(self):
-        sessions = self.session_set.all()
-        try:
-            if sessions.exists():
-                return sessions.order_by('end_time').last().end_time.strftime("%d/%m/%Y %H:%M:%S")
-        except AttributeError:
-            return None
-
-    def getTotalRuntime(self):
+    def getTotalRuntime_timestr(self):
+        time = None
         sessions = self.session_set.all()
         runtimes = [session.getRuntime() for session in sessions]
-        return sum(runtimes, datetime.timedelta())
+        time = sum(runtimes, datetime.timedelta())
+
+        total_seconds = int(time.total_seconds())
+        hours, remainder = divmod(total_seconds,60*60)
+        minutes, seconds = divmod(remainder,60)
+        return '{} hrs {} mins {} secs'.format(hours,minutes,seconds)
 
     def __str__(self):
         return self.title

@@ -54,6 +54,7 @@ def logout(request):
 
 @login_required(login_url='/login/')
 def index(request):
+    #pdb.set_trace()
     previous_lectures = Lecture.objects.filter(author_username=request.user.username).order_by('session__start_time')
 
     #if we have a search query filter previous_lectures that match the query
@@ -130,6 +131,7 @@ def lecture_delete(request, id=None):
 
 @login_required(login_url='/login/')
 def lecture_new(request):
+    pdb.set_trace()
     context = {}
     if request.method == 'POST':
         #create a form instance populated with the data sent in the form
@@ -200,6 +202,12 @@ def connect(request):
         context['form'] = form
 
     return render(request, 'staff/connect.html', context)
+
+def disconnect(request):
+    if 'connected_lecture_id' in request.session:
+        del request.session['connected_lecture_id']
+        del request.session['questions_asked']
+    return HttpResponseRedirect(reverse('staff:connect'))
 
 def feedback(request):
     context = {}

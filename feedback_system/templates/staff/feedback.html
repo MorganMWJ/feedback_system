@@ -4,6 +4,16 @@
 
 {% block title %}{% trans "Lecture Feedback" %}{% endblock %}
 
+{% block nav_options %}
+  <div>
+    <ul class="navbar-nav mr-auto d-flex flex-row">
+      <li class="nav-item">
+        <a class="nav-link border-white p-3" href="{% url 'staff:disconnect' %}" role="button">{% trans "Disconnect" %}</a>
+      </li>
+    </ul>
+  </div>
+{% endblock %}
+
 {% block content %}
 <div class="container-fluid bg-light py-3">
   {% if messages %}
@@ -26,7 +36,7 @@
           <label for="exampleFormControl3">{% trans "No. Slides" %}</label>
           <input class="form-control" id="exampleFormControl3" type="text" placeholder="{{lecture.slide_count}}" readonly>
           <label for="exampleFormControl6">{% trans "Total Runtime" %}</label>
-          <input class="form-control" id="exampleFormControl6" type="text" placeholder="{{lecture.getTotalRuntime}}" readonly>
+          <input class="form-control" id="exampleFormControl6" type="text" placeholder="{{lecture.getTotalRuntime_timestr}}" readonly>
         </div>
       </form>
     </div>

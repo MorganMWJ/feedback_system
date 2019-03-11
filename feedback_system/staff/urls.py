@@ -12,6 +12,7 @@ urlpatterns = [
     #/
     path('', views.connect, name='connect'),
     path('connect/', views.connect, name='connect'),
+    path('disconnect/', views.disconnect, name='disconnect'),
     path('feedback/', views.feedback, name='feedback'),
     #/staff/login/
     path('login/', views.login, name='login'),

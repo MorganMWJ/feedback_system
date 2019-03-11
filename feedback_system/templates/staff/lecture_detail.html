@@ -107,11 +107,11 @@
       <div class="col-sm-3 remember_visibility" id="detailDiv2">
         <div class="form-group">
           <label for="exampleFormControl8">{% trans "First Started" %}</label>
-          <input class="form-control" id="exampleFormControl8" type="text" placeholder="{{lecture.getFirstStarted_datetime}}" readonly>
+          <input class="form-control" id="exampleFormControl8" type="text" placeholder="{{lecture.getFirstStarted|date:'d M, Y - h:i a'}}" readonly>
           <label for="exampleFormControl7">{% trans "Last Ended" %}</label>
-          <input class="form-control" id="exampleFormControl7" type="text" placeholder="{{lecture.getLastEnded_datetime}}" readonly>
+          <input class="form-control" id="exampleFormControl7" type="text" placeholder="{{lecture.getLastEnded|date:'d M, Y - h:i a'}}" readonly>
           <label for="exampleFormControl6">{% trans "Total Runtime" %}</label>
-          <input class="form-control" id="exampleFormControl6" type="text" placeholder="{{lecture.getTotalRuntime}}" readonly>
+          <input class="form-control" id="exampleFormControl6" type="text" placeholder="{{lecture.getTotalRuntime_timestr}}" readonly>
         </div>
       </div>
   </div>
@@ -135,8 +135,8 @@
             {% for session in sessions %}
               <tr>
                 <th>{{ forloop.counter }}</th>
-                <td>{{ session.start_time }}</td>
-                <td>{{ session.end_time }}</td>
+                <td>{{ session.start_time|date:'d M, Y - h:i a' }}</td>
+                <td>{{ session.end_time|date:'d M, Y - h:i a' }}</td>
                 <td>{{ session.getRuntime_timestr }}</td>
               </tr>
             {% endfor %}
