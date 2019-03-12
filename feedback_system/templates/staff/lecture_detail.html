@@ -3,6 +3,8 @@
 
 {% block title %}{% trans "Lecture Feedback Detail" %}{% endblock %}
 
+<script src="{% static 'js/lecture_detail.js' %}"></script>
+
 {% block nav_options %}
   <div>
     <ul class="navbar-nav mr-auto d-flex flex-row">
@@ -15,53 +17,6 @@
     </ul>
   </div>
 {% endblock %}
-
-
-<script>
-  //save the panels user has open
-  function savePanels() {
-    var hiddenPanels = [];
-    $(".remember_visibility").each(function(index){
-      if($(this).is(':hidden')){
-        hiddenPanels.push("#" + $(this).attr('id'));
-      }
-    });
-    localStorage.setItem("hiddenPanelList", JSON.stringify(hiddenPanels));
-  }
-
-
-  $(document).ready(function(){
-    //hide the panels the user previously had hidden
-    var hiddenPanels = JSON.parse(localStorage.getItem("hiddenPanelList"));
-    if(hiddenPanels!=null && hiddenPanels!=undefined){
-      for(i=0; i<hiddenPanels.length; i++) {
-        $(hiddenPanels[i]).hide();
-      }
-    }
-
-    $("#toggleDetailBtn").click(function(){
-      $("#detailDiv1").toggle("fast");
-      $("#detailDiv2").toggle("fast");
-      savePanels();
-    });
-
-    $("#toggleSessionBtn").click(function(){
-      $("#sessionDiv").toggle("medium");
-      savePanels();
-    });
-
-    $("#toggleQuestionBtn").click(function(){
-      $("#questionDiv").toggle("fast");
-      savePanels();
-    });
-
-    $("#toggleGraphBtn").click(function(){
-      $("#feedbackDiv").toggle("fast");
-      savePanels();
-    });
-  });
-
-</script>
 
 {% block content %}
 <div class="container-fluid bg-light pb-3">

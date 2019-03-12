@@ -33,5 +33,5 @@ class FeedbackForm(forms.Form):
     overall_option = forms.ChoiceField(label=_('Overall Feedback'), choices=Feedback.OVERALL_FEEDBACK_CHOICES)
     speed_options = forms.ChoiceField(label=_('Delivery Speed'), choices=Feedback.DELIVERY_SPEED_CHOICES)
     complexity_options = forms.ChoiceField(label=_('Content Complexity'), choices=Feedback.CONTENT_COMPLEXITY_CHOICES)
-    presentation_options = forms.ChoiceField(label=_('Interest/Enagement'), choices=Feedback.CONTENT_PRESENTATION_CHOICES)
+    presentation_options = forms.ChoiceField(label=_('Interest/Engagement'), choices=Feedback.CONTENT_PRESENTATION_CHOICES)
     engagment_options = forms.ChoiceField(label=_('Content Presentation'), choices=Feedback.LEVEL_OF_ENGAGMENT_CHOICES)

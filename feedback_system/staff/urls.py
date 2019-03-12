@@ -40,4 +40,6 @@ urlpatterns = [
     path('questions/<int:id>/delete/', views.question_delete, name='question_delete'),
     #/staff/questions/new/
     path('questions/new/', views.question_new, name='question_new'),
+    #/staff/feedback/new/
+    path('feedback/new/', views.feedback_new, name='feedback_new'),
 ]
