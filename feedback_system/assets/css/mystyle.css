@@ -12,6 +12,10 @@
 .rounded-bottom-right{
   border-bottom-right-radius: 15px
 }
+div.hidden_panel
+{
+   display: none
+}
 /*Code to set background image*/
 /* body{
   background-image: url("{% static "img/aber_landscape12.jpg" %}");

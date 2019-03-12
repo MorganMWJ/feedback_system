@@ -1,10 +1,11 @@
 {% extends 'base_layout.html' %}
+{% load static %}
 {% load i18n %}
+{% load bootstrap3 %}
 
 {% block title %}{% trans "Lecture Feedback Detail" %}{% endblock %}
 
-<script src="{% static 'js/lecture_detail.js' %}"></script>
-
+{% block script %}<script src="{% static 'js/lecture_detail.js' %}"></script>{% endblock %}
 {% block nav_options %}
   <div>
     <ul class="navbar-nav mr-auto d-flex flex-row">
@@ -47,7 +48,7 @@
         </div>
       </div>
     </div>
-      <div class="col-sm-3 remember_visibility" id="detailDiv1">
+      <div class="col-sm-3 hidden_panel remember_visibility" id="detailDiv1">
         <form>
           <div class="form-group">
             <label for="exampleFormControl1">{% trans "Lecture Title" %}</label>
@@ -59,7 +60,7 @@
           </div>
         </form>
       </div>
-      <div class="col-sm-3 remember_visibility" id="detailDiv2">
+      <div class="col-sm-3 hidden_panel remember_visibility" id="detailDiv2">
         <div class="form-group">
           <label for="exampleFormControl8">{% trans "First Started" %}</label>
           <input class="form-control" id="exampleFormControl8" type="text" placeholder="{{lecture.getFirstStarted|date:'d M, Y - h:i a'}}" readonly>
@@ -71,7 +72,7 @@
       </div>
   </div>
   <div class="row my-4  d-flex justify-content-center">
-    <div class="col-sm-6 remember_visibility" id="sessionDiv">
+    <div class="col-sm-6 hidden_panel remember_visibility" id="sessionDiv">
       <center>
         <h3>{% trans "Feedback Sessions" %}</h3>
       </center>
@@ -99,7 +100,7 @@
         {% endif %}
       </table>
     </div>
-    <div class="col-sm-6 remember_visibility" id="questionDiv">
+    <div class="col-sm-6 hidden_panel remember_visibility" id="questionDiv">
       <center>
         <h3>{% trans "Current Questions" %}</h3>
       </center>
@@ -117,7 +118,7 @@
       {% endif %}
     </div>
   </div>
-  <div id="feedbackDiv" class="row my-4 d-flex justify-content-center remember_visibility">
+  <!-- <div id="feedbackDiv" class="row my-4 d-flex justify-content-center hidden_panel remember_visibility">
     <div class="col-sm-auto">
       <canvas id="canvas1" class="border border-dark  m-1"></canvas>
     </div>
@@ -133,16 +134,7 @@
     <div class="col-sm-auto">
       <canvas id="canvas5" class="border border-dark  m-1"></canvas>
     </div>
-  </div>
+  </div> -->
 </div>
 </div>
-
-<script>
-  for (var i = 1; i < 6; i++) {
-    var canvas = document.getElementById("canvas" + i.toString());
-    var ctx = canvas.getContext("2d");
-    ctx.font = "35px Arial";
-    ctx.fillText("JS Canvas Graph", 10, 50);
-  }
-</script>
 {% endblock %}

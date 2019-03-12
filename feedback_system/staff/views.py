@@ -61,7 +61,9 @@ def index(request):
     #if we have a search query filter previous_lectures that match the query
     query = request.GET.get("q")
     if query:
-        previous_lectures = previous_lectures.filter(title__icontains=query)
+        previous_lectures = previous_lectures.filter(
+                Q(title__icontains=query) |
+                Q(date_created__icontains=query))
 
     #pagination code
     paginator = Paginator(previous_lectures, 10)
@@ -132,7 +134,7 @@ def lecture_delete(request, id=None):
 
 @login_required(login_url='/login/')
 def lecture_new(request):
-    pdb.set_trace()
+    # pdb.set_trace()
     context = {}
     if request.method == 'POST':
         #create a form instance populated with the data sent in the form
@@ -153,7 +155,8 @@ def lecture_new(request):
                                 author_forename=request.user.first_name,
                                 author_surname=request.user.last_name,
                                 session_code=Lecture.getCode(),
-                                notes=notes)
+                                notes=notes,
+                                date_created=timezone.now())
             #redirect to view lecture index
             return HttpResponseRedirect(reverse('staff:index'))
         #check pdf is valid

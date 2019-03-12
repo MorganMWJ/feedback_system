@@ -2,9 +2,7 @@
 {% load i18n %}
 {% load bootstrap3 %}
 
-{% block title %}
-  {% trans "Staff Login" %}
-{% endblock %}
+{% block title %}{% trans "Staff Login" %}{% endblock %}
 
 {% block nav_options %}
   {% if user.is_authenticated %}

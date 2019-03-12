@@ -1,21 +1,21 @@
 //save the panels user has open
 function savePanels() {
-  var hiddenPanels = [];
+  var visiblePanels = [];
   $(".remember_visibility").each(function(index) {
-    if ($(this).is(':hidden')) {
-      hiddenPanels.push("#" + $(this).attr('id'));
+    if ($(this).is(':visible')) {
+      visiblePanels.push("#" + $(this).attr('id'));
     }
   });
-  localStorage.setItem("hiddenPanelList", JSON.stringify(hiddenPanels));
+  localStorage.setItem("visiblePanelList", JSON.stringify(visiblePanels));
 }
 
 
 $(document).ready(function() {
   //hide the panels the user previously had hidden
-  var hiddenPanels = JSON.parse(localStorage.getItem("hiddenPanelList"));
-  if (hiddenPanels != null && hiddenPanels != undefined) {
-    for (i = 0; i < hiddenPanels.length; i++) {
-      $(hiddenPanels[i]).hide();
+  var visiblePanels = JSON.parse(localStorage.getItem("visiblePanelList"));
+  if (visiblePanels != null && visiblePanels != undefined) {
+    for (i = 0; i < visiblePanels.length; i++) {
+      $(visiblePanels[i]).removeClass("hidden_panel");
     }
   }
 
@@ -40,3 +40,11 @@ $(document).ready(function() {
     savePanels();
   });
 });
+
+
+// for (var i = 1; i < 6; i++) {
+//   var canvas = document.getElementById("canvas" + i.toString());
+//   var ctx = canvas.getContext("2d");
+//   ctx.font = "35px Arial";
+//   ctx.fillText("JS Canvas Graph", 10, 50);
+// }
