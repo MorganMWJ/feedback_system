@@ -41,8 +41,8 @@
               </div>
               <div>
                 <span class="h5"><strong>Creation Date:</strong> {{ lecture.date_created|date:'d/m/Y' }} </span>
-                {% if lecture.getFirstStarted %}<span class="h5"><strong>First Session Date:</strong> {{ lecture.getFirstStarted|date:'d/m/Y' }}</span>{% endif %}
-                {% if lecture.getLastEnded %}<span class="h5"><strong>Last Session Date:</strong> {{ lecture.getLastEnded|date:'d/m/Y' }} </span>{% endif %}
+                {% if lecture.get_first_started %}<span class="h5"><strong>First Session Date:</strong> {{ lecture.get_first_started|date:'d/m/Y' }}</span>{% endif %}
+                {% if lecture.get_last_ended %}<span class="h5"><strong>Last Session Date:</strong> {{ lecture.get_last_ended|date:'d/m/Y' }} </span>{% endif %}
               </div>
             </div>
             <div class="col-sm-auto">

@@ -37,5 +37,8 @@ Run python shell:
 Initialise database with data from fixtures:
 	python manage.py loaddata <fixturename>
 
-
+How to access app locally through mobile
+	-Add computers ip address to list of ALLOWED_HOSTS in settings.py
+	-python manage.oy runserver 0.0.0.0:8000
+	-Open port 8000 in control panel??? (OR JUST ALLOW ACCESS as admin)
 	

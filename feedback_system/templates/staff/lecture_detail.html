@@ -2,6 +2,7 @@
 {% load static %}
 {% load i18n %}
 {% load bootstrap3 %}
+{% load format_extras %}
 
 {% block title %}{% trans "Lecture Feedback Detail" %}{% endblock %}
 
@@ -35,16 +36,15 @@
       <div class="d-flex justify-content-between">
         <div>
           <h2>{% trans "Session Code" %}: {{ lecture.session_code }}</h2>
-          <h4>{% trans "Session Running" %}: {{ lecture.is_running }}</h4>
-          <h4>{% trans "Questions Enabled" %}: {{ lecture.is_taking_questions }}</h4>
+          <a href="{% url 'staff:lecture_generate_session_code' lecture.id %}">{% trans "Generate New Code" %}</a>
         </div>
         <div>
-          <a href="{% url 'staff:lecture_start_feedback_session' lecture.id %}" role="button" class="btn btn-lg btn-outline-success m-2">Run Session</a>
+          {% if lecture.is_running %}
           <a href="{% url 'staff:lecture_stop_feedback_session' lecture.id %}" role="button" class="btn btn-lg btn-outline-danger m-2">Stop Session</a>
-          <a href="" role="button" class="btn btn-lg btn-outline-primary m-2">Toggle Overlay</a>
-          <br />
+          {% else %}
+          <a href="{% url 'staff:lecture_start_feedback_session' lecture.id %}" role="button" class="btn btn-lg btn-outline-success m-2">Start Session</a>
+          {% endif %}
           <a href="{% url 'staff:lecture_toggle_questions' lecture.id %}" role="button" class="btn btn-lg btn-outline-secondary m-2">{% if lecture.is_taking_questions %}{% trans "Disable" %}{% else %}{% trans "Enable" %}{% endif %} {% trans "Questions" %}</a>
-          <a href="{% url 'staff:lecture_generate_session_code' lecture.id %}" role="button" class="btn btn-lg btn-outline-secondary m-2">{% trans "Generate New Session Code" %}</a>
         </div>
       </div>
     </div>
@@ -63,11 +63,11 @@
       <div class="col-sm-3 hidden_panel remember_visibility" id="detailDiv2">
         <div class="form-group">
           <label for="exampleFormControl8">{% trans "First Started" %}</label>
-          <input class="form-control" id="exampleFormControl8" type="text" placeholder="{{lecture.getFirstStarted|date:'d M, Y - h:i a'}}" readonly>
+          <input class="form-control" id="exampleFormControl8" type="text" placeholder="{{lecture.get_first_started|date:'d M, Y - h:i a'}}" readonly>
           <label for="exampleFormControl7">{% trans "Last Ended" %}</label>
-          <input class="form-control" id="exampleFormControl7" type="text" placeholder="{{lecture.getLastEnded|date:'d M, Y - h:i a'}}" readonly>
+          <input class="form-control" id="exampleFormControl7" type="text" placeholder="{{lecture.get_last_ended|date:'d M, Y - h:i a'}}" readonly>
           <label for="exampleFormControl6">{% trans "Total Runtime" %}</label>
-          <input class="form-control" id="exampleFormControl6" type="text" placeholder="{{lecture.getTotalRuntime_timestr}}" readonly>
+          <input class="form-control" id="exampleFormControl6" type="text" placeholder="{{lecture.get_total_runtime|runtime_format}}" readonly>
         </div>
       </div>
   </div>
@@ -77,7 +77,7 @@
         <h3>{% trans "Feedback Sessions" %}</h3>
       </center>
       <hr class="mt-0" />
-      <table class="table table-bordered">
+      <table class="table table-bordered table-hover">
         <thead class="thead-dark">
           <tr>
             <th scope="col">{% trans "Section" %}</th>
@@ -92,8 +92,12 @@
               <tr>
                 <th>{{ forloop.counter }}</th>
                 <td>{{ session.start_time|date:'d M, Y - h:i a' }}</td>
-                <td>{{ session.end_time|date:'d M, Y - h:i a' }}</td>
-                <td>{{ session.getRuntime_timestr }}</td>
+                {% if forloop.last and lecture.is_running %}
+                  <td>{% trans "Session Running" %}</td>
+                {% else %}
+                  <td>{{ session.end_time|date:'d M, Y - h:i a' }}</td>
+                {% endif %}
+                <td>{{ session.get_runtime|runtime_format }}</td>
               </tr>
             {% endfor %}
           </tbody>
@@ -108,7 +112,17 @@
       {% if questions %}
         <ul class="list-group list-group-flush">
           {% for question in questions %}
-            <li class="list-group-item d-flex justify-content-between align-items-center">{{ question.question_text }}<a href="{% url 'staff:question_mark_reviewed' question.id %}" role="button" class="btn btn-success ml-1">{% trans "Mark Reviewed" %}</a></li>
+            <li class="list-group-item">
+              <div class="row">
+                <div class="col-9 fix_overflow">
+                  {{ question.question_text }}
+                </div>
+                <div class="col-3">
+                  <small>{{question.get_time_posted_ago|question_time_format}}</small>
+                  <a href="{% url 'staff:question_mark_reviewed' question.id %}" role="button" class="btn btn-success btn-sm">{% trans "Mark Reviewed" %}</a>
+                </div>
+              </div>
+            </li>
           {% endfor %}
         </ul>
       {% else %}

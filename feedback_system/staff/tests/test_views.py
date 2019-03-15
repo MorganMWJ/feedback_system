@@ -6,7 +6,7 @@ from django.urls import reverse
 
 import pdb
 
-class TestViews(TestCase):
+class TestLoginView(TestCase):
     def setUp(self):
         self.cli = Client()
 
@@ -54,7 +54,11 @@ class TestViews(TestCase):
         response = self.cli.get(reverse('staff:logout'))
         self.assertEquals(response.status_code, 302)
 
+class TestIndexView(TestCase):
+    def setUp(self):
+        self.cli = Client()
+
     #Index View Tests
     def test_index_redirect_if_not_logged_in(self):
         response = self.cli.get(reverse('staff:index'))
-        self.assertRedirects(response, '/staff/login/?next=/staff/lectures/')
+        self.assertRedirects(response, '/login/?next=/lectures/')

@@ -55,8 +55,8 @@ def logout(request):
 
 @login_required(login_url='/login/')
 def index(request):
-    #pdb.set_trace()
-    previous_lectures = Lecture.objects.filter(author_username=request.user.username).order_by('session__start_time')
+    pdb.set_trace()
+    previous_lectures = Lecture.objects.filter(author_username=request.user.username).order_by('-date_created')
 
     #if we have a search query filter previous_lectures that match the query
     query = request.GET.get("q")
@@ -88,6 +88,9 @@ def lecture_detail(request, id=None):
     for s in sessions:
         allQuestions = list(chain(allQuestions, s.question_set.filter(is_reviewed=False).order_by("time_posted")))
 
+    feedbackSummary = []
+    #todo put in feedback totals for each category
+
     return render(request, 'staff/lecture_detail.html', {'lecture': instance, 'sessions': sessions, 'questions': allQuestions})
 
 @login_required(login_url='/login/')
@@ -115,7 +118,7 @@ def lecture_stop_feedback_session(self, id=None):
 @login_required(login_url='/login/')
 def lecture_generate_session_code(request, id=None):
     instance = get_object_or_404(Lecture, id=id)
-    instance.session_code = Lecture.getCode()
+    instance.session_code = Lecture.get_code()
     instance.save()
     return redirect(reverse('staff:lecture_detail', kwargs={'id': instance.id}))
 
@@ -154,7 +157,7 @@ def lecture_new(request):
                                 author_username=request.user.username,
                                 author_forename=request.user.first_name,
                                 author_surname=request.user.last_name,
-                                session_code=Lecture.getCode(),
+                                session_code=Lecture.get_code(),
                                 notes=notes,
                                 date_created=timezone.now())
             #redirect to view lecture index
@@ -210,6 +213,7 @@ def connect(request):
 def disconnect(request):
     if 'connected_lecture_id' in request.session:
         del request.session['connected_lecture_id']
+    if 'questions_asked' in request.session:
         del request.session['questions_asked']
     return HttpResponseRedirect(reverse('staff:connect'))
 
@@ -231,13 +235,13 @@ def feedback(request):
             context['questions'] = Question.objects.filter(pk__in=request.session['questions_asked'])
     else:
         messages.error(request, _('Lecture is not active'))
-        return HttpResponseRedirect(reverse('staff:connect'))
+        return HttpResponseRedirect(reverse('staff:disconnect'))
 
     return render(request, 'staff/feedback.html', context)
 
 def feedback_new(request):
     context = {}
-    # pdb.set_trace()
+    pdb.set_trace()
     try:
         lecture = Lecture.objects.get(pk=request.session['connected_lecture_id'])
     except (KeyError, Lecture.DoesNotExist):
@@ -246,9 +250,22 @@ def feedback_new(request):
 
     if lecture.is_running:
         if request.method == 'POST':
-            form = FeedbackForm(request.POST)
+            form = FeedbackForm(lecture, request.POST)
             if form.is_valid():
-                pass#todo
+                overall = form.cleaned_data.get('overall_option')
+                speed = form.cleaned_data.get('speed_options')
+                complexity = form.cleaned_data.get('complexity_options')
+                presentation = form.cleaned_data.get('presentation_options')
+                engagment = form.cleaned_data.get('engagment_options')
+                slide = form.cleaned_data.get('slide_options')
+                Feedback.objects.create(time_posted=timezone.now(),
+                                slide_number=slide,
+                                overall_feedback=overall,
+                                delivery_speed=speed,
+                                content_complexity=complexity,
+                                content_presentation=presentation,
+                                level_of_engagement=engagment,
+                                session=lecture.get_last_session())
             else:
                 messages.error(request, _('Invalid POST Data'))
     else:
@@ -269,7 +286,7 @@ def question_new(request):
             form = QuestionForm(request.POST)
             if form.is_valid():
                 question = form.cleaned_data.get('question')
-                newQuestion = Question.objects.create(question_text=question, time_posted=timezone.now(), session=lecture.getLastSession())
+                newQuestion = Question.objects.create(question_text=question, time_posted=timezone.now(), session=lecture.get_last_session())
                 if 'questions_asked' in request.session:
                     request.session['questions_asked'].append(newQuestion.id)
                 else:

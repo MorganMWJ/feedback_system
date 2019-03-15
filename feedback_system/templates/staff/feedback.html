@@ -1,6 +1,7 @@
 {% extends 'base_layout.html' %}
 {% load i18n %}
 {% load bootstrap3 %}
+{% load format_extras %}
 
 {% block title %}{% trans "Lecture Feedback" %}{% endblock %}
 
@@ -22,7 +23,7 @@
   {% endfor %}
   {% endif %}
   <div class="row">
-    <div class="col-sm-auto">
+    <div class="col-sm-3">
       <center><h3>{% trans "Lecture Detail" %}</h3></center>
       <hr class="mt-0"/>
       <form>
@@ -36,14 +37,14 @@
           <label for="exampleFormControl3">{% trans "No. Slides" %}</label>
           <input class="form-control" id="exampleFormControl3" type="text" placeholder="{{lecture.slide_count}}" readonly>
           <label for="exampleFormControl6">{% trans "Total Runtime" %}</label>
-          <input class="form-control" id="exampleFormControl6" type="text" placeholder="{{lecture.getTotalRuntime_timestr}}" readonly>
+          <input class="form-control" id="exampleFormControl6" type="text" placeholder="{{lecture.get_total_runtime|runtime_format}}" readonly>
         </div>
       </form>
     </div>
-    <div class="col-sm-auto">
+    <div class="col-sm-3">
       <center><h3>{% trans "Give Feedback" %}</h3></center>
       <hr class="mt-0"/>
-      <form action="{% url 'staff:feedback' %}" method="post" class="px-4">
+      <form action="{% url 'staff:feedback_new' %}" method="post" class="px-4">
         {% csrf_token %}
         {% bootstrap_form feedback_form %}
         {% buttons %}
@@ -53,7 +54,7 @@
         {% endbuttons %}
       </form>
     </div>
-    <div class="col-sm-auto">
+    <div class="col-sm-3">
       <center><h3>{% trans "Ask Questions" %}</h3></center>
       <hr class="mt-0"/>
       <form action="{% url 'staff:question_new' %}" method="post" class="px-4">
@@ -70,7 +71,19 @@
       {% if questions %}
         <ul class="list-group list-group-flush">
           {% for question in questions %}
-            <li class="list-group-item d-flex justify-content-between align-items-center">{{ question.question_text }}<a href="{% url 'staff:question_delete' question.id %}" role="button" class="btn btn-danger ml-1">{% trans "Remove" %}</a></li>
+            <li class="list-group-item">
+              <div class="row d-flex justify-content-between">
+                <div class="col-2">
+                  <small>{{question.get_time_posted_ago|question_time_format}}</small>
+                </div>
+                <div class="col-8 fix_overflow">
+                  {{ question.question_text }}
+                </div>
+                <div class="col-2">
+                  <a href="{% url 'staff:question_delete' question.id %}" role="button" class="btn btn-danger ml-1">{% trans "Remove" %}</a>
+                </div>
+              </div>
+            </li>
           {% endfor %}
         </ul>
       {% else %}

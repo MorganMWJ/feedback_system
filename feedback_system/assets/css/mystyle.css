@@ -10,11 +10,14 @@
   margin-left: 1rem;
 }
 .rounded-bottom-right{
-  border-bottom-right-radius: 15px
+  border-bottom-right-radius: 15px;
 }
 div.hidden_panel
 {
-   display: none
+   display: none;
+}
+.fix_overflow{
+   word-wrap: break-word;
 }
 /*Code to set background image*/
 /* body{

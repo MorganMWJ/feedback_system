@@ -4,6 +4,7 @@ import datetime
 from django.utils import timezone
 from django.db import models
 from django.core.validators import MinValueValidator, RegexValidator
+from django.utils.translation import ugettext_lazy as _
 
 alphanumeric = RegexValidator(r'^[0-9a-zA-Z]*$', 'Only alphanumeric characters allowed.')
 
@@ -21,19 +22,19 @@ class Lecture(models.Model):
     notes = models.TextField(null=True)
     date_created = models.DateTimeField()
 
-    def getLastSession(self):
+    def get_last_session(self):
         sessions = self.session_set.all()
         if sessions.exists():
-            return sessions.order_by('end_time').last()
+            return sessions.order_by('start_time').last()
 
-    def getFirstStarted(self):
+    def get_first_started(self):
         sessions = self.session_set.all()
         if sessions.exists():
             return sessions.order_by('start_time').first().start_time
         else:
             return None
 
-    def getLastEnded(self):
+    def get_last_ended(self):
         sessions = self.session_set.all()
         try:
             if sessions.exists():
@@ -41,22 +42,16 @@ class Lecture(models.Model):
         except AttributeError:
             return None
 
-    def getTotalRuntime_timestr(self):
-        time = None
+    def get_total_runtime(self):
         sessions = self.session_set.all()
-        runtimes = [session.getRuntime() for session in sessions]
-        time = sum(runtimes, datetime.timedelta())
-
-        total_seconds = int(time.total_seconds())
-        hours, remainder = divmod(total_seconds,60*60)
-        minutes, seconds = divmod(remainder,60)
-        return '{} hrs {} mins {} secs'.format(hours,minutes,seconds)
+        runtimes = [session.get_runtime() for session in sessions]
+        return sum(runtimes, datetime.timedelta())
 
     def __str__(self):
         return self.title
 
     @staticmethod
-    def getCode():
+    def get_code():
         code = ""
         #while code is empty or code already in db
         while code=="" or Lecture.objects.filter(session_code=code).count()>0:
@@ -69,29 +64,20 @@ class Session(models.Model):
     end_time = models.DateTimeField(null=True)
     lecture = models.ForeignKey(Lecture, on_delete=models.CASCADE)
 
-    def getRuntime(self):
+    def get_runtime(self):
         if self.end_time is None:
             return (timezone.now()-self.start_time)
         else:
             return (self.end_time-self.start_time)
-
-    def getRuntime_timestr(self):
-        time = None
-        if self.end_time is None:
-            time = (timezone.now()-self.start_time)
-        else:
-            time = (self.end_time-self.start_time)
-
-        total_seconds = int(time.total_seconds())
-        hours, remainder = divmod(total_seconds,60*60)
-        minutes, seconds = divmod(remainder,60)
-        return '{} hrs {} mins {} secs'.format(hours,minutes,seconds)
 
 class Question(models.Model):
     question_text = models.CharField(max_length=300)
     time_posted = models.DateTimeField()
     is_reviewed = models.BooleanField(default=False)
     session = models.ForeignKey(Session, on_delete=models.CASCADE)
+
+    def get_time_posted_ago(self):
+        return timezone.now() - self.time_posted
 
     def __str__(self):
         return self.question_text
@@ -128,6 +114,7 @@ class Feedback(models.Model):
     )
 
     time_posted = models.DateTimeField()
+    slide_number = models.IntegerField(null=True, validators=[MinValueValidator(1)])
     overall_feedback = models.CharField(max_length=30,
                                         choices=OVERALL_FEEDBACK_CHOICES,
                                         default='')
@@ -144,3 +131,12 @@ class Feedback(models.Model):
                                         choices=LEVEL_OF_ENGAGMENT_CHOICES,
                                         default='')
     session = models.ForeignKey(Session, on_delete=models.CASCADE)
+
+    # def __str__(self):
+    #     res = str(self.slide_number) + "=>"
+    #     res += self.overall_feedback + "|"
+    #     res += self.delivery_speed + "|"
+    #     res += self.content_complexity + "|"
+    #     res += self.content_presentation + "|"
+    #     res += self.level_of_engagement + "|"
+    #     return res
