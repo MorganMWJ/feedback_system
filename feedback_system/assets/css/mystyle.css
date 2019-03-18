@@ -19,6 +19,9 @@ div.hidden_panel
 .fix_overflow{
    word-wrap: break-word;
 }
+/* .scroll{
+  overflow: scroll;
+} */
 /*Code to set background image*/
 /* body{
   background-image: url("{% static "img/aber_landscape12.jpg" %}");

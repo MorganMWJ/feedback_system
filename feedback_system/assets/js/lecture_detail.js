@@ -20,8 +20,9 @@ $(document).ready(function() {
   }
 
   $("#toggleDetailBtn").click(function() {
-    $("#detailDiv1").toggle("fast");
-    $("#detailDiv2").toggle("fast");
+    $("#detailDiv").toggle("fast");
+    // $("#detailDiv2").toggle("fast");
+    // $("#detailDiv3").toggle("fast");
     savePanels();
   });
 
@@ -41,10 +42,13 @@ $(document).ready(function() {
   });
 });
 
-
-// for (var i = 1; i < 6; i++) {
-//   var canvas = document.getElementById("canvas" + i.toString());
-//   var ctx = canvas.getContext("2d");
-//   ctx.font = "35px Arial";
-//   ctx.fillText("JS Canvas Graph", 10, 50);
+/* This code is functional AJAX example */
+// function updateTime(){
+//   $.ajax({url: "/lecture/3/",
+//           type: "GET",
+//           dataytype: 'json',
+//           success: function(response){
+//             $("#exampleFormControl6").attr("placeholder", response.total_runtime);
+//           }});
 // }
+// setInterval(updateTime, 1000);

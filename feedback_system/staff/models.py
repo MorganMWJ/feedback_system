@@ -3,6 +3,7 @@ import string
 import datetime
 from django.utils import timezone
 from django.db import models
+from django.conf import settings
 from django.core.validators import MinValueValidator, RegexValidator
 from django.utils.translation import ugettext_lazy as _
 
@@ -13,14 +14,9 @@ class Lecture(models.Model):
     slide_count = models.IntegerField(
                     default=1,
                     validators=[MinValueValidator(1)])
-    author_username = models.CharField(max_length=10)
-    author_forename = models.CharField(max_length=30)
-    author_surname = models.CharField(max_length=30)
-    session_code = models.CharField(max_length=6, unique=True, validators=[alphanumeric])
-    is_running = models.BooleanField(default=False)
-    is_taking_questions = models.BooleanField(default=True)
     notes = models.TextField(null=True)
     date_created = models.DateTimeField()
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
 
     def get_last_session(self):
         sessions = self.session_set.all()
@@ -36,10 +32,11 @@ class Lecture(models.Model):
 
     def get_last_ended(self):
         sessions = self.session_set.all()
-        try:
-            if sessions.exists():
-                return sessions.order_by('end_time').last().end_time
-        except AttributeError:
+        if sessions.exists() and not sessions.order_by('start_time').last().is_running:
+            return sessions.order_by('start_time').last().end_time
+        elif sessions.exists() and sessions.order_by('start_time').last().is_running and len(sessions)>1:
+            return sessions.order_by('start_time').reverse()[1].end_time
+        else:
             return None
 
     def get_total_runtime(self):
@@ -50,19 +47,22 @@ class Lecture(models.Model):
     def __str__(self):
         return self.title
 
-    @staticmethod
-    def get_code():
-        code = ""
-        #while code is empty or code already in db
-        while code=="" or Lecture.objects.filter(session_code=code).count()>0:
-            for i in range(6):
-                code += random.choice(string.ascii_uppercase + string.digits)
-        return code
-
 class Session(models.Model):
     start_time = models.DateTimeField()
     end_time = models.DateTimeField(null=True)
+    code = models.CharField(max_length=6, unique=True, validators=[alphanumeric])
+    is_running = models.BooleanField(default=True)
+    is_taking_questions = models.BooleanField(default=True)
     lecture = models.ForeignKey(Lecture, on_delete=models.CASCADE)
+
+    @staticmethod
+    def generate_code():
+        code = ""
+        #while code is empty or code already in db
+        while code=="" or Session.objects.filter(code=code).count()>0:
+            for i in range(6):
+                code += random.choice(string.ascii_uppercase + string.digits)
+        return code
 
     def get_runtime(self):
         if self.end_time is None:

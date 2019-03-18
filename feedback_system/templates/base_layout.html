@@ -17,7 +17,14 @@
   <body>
     {% block script %}{% endblock %}
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark d-flex justify-content-between">
-      <span id="web_app_title" class="text-white mb-0">{% trans "Lecture Feedback System" %} <small>{% if user.is_authenticated %}{{user.get_full_name}} ({{user.email}}){% endif %}</small></span>
+      <span id="web_app_title" class="text-white mb-0">
+        {% trans "Lecture Feedback System" %}
+        <small>
+          {% if user.is_authenticated %}
+            {{user.get_full_name}} ({{user.email}})
+          {% endif %}         
+        </small>
+      </span>
       {% block nav_options %}
       {% endblock %}
     </nav>

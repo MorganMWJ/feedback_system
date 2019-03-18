@@ -23,25 +23,9 @@
   {% endfor %}
   {% endif %}
   <div class="row">
-    <div class="col-sm-3">
-      <center><h3>{% trans "Lecture Detail" %}</h3></center>
-      <hr class="mt-0"/>
-      <form>
-        <div class="form-group">
-          <label for="exampleFormControl0">{% trans "Code" %}</label>
-          <input class="form-control" id="exampleFormControl0" type="text" placeholder="{{lecture.session_code}}" readonly>
-          <label for="exampleFormControl1">{% trans "Lecture Title" %}</label>
-          <input class="form-control" id="exampleFormControl1" type="text" placeholder="{{lecture.title}}" readonly>
-          <label for="exampleFormControl2">{% trans "Lecture Author" %}</label>
-          <input class="form-control" id="exampleFormControl2" type="text" placeholder="{{user.get_full_name}} {{user.email}}" readonly>
-          <label for="exampleFormControl3">{% trans "No. Slides" %}</label>
-          <input class="form-control" id="exampleFormControl3" type="text" placeholder="{{lecture.slide_count}}" readonly>
-          <label for="exampleFormControl6">{% trans "Total Runtime" %}</label>
-          <input class="form-control" id="exampleFormControl6" type="text" placeholder="{{lecture.get_total_runtime|runtime_format}}" readonly>
-        </div>
-      </form>
+    <div class="col-sm-1">
     </div>
-    <div class="col-sm-3">
+    <div class="col-sm-5 border-right border-left">
       <center><h3>{% trans "Give Feedback" %}</h3></center>
       <hr class="mt-0"/>
       <form action="{% url 'staff:feedback_new' %}" method="post" class="px-4">
@@ -54,7 +38,7 @@
         {% endbuttons %}
       </form>
     </div>
-    <div class="col-sm-3">
+    <div class="col-sm-5 border-right border-left">
       <center><h3>{% trans "Ask Questions" %}</h3></center>
       <hr class="mt-0"/>
       <form action="{% url 'staff:question_new' %}" method="post" class="px-4">
@@ -89,6 +73,8 @@
       {% else %}
         <p>No questions asked</p>
       {% endif %}
+    </div>
+    <div class="col-sm-1">
     </div>
   </div>
 </div>

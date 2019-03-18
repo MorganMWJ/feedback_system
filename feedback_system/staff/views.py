@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, JsonResponse
 from django.urls import reverse
 from django.utils import translation
 from django.utils.translation import ugettext as _
@@ -15,10 +15,12 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 
 from ldap3 import core
+from PyPDF2.utils import PdfReadError
 from itertools import chain
 from staff.forms import LoginForm, NewLectureForm, PDFUploadForm, ConnectForm, FeedbackForm, QuestionForm
 from staff.models import Lecture, Session, Question, Feedback
 from staff.pdf_extractor import get_info
+from staff.templatetags.format_extras import runtime_format, question_time_format
 
 import pdb #pdb.set_trace() to start
 
@@ -55,8 +57,8 @@ def logout(request):
 
 @login_required(login_url='/login/')
 def index(request):
-    pdb.set_trace()
-    previous_lectures = Lecture.objects.filter(author_username=request.user.username).order_by('-date_created')
+    # pdb.set_trace()
+    previous_lectures = Lecture.objects.filter(user__username=request.user.username).order_by('-date_created')
 
     #if we have a search query filter previous_lectures that match the query
     query = request.GET.get("q")
@@ -80,6 +82,7 @@ def index(request):
 
 @login_required(login_url='/login/')
 def lecture_detail(request, id=None):
+    #pdb.set_trace()
     instance = get_object_or_404(Lecture, id=id)
     sessions = instance.session_set.all().order_by("start_time")
 
@@ -88,46 +91,50 @@ def lecture_detail(request, id=None):
     for s in sessions:
         allQuestions = list(chain(allQuestions, s.question_set.filter(is_reviewed=False).order_by("time_posted")))
 
+    #put in feedback totals for each category - TODO
     feedbackSummary = []
-    #todo put in feedback totals for each category
 
+    if request.is_ajax() and request.method == 'GET':
+        resp_data = {
+            'total_runtime': runtime_format(instance.get_total_runtime()),
+            # more data
+        }
+        return JsonResponse(resp_data, status=200)
+        
     return render(request, 'staff/lecture_detail.html', {'lecture': instance, 'sessions': sessions, 'questions': allQuestions})
 
 @login_required(login_url='/login/')
-def lecture_start_feedback_session(self, id=None):
+def session_new(self, id=None):
+    pdb.set_trace()
     instance = get_object_or_404(Lecture, id=id)
-    if not instance.is_running:
-        #create a new feedback session and set lecture to be running
-        Session.objects.create(start_time=timezone.now(),lecture=instance)
-        instance.is_running = True
-        instance.save()
-    return redirect(reverse('staff:lecture_detail', kwargs={'id': instance.id}))
+    #create a new feedback session and set it to be running
+    Session.objects.create(start_time=timezone.now(),code=Session.generate_code(), lecture=instance)
+    instance.save()
+    return redirect(reverse('staff:lecture_detail', kwargs={'id': id}))
 
 @login_required(login_url='/login/')
-def lecture_stop_feedback_session(self, id=None):
-    instance = get_object_or_404(Lecture, id=id)
+def session_stop(self, id=None):
+    instance = get_object_or_404(Session, id=id)
     if instance.is_running:
-        #set lecture as no longer running and update feedback session end_time
-        session_instance = instance.session_set.order_by("start_time").last()
-        session_instance.end_time = timezone.now()
-        session_instance.save()
+        #set session as no longer running and update end_time
+        instance.end_time = timezone.now()
         instance.is_running = False
         instance.save()
-    return redirect(reverse('staff:lecture_detail', kwargs={'id': instance.id}))
+    return redirect(reverse('staff:lecture_detail', kwargs={'id': instance.lecture.id}))
 
 @login_required(login_url='/login/')
-def lecture_generate_session_code(request, id=None):
-    instance = get_object_or_404(Lecture, id=id)
-    instance.session_code = Lecture.get_code()
+def session_regenerate_code(request, id=None):
+    instance = get_object_or_404(Session, id=id)
+    instance.code = Session.generate_code()
     instance.save()
-    return redirect(reverse('staff:lecture_detail', kwargs={'id': instance.id}))
+    return redirect(reverse('staff:lecture_detail', kwargs={'id': instance.lecture.id}))
 
 @login_required(login_url='/login/')
-def lecture_toggle_questions(request, id=None):
-    instance = get_object_or_404(Lecture, id=id)
+def session_toggle_questions(request, id=None):
+    instance = get_object_or_404(Session, id=id)
     instance.is_taking_questions = not instance.is_taking_questions
     instance.save()
-    return redirect(reverse('staff:lecture_detail', kwargs={'id': instance.id}))
+    return redirect(reverse('staff:lecture_detail', kwargs={'id': instance.lecture.id}))
 
 @login_required(login_url='/login/')
 def lecture_delete(request, id=None):
@@ -154,19 +161,18 @@ def lecture_new(request):
 
             Lecture.objects.create(title=title,
                                 slide_count=slide_count,
-                                author_username=request.user.username,
-                                author_forename=request.user.first_name,
-                                author_surname=request.user.last_name,
-                                session_code=Lecture.get_code(),
                                 notes=notes,
-                                date_created=timezone.now())
+                                date_created=timezone.now(),
+                                user=request.user)
             #redirect to view lecture index
             return HttpResponseRedirect(reverse('staff:index'))
         #check pdf is valid
         elif pdf_form.is_valid():
-            #if so extarct it from there
-            info = get_info(request.FILES['lecture_pdf_file'])
-            context['form'] = NewLectureForm(initial={'title': info['title'], 'slide_count': info['pageCount']})
+            try:
+                info = get_info(request.FILES['lecture_pdf_file'])
+                context['form'] = NewLectureForm(initial={'title': info['title'], 'slide_count': info['pageCount']})
+            except PdfReadError:
+                messages.error(request, _('File has not been decrypted'))
         else:
             context['invalid_form_error'] = True
     else:
@@ -192,10 +198,10 @@ def connect(request):
         if form.is_valid():
             code = form.cleaned_data.get('code')
             try:
-                lecture = Lecture.objects.get(session_code=code.upper())
-                #ensure that lecture is active (running a session)
-                if lecture.is_running:
-                    request.session['connected_lecture_id'] = lecture.id
+                session = Session.objects.get(code=code.upper())
+                #ensure that session is running
+                if session.is_running:
+                    request.session['connected_session_id'] = session.id
                     request.session.set_expiry(0) #exipre upon web browser close
                     return HttpResponseRedirect(reverse('staff:feedback'))
                 else:
@@ -211,8 +217,8 @@ def connect(request):
     return render(request, 'staff/connect.html', context)
 
 def disconnect(request):
-    if 'connected_lecture_id' in request.session:
-        del request.session['connected_lecture_id']
+    if 'connected_session_id' in request.session:
+        del request.session['connected_session_id']
     if 'questions_asked' in request.session:
         del request.session['questions_asked']
     return HttpResponseRedirect(reverse('staff:connect'))
@@ -221,20 +227,20 @@ def feedback(request):
     context = {}
     # pdb.set_trace()
     try:
-        lecture = Lecture.objects.get(pk=request.session['connected_lecture_id'])
-    except (KeyError, Lecture.DoesNotExist):
-        messages.error(request, _('Please connect to active lecture with valid feedback code'))
+        session = Session.objects.get(pk=request.session['connected_session_id'])
+    except (KeyError, Session.DoesNotExist):
+        messages.error(request, _('Please connect to active session with valid feedback code'))
         return redirect(reverse('staff:connect'))
 
     #ensure that lecture is active (running a session)
-    if lecture.is_running:
-        context['lecture'] = lecture
-        context['feedback_form'] = FeedbackForm(lecture)
+    if session.is_running:
+        context['session'] = session
+        context['feedback_form'] = FeedbackForm(session.lecture)
         context['question_form'] = QuestionForm()
         if 'questions_asked' in request.session:
             context['questions'] = Question.objects.filter(pk__in=request.session['questions_asked'])
     else:
-        messages.error(request, _('Lecture is not active'))
+        messages.error(request, _('Session is not active'))
         return HttpResponseRedirect(reverse('staff:disconnect'))
 
     return render(request, 'staff/feedback.html', context)
@@ -243,14 +249,14 @@ def feedback_new(request):
     context = {}
     pdb.set_trace()
     try:
-        lecture = Lecture.objects.get(pk=request.session['connected_lecture_id'])
-    except (KeyError, Lecture.DoesNotExist):
-        messages.error(request, _('Please connect to active lecture with valid feedback code'))
+        session = Session.objects.get(pk=request.session['connected_session_id'])
+    except (KeyError, Session.DoesNotExist):
+        messages.error(request, _('Please connect to active session with valid feedback code'))
         return redirect(reverse('staff:connect'))
 
-    if lecture.is_running:
+    if session.is_running:
         if request.method == 'POST':
-            form = FeedbackForm(lecture, request.POST)
+            form = FeedbackForm(session.lecture, request.POST)
             if form.is_valid():
                 overall = form.cleaned_data.get('overall_option')
                 speed = form.cleaned_data.get('speed_options')
@@ -265,28 +271,28 @@ def feedback_new(request):
                                 content_complexity=complexity,
                                 content_presentation=presentation,
                                 level_of_engagement=engagment,
-                                session=lecture.get_last_session())
+                                session=session)
             else:
                 messages.error(request, _('Invalid POST Data'))
     else:
-        messages.error(request, _('Please connect to active lecture with valid feedback code'))
+        messages.error(request, _('Please connect to active session with valid feedback code'))
 
     return HttpResponseRedirect(reverse('staff:feedback'))
 
 def question_new(request):
     # pdb.set_trace()
     try:
-        lecture = Lecture.objects.get(pk=request.session['connected_lecture_id'])
-    except (KeyError, Lecture.DoesNotExist):
-        messages.error(request, _('Please connect to active lecture with valid feedback code'))
+        session = Session.objects.get(pk=request.session['connected_session_id'])
+    except (KeyError, Session.DoesNotExist):
+        messages.error(request, _('Please connect to active session with valid feedback code'))
         return redirect(reverse('staff:connect'))
 
-    if lecture.is_running and lecture.is_taking_questions:
+    if session.is_running and session.is_taking_questions:
         if request.method == 'POST':
             form = QuestionForm(request.POST)
             if form.is_valid():
                 question = form.cleaned_data.get('question')
-                newQuestion = Question.objects.create(question_text=question, time_posted=timezone.now(), session=lecture.get_last_session())
+                newQuestion = Question.objects.create(question_text=question, time_posted=timezone.now(), session=session)
                 if 'questions_asked' in request.session:
                     request.session['questions_asked'].append(newQuestion.id)
                 else:
@@ -294,17 +300,17 @@ def question_new(request):
             else:
                 messages.error(request, _('Invalid POST Data'))
     elif not lecture.is_running:
-        messages.error(request, _('Please connect to active lecture with valid feedback code'))
+        messages.error(request, _('Please connect to active session with valid feedback code'))
     else:
-        messages.error(request, _('Lecture not currently taking questions'))
+        messages.error(request, _('Session not currently taking questions'))
     return redirect(reverse('staff:feedback'))
 
 #currently assumes staff cannot delete questions only those who post them during their sesssion
 def question_delete(request, id=None):
     try:
-        lecture = Lecture.objects.get(pk=request.session['connected_lecture_id'])
-    except (KeyError, Lecture.DoesNotExist):
-        messages.error(request, _('Please connect to active lecture with valid feedback code'))
+        session = Session.objects.get(pk=request.session['connected_session_id'])
+    except (KeyError, Session.DoesNotExist):
+        messages.error(request, _('Please connect to active session with valid feedback code'))
         return redirect(reverse('staff:connect'))
 
     if 'questions_asked' in request.session:
