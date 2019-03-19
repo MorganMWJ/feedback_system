@@ -21,9 +21,11 @@ urlpatterns = [
     #/lectures/
     path('lectures/', views.index, name='index'),
     #/lectures/new/
-    path('lecture/new/', views.lecture_new, name='lecture_new'),
+    path('lecture/new/', views.lecture_create, name='lecture_create'),
     #/lectures/?
     path('lecture/<int:id>/', views.lecture_detail, name='lecture_detail'),
+    #/lectures/?/edit/
+    path('lecture/<int:id>/edit/', views.lecture_update, name='lecture_update'),
     #/lectures/?/delete/
     path('lecture/<int:id>/delete/', views.lecture_delete, name='lecture_delete'),
     #/lectures/?/start_session/
@@ -41,5 +43,8 @@ urlpatterns = [
     #/questions/new/
     path('question/new/', views.question_new, name='question_new'),
     #/feedback/new/
-    path('feedback/new/', views.feedback_new, name='feedback_new'),    
+    path('feedback/new/', views.feedback_new, name='feedback_new'),
+
+    path('session/<int:id>/questions/', views.session_question_list, name='session_question_list'),
+
 ]

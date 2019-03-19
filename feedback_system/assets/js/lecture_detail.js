@@ -41,18 +41,28 @@ $(document).ready(function() {
     savePanels();
   });
 
-  $(".session_row").click(function(event) {
-    let pos = event.target.id
-    $.ajax({url: `/session/${pos}/questions/`,
-            type: "GET",
-            dataytype: 'json',
-            success: function(response){
-              $("#exampleFormControl6").attr("placeholder", response.total_runtime);
-            }}
-    );
-  });
+  // $(".session_row").click(function(event) {
+  //   let pos = event.target.id
+  //   $.ajax({url: `/session/${pos}/questions/`,
+  //           type: "GET",
+  //           dataytype: 'json',
+  //           success: function(response){
+  //             $("#exampleFormControl6").attr("placeholder", response.total_runtime);
+  //           }}
+  //   );
+  // });
 
 });
+
+
+// function updateQuestions(){
+//   console.log(item_num) // sanity check
+//     $('.table_body').html('').load(
+//         "{% url 'update_items' %}?item_num=" + item_num
+//     );
+// }
+// setInterval(updateQuestions, 1000);
+
 
 /* This code is functional AJAX example */
 // function updateTime(){

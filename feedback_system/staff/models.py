@@ -5,6 +5,7 @@ from django.utils import timezone
 from django.db import models
 from django.conf import settings
 from django.core.validators import MinValueValidator, RegexValidator
+from django.urls import reverse
 from django.utils.translation import ugettext_lazy as _
 
 alphanumeric = RegexValidator(r'^[0-9a-zA-Z]*$', 'Only alphanumeric characters allowed.')
@@ -46,6 +47,9 @@ class Lecture(models.Model):
 
     def __str__(self):
         return self.title
+
+    def get_absolute_url(self):
+        return reverse('staff:lecture_detail', kwargs={'id': self.pk})
 
 class Session(models.Model):
     start_time = models.DateTimeField()

@@ -17,7 +17,7 @@ from django.contrib import messages
 from ldap3 import core
 from PyPDF2.utils import PdfReadError
 from itertools import chain
-from staff.forms import LoginForm, NewLectureForm, PDFUploadForm, ConnectForm, FeedbackForm, QuestionForm
+from staff.forms import LoginForm, LectureDetailsForm, PDFUploadForm, ConnectForm, FeedbackForm, QuestionForm
 from staff.models import Lecture, Session, Question, Feedback
 from staff.pdf_extractor import get_info
 from staff.templatetags.format_extras import runtime_format, question_time_format
@@ -101,7 +101,7 @@ def lecture_detail(request, id=None):
         }
         return JsonResponse(resp_data, status=200)
 
-    return render(request, 'staff/lecture_detail.html', {'lecture': instance, 'sessions': sessions, 'questions': last_session_questions})
+    return render(request, 'staff/lecture_detail.html', {'lecture': instance, 'session': instance.get_last_session(), 'sessions': sessions, 'questions': last_session_questions})
 
 @login_required(login_url='/login/')
 def session_new(self, id=None):
@@ -143,11 +143,11 @@ def lecture_delete(request, id=None):
     return redirect(reverse('staff:index'))
 
 @login_required(login_url='/login/')
-def lecture_new(request):
+def lecture_create(request):
     context = {}
     if request.method == 'POST':
         #create a form instance populated with the data sent in the form
-        form = NewLectureForm(request.POST)
+        form = LectureDetailsForm(request.POST)
         context['form'] = form
         pdf_form = PDFUploadForm(request.POST, request.FILES)
         context['pdf_form'] = pdf_form
@@ -169,16 +169,58 @@ def lecture_new(request):
         elif pdf_form.is_valid():
             try:
                 info = get_info(request.FILES['lecture_pdf_file'])
-                context['form'] = NewLectureForm(initial={'title': info['title'], 'slide_count': info['pageCount']})
+                context['form'] = LectureDetailsForm(initial={'title': info['title'], 'slide_count': info['pageCount']})
             except PdfReadError:
                 messages.error(request, _('File has not been decrypted'))
         else:
             context['invalid_form_error'] = True
     else:
-        context['form'] = NewLectureForm()
+        context['form'] = LectureDetailsForm()
         context['pdf_form'] = PDFUploadForm()
 
     return render(request, 'staff/lecture_new.html', context)
+
+@login_required(login_url='/login/')
+def lecture_update(request, id=None):
+    context = {}
+    lecture = get_object_or_404(Lecture, id=id)
+    context['lecture'] = lecture
+    if request.method == 'POST':
+        #create a form instance populated with the data sent in the form
+        form = LectureDetailsForm(request.POST)
+        context['form'] = form
+        pdf_form = PDFUploadForm(request.POST, request.FILES)
+        context['pdf_form'] = pdf_form
+        #check new lecture data is valid
+        if form.is_valid():
+            lecture.title = form.cleaned_data.get('title')
+            lecture.slide_count = form.cleaned_data.get('slide_count')
+            lecture.notes = form.cleaned_data.get('notes')
+            lecture.save()
+
+            #redirect to view lecture index
+            return redirect(reverse('staff:lecture_detail', kwargs={'id': lecture.id}))
+        #check pdf is valid
+        elif pdf_form.is_valid():
+            try:
+                info = get_info(request.FILES['lecture_pdf_file'])
+                context['form'] = LectureDetailsForm(initial={'title': info['title'], 'slide_count': info['pageCount']})
+            except PdfReadError:
+                messages.error(request, _('File has not been decrypted'))
+        else:
+            context['invalid_form_error'] = True
+    else:
+        context['form'] = LectureDetailsForm(initial={'title': lecture.title, 'slide_count': lecture.slide_count, 'notes': lecture.notes})
+        context['pdf_form'] = PDFUploadForm()
+
+    return render(request, 'staff/lecture_edit.html', context)
+
+@login_required(login_url='/login/')
+def session_question_list(request, id=None):
+    #pdb.set_trace();
+    session = get_object_or_404(Session, id=id)
+    questions = session.question_set.filter(is_reviewed=False).order_by("-time_posted")
+    return render(request, 'staff/questions_list.html', {'session': session, 'questions': questions})
 
 @login_required(login_url='/login/')
 def question_mark_reviewed(request, id=None):

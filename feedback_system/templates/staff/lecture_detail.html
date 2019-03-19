@@ -6,9 +6,20 @@
 
 {% block title %}{% trans "Lecture Feedback Detail" %}{% endblock %}
 
-{% block script %}<script src="{% static 'js/lecture_detail.js' %}"></script>{% endblock %}
+
+
+{% block script %}
+  <script src="{% static 'js/lecture_detail.js' %}"></script>
+  <script>
+    function updateQuestions(){
+        $('#questionDiv').html('').load("{% url 'staff:session_question_list' session.id %}");
+    }
+    setInterval(updateQuestions, 10000);
+  </script>
+{% endblock %}
 
 {% block nav_options %}
+
 <div>
   <ul class="navbar-nav mr-auto d-flex flex-row">
     <li class="nav-item">
@@ -91,7 +102,8 @@
       </table>
     </div>
     <div class="col-sm-6 hidden_panel remember_visibility" id="questionDiv">
-      <center>
+      {% include 'staff/questions_list.html' %}
+      <!-- <center>
         <h3>{% trans "Current Questions" %}{% if not lecture.get_last_session.is_taking_questions %} <small>[{% trans "Disabled" %}]</small>{% endif %}</h3>
       </center>
       <hr class="mt-0" />
@@ -115,7 +127,7 @@
       <center>
         <h4>{% trans "No Questions for this Session" %}</h4>
       </center>
-      {% endif %}
+      {% endif %} -->
     </div>
   </div>
   <div class="row hidden_panel remember_visibility" id="detailDiv">
@@ -140,10 +152,9 @@
         <label for="exampleFormControl6">{% trans "Total Runtime" %}</label>
         <input class="form-control" id="exampleFormControl6" type="text" placeholder="{{lecture.get_total_runtime|runtime_format}}" readonly>
       </div>
+      <a href="{% url 'staff:lecture_update' lecture.id %}">{% trans 'Edit' %}</a>
     </div>
     <div class="col-sm-5">
-      <!-- <p>Notes</p> -->
-      <!-- <p>{{lecture.notes}}</p> -->
       <label for="notesArea">{% trans "Notes" %}</label>
       <textarea name="name" rows="8" cols="80" class="form-control" id="notesArea" type="text" placeholder="{{lecture.notes}}" readonly></textarea>
     </div>

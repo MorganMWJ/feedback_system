@@ -1,0 +1,28 @@
+{% load i18n %}
+{% load format_extras %}
+
+<center>
+  <h3>{% trans "Current Questions" %}{% if not session.is_taking_questions %} <small>[{% trans "Disabled" %}]</small>{% endif %}</h3>
+</center>
+<hr class="mt-0" />
+{% if questions %}
+<ul class="list-group list-group-flush">
+  {% for question in questions %}
+  <li class="list-group-item">
+    <div class="row">
+      <div class="col-9 fix_overflow">
+        {{ question.question_text }}
+      </div>
+      <div class="col-3">
+        <small>{{question.get_time_posted_ago|question_time_format}}</small>
+        <a href="{% url 'staff:question_mark_reviewed' question.id %}" role="button" class="btn btn-success btn-sm">{% trans "Mark Reviewed" %}</a>
+      </div>
+    </div>
+  </li>
+  {% endfor %}
+</ul>
+{% else %}
+<center>
+  <h4>{% trans "No Questions for this Session" %}</h4>
+</center>
+{% endif %}
