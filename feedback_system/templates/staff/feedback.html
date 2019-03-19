@@ -4,7 +4,7 @@
 {% load format_extras %}
 
 {% block title %}{% trans "Lecture Feedback" %}{% endblock %}
-
+{% block session_code %}{{session.code}}{% endblock %}
 {% block nav_options %}
   <div>
     <ul class="navbar-nav mr-auto d-flex flex-row">
@@ -16,7 +16,14 @@
 {% endblock %}
 
 {% block content %}
-<div class="container-fluid bg-light py-3">
+<div class="container-fluid bg-light pb-3">
+  {% if request.session.connected_session_id %}
+  <div class="row">
+    <div class="col-sm-auto bg-dark h3 text-white py-2 px-4 rounded-bottom-right">
+      <span>{% trans "Session Code" %}: {{session.code}}</span>
+    </div>
+  </div>
+  {% endif %}
   {% if messages %}
   {% for message in messages %}
     <div class="alert alert-danger text-center" role="alert">{{ message }}</div>
@@ -39,17 +46,19 @@
       </form>
     </div>
     <div class="col-sm-5 border-right border-left">
-      <center><h3>{% trans "Ask Questions" %}</h3></center>
-      <hr class="mt-0"/>
-      <form action="{% url 'staff:question_new' %}" method="post" class="px-4">
-        {% csrf_token %}
-        {% bootstrap_form question_form %}
-        {% buttons %}
-        <button type="submit" class="btn btn-primary">
-          {% trans "Post" %}
-        </button>
-        {% endbuttons %}
-      </form>
+      {% if session.is_taking_questions %}
+        <center><h3>{% trans "Ask Questions" %}</h3></center>
+        <hr class="mt-0"/>
+        <form action="{% url 'staff:question_new' %}" method="post" class="px-4">
+          {% csrf_token %}
+          {% bootstrap_form question_form %}
+          {% buttons %}
+          <button type="submit" class="btn btn-primary">
+            {% trans "Post" %}
+          </button>
+          {% endbuttons %}
+        </form>
+      {% endif %}
       <center><h3>{% trans "Your Questions" %}</h3></center>
       <hr class="mt-0"/>
       {% if questions %}

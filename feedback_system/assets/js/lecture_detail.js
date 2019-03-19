@@ -40,6 +40,18 @@ $(document).ready(function() {
     $("#feedbackDiv").toggle("fast");
     savePanels();
   });
+
+  $(".session_row").click(function(event) {
+    let pos = event.target.id
+    $.ajax({url: `/session/${pos}/questions/`,
+            type: "GET",
+            dataytype: 'json',
+            success: function(response){
+              $("#exampleFormControl6").attr("placeholder", response.total_runtime);
+            }}
+    );
+  });
+
 });
 
 /* This code is functional AJAX example */

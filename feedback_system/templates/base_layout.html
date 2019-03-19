@@ -22,7 +22,7 @@
         <small>
           {% if user.is_authenticated %}
             {{user.get_full_name}} ({{user.email}})
-          {% endif %}         
+          {% endif %}
         </small>
       </span>
       {% block nav_options %}

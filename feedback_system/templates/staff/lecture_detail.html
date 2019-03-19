@@ -7,6 +7,7 @@
 {% block title %}{% trans "Lecture Feedback Detail" %}{% endblock %}
 
 {% block script %}<script src="{% static 'js/lecture_detail.js' %}"></script>{% endblock %}
+
 {% block nav_options %}
 <div>
   <ul class="navbar-nav mr-auto d-flex flex-row">
@@ -35,6 +36,8 @@
       <hr />
       {% if sessions.count > 0 %}
       <h1>{% trans "Session Code" %}: {{ lecture.get_last_session.code }}</h1>
+      {% else %}
+      <h1>{% trans "Start a feedback session" %}</h1>
       {% endif %}
       <div class="d-flex flex-row justify-content-center">
         <div>
@@ -72,7 +75,7 @@
         {% if sessions %}
         <tbody>
           {% for session in sessions %}
-          <tr>
+          <tr id="{{ session.id }}" class="session_row">
             <th>{{ forloop.counter }}</th>
             <td>{{ session.start_time|date:'d M, Y - h:i a' }}</td>
             {% if forloop.last and lecture.get_last_session.is_running %}
@@ -89,7 +92,7 @@
     </div>
     <div class="col-sm-6 hidden_panel remember_visibility" id="questionDiv">
       <center>
-        <h3>{% trans "Current Questions" %}</h3>
+        <h3>{% trans "Current Questions" %}{% if not lecture.get_last_session.is_taking_questions %} <small>[{% trans "Disabled" %}]</small>{% endif %}</h3>
       </center>
       <hr class="mt-0" />
       {% if questions %}
@@ -116,6 +119,8 @@
     </div>
   </div>
   <div class="row hidden_panel remember_visibility" id="detailDiv">
+    <div class="col-sm-1">
+    </div>
     <div class="col-sm-3">
       <div class="form-group">
         <label for="exampleFormControl1">{% trans "Lecture Title" %}</label>
@@ -126,7 +131,7 @@
         <input class="form-control" id="exampleFormControl3" type="text" placeholder="{{lecture.slide_count}}" readonly>
       </div>
     </div>
-    <div class="col-sm-3">
+    <div class="col-sm-2">
       <div class="form-group">
         <label for="exampleFormControl8">{% trans "First Started" %}</label>
         <input class="form-control" id="exampleFormControl8" type="text" placeholder="{% if lecture.get_first_started %}{{lecture.get_first_started|date:'d M, Y - h:i a'}}{% else %}N/A{% endif %}" readonly>
@@ -136,12 +141,14 @@
         <input class="form-control" id="exampleFormControl6" type="text" placeholder="{{lecture.get_total_runtime|runtime_format}}" readonly>
       </div>
     </div>
-    {% if lecture.notes %}
-    <div class="col-sm-auto">
-      <p>Notes</p>
-      <p>{{lecture.notes}}</p>
+    <div class="col-sm-5">
+      <!-- <p>Notes</p> -->
+      <!-- <p>{{lecture.notes}}</p> -->
+      <label for="notesArea">{% trans "Notes" %}</label>
+      <textarea name="name" rows="8" cols="80" class="form-control" id="notesArea" type="text" placeholder="{{lecture.notes}}" readonly></textarea>
     </div>
-    {% endif %}
+    <div class="col-sm-1">
+    </div>
   </div>
 </div>
 {% endblock %}

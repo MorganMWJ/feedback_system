@@ -85,14 +85,14 @@ def lecture_detail(request, id=None):
     #pdb.set_trace()
     instance = get_object_or_404(Lecture, id=id)
     sessions = instance.session_set.all().order_by("start_time")
-
-    #combine all this lecture's sessions' questions
-    allQuestions = []
-    for s in sessions:
-        allQuestions = list(chain(allQuestions, s.question_set.filter(is_reviewed=False).order_by("time_posted")))
-
-    #put in feedback totals for each category - TODO
+    last_session_questions = []
     feedbackSummary = []
+
+    if sessions:
+        #get last sessions questions
+        last_session_questions = list(instance.get_last_session().question_set.filter(is_reviewed=False).order_by("-time_posted"))
+        #put in feedback totals for each category - TODO
+
 
     if request.is_ajax() and request.method == 'GET':
         resp_data = {
@@ -100,8 +100,8 @@ def lecture_detail(request, id=None):
             # more data
         }
         return JsonResponse(resp_data, status=200)
-        
-    return render(request, 'staff/lecture_detail.html', {'lecture': instance, 'sessions': sessions, 'questions': allQuestions})
+
+    return render(request, 'staff/lecture_detail.html', {'lecture': instance, 'sessions': sessions, 'questions': last_session_questions})
 
 @login_required(login_url='/login/')
 def session_new(self, id=None):
@@ -144,7 +144,6 @@ def lecture_delete(request, id=None):
 
 @login_required(login_url='/login/')
 def lecture_new(request):
-    # pdb.set_trace()
     context = {}
     if request.method == 'POST':
         #create a form instance populated with the data sent in the form
@@ -191,7 +190,6 @@ def question_mark_reviewed(request, id=None):
 
 def connect(request):
     context = {}
-    #pdb.set_trace()
     if request.method == 'POST':
         form = ConnectForm(request.POST)
         context['form'] = form
@@ -206,7 +204,7 @@ def connect(request):
                     return HttpResponseRedirect(reverse('staff:feedback'))
                 else:
                     messages.error(request, _('Lecture is not active'))
-            except Lecture.DoesNotExist:
+            except Session.DoesNotExist:
                 messages.error(request, _('Invalid lecture feedback code'))
         else:
             messages.error(request, _('Invalid POST Data'))
@@ -225,7 +223,6 @@ def disconnect(request):
 
 def feedback(request):
     context = {}
-    # pdb.set_trace()
     try:
         session = Session.objects.get(pk=request.session['connected_session_id'])
     except (KeyError, Session.DoesNotExist):
@@ -238,7 +235,7 @@ def feedback(request):
         context['feedback_form'] = FeedbackForm(session.lecture)
         context['question_form'] = QuestionForm()
         if 'questions_asked' in request.session:
-            context['questions'] = Question.objects.filter(pk__in=request.session['questions_asked'])
+            context['questions'] = Question.objects.filter(pk__in=request.session['questions_asked']).order_by("-time_posted")
     else:
         messages.error(request, _('Session is not active'))
         return HttpResponseRedirect(reverse('staff:disconnect'))
@@ -247,7 +244,6 @@ def feedback(request):
 
 def feedback_new(request):
     context = {}
-    pdb.set_trace()
     try:
         session = Session.objects.get(pk=request.session['connected_session_id'])
     except (KeyError, Session.DoesNotExist):
@@ -280,7 +276,6 @@ def feedback_new(request):
     return HttpResponseRedirect(reverse('staff:feedback'))
 
 def question_new(request):
-    # pdb.set_trace()
     try:
         session = Session.objects.get(pk=request.session['connected_session_id'])
     except (KeyError, Session.DoesNotExist):
@@ -299,7 +294,7 @@ def question_new(request):
                     request.session['questions_asked'] = [newQuestion.id]
             else:
                 messages.error(request, _('Invalid POST Data'))
-    elif not lecture.is_running:
+    elif not session.is_running:
         messages.error(request, _('Please connect to active session with valid feedback code'))
     else:
         messages.error(request, _('Session not currently taking questions'))
