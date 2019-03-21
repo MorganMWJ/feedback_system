@@ -93,15 +93,27 @@ def lecture_detail(request, id=None):
         last_session_questions = list(instance.get_last_session().question_set.filter(is_reviewed=False).order_by("-time_posted"))
         #put in feedback totals for each category - TODO
 
+    return render(request, 'staff/lecture_detail.html', {'lecture': instance, 'session': instance.get_last_session(), 'sessions': sessions, 'questions': last_session_questions})
 
+@login_required(login_url='/login/')
+def lecture_runtime(request, id=None):
+    lecture = get_object_or_404(Lecture, id=id)
     if request.is_ajax() and request.method == 'GET':
         resp_data = {
-            'total_runtime': runtime_format(instance.get_total_runtime()),
+            'total_runtime': runtime_format(lecture.get_total_runtime()),
             # more data
         }
         return JsonResponse(resp_data, status=200)
 
-    return render(request, 'staff/lecture_detail.html', {'lecture': instance, 'session': instance.get_last_session(), 'sessions': sessions, 'questions': last_session_questions})
+@login_required(login_url='/login/')
+def session_runtime(request, id=None):
+    session = get_object_or_404(Session, id=id)
+    if request.is_ajax() and request.method == 'GET':
+        resp_data = {
+            'runtime': runtime_format(session.get_runtime()),
+            # more data
+        }
+        return JsonResponse(resp_data, status=200)
 
 @login_required(login_url='/login/')
 def session_new(self, id=None):

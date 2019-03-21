@@ -28,10 +28,14 @@ urlpatterns = [
     path('lecture/<int:id>/edit/', views.lecture_update, name='lecture_update'),
     #/lectures/?/delete/
     path('lecture/<int:id>/delete/', views.lecture_delete, name='lecture_delete'),
+    #/lectures/?/runtime/
+    path('lecture/<int:id>/runtime/', views.lecture_runtime, name='lecture_runtime'),
     #/lectures/?/start_session/
     path('lecture/<int:id>/session/new/', views.session_new, name='session_new'),
     #/lectures/?/stop_session/
     path('session/<int:id>/stop/', views.session_stop, name='session_stop'),
+    #/session/?/runtime/
+    path('session/<int:id>/runtime/', views.session_runtime, name='session_runtime'),
     #/lectures/?/generate_session_code/
     path('session/<int:id>/regenerate_code/', views.session_regenerate_code, name='session_regenerate_code'),
     #/lectures/?/toggle_questions/

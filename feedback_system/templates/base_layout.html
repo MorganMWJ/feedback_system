@@ -39,7 +39,7 @@
         {% csrf_token %}
         <input name="next" type="hidden" value="{{ request.get_full_path }}" />
         <input name="language" type="hidden" value="cy" />
-        <input class="fixed-bottom ml-4 mb-4 btn btn-info" type="submit" value="Newid i'r Gymraeg"/>
+        <input class="fixed-bottom ml-4 mb-4 btn btn-info" type="submit" value="Cymraeg"/>
       </form>
     {% else %}
       <form action="{% url 'set_language' %}" method="post" class="float-right">
@@ -47,7 +47,7 @@
         <!--  Need slice:'3:' becasue need to remove /cy prefix when going back to english version of site-->
         <input name="next" type="hidden" value="{{ request.get_full_path|slice:'3:' }}" />
         <input name="language" type="hidden" value="en" />
-        <input class="fixed-bottom ml-4 mb-4 btn btn-info" type="submit" value="Switch to English"/>
+        <input class="fixed-bottom ml-4 mb-4 btn btn-info" type="submit" value="English"/>
       </form>
     {% endif %}
 

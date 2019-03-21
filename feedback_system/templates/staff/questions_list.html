@@ -1,10 +1,6 @@
 {% load i18n %}
 {% load format_extras %}
 
-<center>
-  <h3>{% trans "Current Questions" %}{% if not session.is_taking_questions %} <small>[{% trans "Disabled" %}]</small>{% endif %}</h3>
-</center>
-<hr class="mt-0" />
 {% if questions %}
 <ul class="list-group list-group-flush">
   {% for question in questions %}

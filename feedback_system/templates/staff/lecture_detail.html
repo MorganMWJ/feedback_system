@@ -9,12 +9,28 @@
 
 
 {% block script %}
-  <script src="{% static 'js/lecture_detail.js' %}"></script>
-  <script>
-    function updateQuestions(){
-        $('#questionDiv').html('').load("{% url 'staff:session_question_list' session.id %}");
+<script src="{% static 'js/lecture_detail.js' %}"></script>
+<script>
+  function updateQuestions(){
+        $('#reloadable_content_questions').html('').load("{% url 'staff:session_question_list' session.id %}");
     }
     setInterval(updateQuestions, 10000);
+
+    function updateTime(){
+      $.ajax({url: "{% url 'staff:lecture_runtime' lecture.id %}",
+              type: "GET",
+              dataytype: 'json',
+              success: function(response){
+                $("#exampleFormControl6").attr("placeholder", response.total_runtime);
+              }});
+      $.ajax({url: "{% url 'staff:session_runtime' session.id %}",
+              type: "GET",
+              dataytype: 'json',
+              success: function(response){
+                $("td.time").last().text(response.runtime);
+              }});
+    }
+    setInterval(updateTime, 1000);
   </script>
 {% endblock %}
 
@@ -39,7 +55,17 @@
       <button class="btn mx-1" type="button" id="toggleDetailBtn">Toggle Detail</button>
       <button class="btn mx-1" type="button" id="toggleSessionBtn">Toggle Sessions</button>
       <button class="btn mx-1" type="button" id="toggleQuestionBtn">Toggle Questions</button>
-      <button class="btn mx-1" type="button" id="toggleGraphBtn">Toggle Graphs</button>
+      <div class="button-group">
+        <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown">Display Options <span class="caret"></span></button>
+        <ul class="dropdown-menu">
+          <li><a href="#" class="small" data-value="option1" tabIndex="-1"><input type="checkbox" />&nbsp;Option 1</a></li>
+          <li><a href="#" class="small" data-value="option2" tabIndex="-1"><input type="checkbox" />&nbsp;Option 2</a></li>
+          <li><a href="#" class="small" data-value="option3" tabIndex="-1"><input type="checkbox" />&nbsp;Option 3</a></li>
+          <li><a href="#" class="small" data-value="option4" tabIndex="-1"><input type="checkbox" />&nbsp;Option 4</a></li>
+          <li><a href="#" class="small" data-value="option5" tabIndex="-1"><input type="checkbox" />&nbsp;Option 5</a></li>
+          <li><a href="#" class="small" data-value="option6" tabIndex="-1"><input type="checkbox" />&nbsp;Option 6</a></li>
+        </ul>
+      </div>
     </div>
   </div>
   <div class="row my-4 d-flex justify-content-center">
@@ -94,7 +120,7 @@
             {% else %}
             <td>{{ session.end_time|date:'d M, Y - h:i a' }}</td>
             {% endif %}
-            <td>{{ session.get_runtime|runtime_format }}</td>
+            <td class="time">{{ session.get_runtime|runtime_format }}</td>
           </tr>
           {% endfor %}
         </tbody>
@@ -102,32 +128,11 @@
       </table>
     </div>
     <div class="col-sm-6 hidden_panel remember_visibility" id="questionDiv">
-      {% include 'staff/questions_list.html' %}
-      <!-- <center>
-        <h3>{% trans "Current Questions" %}{% if not lecture.get_last_session.is_taking_questions %} <small>[{% trans "Disabled" %}]</small>{% endif %}</h3>
+      <center>
+        <h3>{% trans "Current Questions" %}{% if not session.is_taking_questions %} <small>[{% trans "Disabled" %}]</small>{% endif %}</h3>
       </center>
       <hr class="mt-0" />
-      {% if questions %}
-      <ul class="list-group list-group-flush">
-        {% for question in questions %}
-        <li class="list-group-item">
-          <div class="row">
-            <div class="col-9 fix_overflow">
-              {{ question.question_text }}
-            </div>
-            <div class="col-3">
-              <small>{{question.get_time_posted_ago|question_time_format}}</small>
-              <a href="{% url 'staff:question_mark_reviewed' question.id %}" role="button" class="btn btn-success btn-sm">{% trans "Mark Reviewed" %}</a>
-            </div>
-          </div>
-        </li>
-        {% endfor %}
-      </ul>
-      {% else %}
-      <center>
-        <h4>{% trans "No Questions for this Session" %}</h4>
-      </center>
-      {% endif %} -->
+      <div id="reloadable_content_questions">{% include 'staff/questions_list.html' %}</div>
     </div>
   </div>
   <div class="row hidden_panel remember_visibility" id="detailDiv">
