@@ -1,0 +1,49 @@
+#web_app_title{
+  font-size: 200%;
+}
+/*Code to get user under navbar title*/
+#web_app_title small{
+  display:block;
+  font-size: 50%;
+}
+#id_lecture_pdf_file{
+  margin-left: 1rem;
+}
+.rounded-bottom-right{
+  border-bottom-right-radius: 15px;
+}
+div.hidden_panel
+{
+   display: none;
+}
+.fix_overflow{
+   word-wrap: break-word;
+}
+/* .scroll{
+  overflow: scroll;
+} */
+/*Code to set background image*/
+/* body{
+  background-image: url("{% static "img/aber_landscape12.jpg" %}");
+} */
+html {
+  font-size: 1rem;
+}
+
+@include media-breakpoint-up(sm) {
+  html {
+    font-size: 1.2rem;
+  }
+}
+
+@include media-breakpoint-up(md) {
+  html {
+    font-size: 1.4rem;
+  }
+}
+
+@include media-breakpoint-up(lg) {
+  html {
+    font-size: 1.6rem;
+  }
+}

@@ -1,0 +1,176 @@
+{% extends 'base_layout.html' %}
+{% load static %}
+{% load i18n %}
+<!-- {% load bootstrap3 %} -->
+{% load format_extras %}
+
+{% block title %}{% trans "Lecture Feedback Detail" %}{% endblock %}
+
+
+{% block script %}
+<script src="{% static 'js/lecture_detail.js' %}"></script>
+{% if last_session %}
+<script>
+  $(document).ready(function() {
+
+    $('#session_table tbody tr').click(function(){
+      $('tr').removeClass("table-active");
+    	$(this).addClass("table-active");
+      updateQuestions();
+    });
+
+    function updateQuestions(){
+      let id = "";
+      $('.table-active').each(function() {
+          id = this.id;
+      });
+      let urlStr = "{% url 'staff:session_questions' 123 %}".replace('123', id);
+      $('#reloadable_content_questions').html('').load(urlStr);
+    }
+    setInterval(updateQuestions, 5000);
+  //
+  //     function updateTime(){
+  //       $.ajax({url: "{% url 'staff:session_runtime' last_session.id %}",
+  //               type: "GET",
+  //               dataytype: 'json',
+  //               success: function(response){
+  //                 $("td.time").last().text(response.runtime);
+  //               }});
+  //     }
+  //     setInterval(updateTime, 1000);
+  });
+  </script>
+{% endif %}
+{% endblock %}
+
+{% block nav_options %}
+
+<div>
+  <ul class="navbar-nav mr-auto d-flex flex-row">
+    <li class="nav-item">
+      <a class="nav-link border-right border-white p-3" href="{% url 'staff:feedback_detail' lecture.id %}" role="button">{% trans "View Feedback" %}</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link border-right border-white p-3" href="{% url 'staff:index' %}" role="button">{% trans "Lecture History" %}</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link border-left border-white p-3" href="{% url 'staff:logout' %}" role="button">{% trans "Logout" %}</a>
+    </li>
+  </ul>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid bg-light pb-3">
+  <div class="row float-left">
+    <div class="col-sm-auto bg-dark p-3 rounded-bottom-right">
+      <div class="">
+        <div class="border-bottom rounded text-white pt-2"><label><input type="checkbox" value="">Show Sessions</label></div>
+        <div class="border-top border-bottom rounded text-white pt-2"><label><input type="checkbox" value="">Show Questions</label></div>
+        <div class="border-top rounded text-white pt-2"><label><input type="checkbox" value="">Show Details</label></div>
+      </div>
+      <!-- <button class="btn mx-1" type="button" id="toggleDetailBtn">Toggle Detail</button>
+      <button class="btn mx-1" type="button" id="toggleSessionBtn">Toggle Sessions</button>
+      <button class="btn mx-1" type="button" id="toggleQuestionBtn">Toggle Questions</button> -->
+      <!-- <div class="btn-group-vertical" role="group">
+        <label><input type="checkbox" value="">Show Sessions</label>
+        <label><input type="checkbox" value="">Show Questions</label>
+        <label><input type="checkbox" value="">Show Details</label>
+      </div> -->
+    </div>
+  </div>
+  <div class="row mb-4 d-flex justify-content-center">
+    <div class="col-sm-auto">
+      <hr />
+      {% if sessions %}
+      <h1>{% trans "Session Code" %}: {{ last_session.code }}</h1>
+      {% else %}
+      <h1>{% trans "Start a feedback session" %}</h1>
+      {% endif %}
+      <div class="col-sm-auto d-flex flex-row justify-content-center">
+        <div>
+          {% if last_session and last_session.is_running %}
+          <a href="{% url 'staff:session_stop' last_session.id %}" role="button" class="btn btn-lg btn-outline-danger mr-2">Stop Session</a>
+          {% else %}
+          <a href="{% url 'staff:session_new' lecture.id %}" role="button" class="btn btn-lg btn-outline-success mr-2">Start Session</a>
+          {% endif %}
+        </div>
+        <div>
+          {% if sessions %}
+          <a href="{% url 'staff:session_regenerate_code' last_session.id %}">{% trans "Generate New Code" %}</a>
+          <br />
+          <a href="{% url 'staff:session_toggle_questions' last_session.id %}">{% if last_session.is_taking_questions %}{% trans "Disable" %}{% else %}{% trans "Enable" %}{% endif %} {% trans "Questions" %}</a>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row my-4 d-flex justify-content-center">
+    <div class="col-sm-6 remember_visibility" id="sessionDiv">
+      <center>
+        <h3>{% trans "Feedback Sessions" %}</h3>
+      </center>
+      <hr class="mt-0" />
+      {% if sessions %}
+      <table id="session_table" class="table table-bordered table-hover">
+        <thead class="thead-dark">
+          <tr>
+            <th scope="col">{% trans "Session" %}</th>
+            <th scope="col">{% trans "Startime" %}</th>
+            <th scope="col">{% trans "Endtime" %}</th>
+            <th scope="col">{% trans "Runtime" %}</th>
+            <th scope="col">{% trans "Options" %}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for session in sessions %}
+          <tr id="{{ session.id }}" class="session_row {% if forloop.last %}table-active{% endif %}">
+            <th>{{ forloop.counter }}</th>
+            <td>{{ session.start_time|date:'d M, Y - h:i a' }}</td>
+            {% if forloop.last and session.is_running %}
+            <td>{% trans "Session Running" %}</td>
+            {% else %}
+            <td>{{ session.end_time|date:'d M, Y - h:i a' }}</td>
+            {% endif %}
+            <td class="time">{{ session.get_runtime|runtime_format }}</td>
+            <td>
+              {% if not forloop.first %}<a href="{% url 'staff:session_merge_previous' session.id %}">Merge with Above Session</a><br />{% endif %}
+              {% if not forloop.last %}<a href="">Merge with Below Session</a><br />{% endif %}
+              <a href="{% url 'staff:session_delete' session.id %}" class="text-danger">Delete Session</a>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      {% else %}
+      <center>
+        <h4>{% trans "No Sessions" %}</h4>
+      </center>
+      {% endif %}
+    </div>
+    <div class="col-sm-6 remember_visibility" id="questionDiv">
+      <center>
+        <h3>{% trans "Questions" %}{% if last_session and not last_session.is_taking_questions %} <small>[{% trans "Disabled" %}]</small>{% endif %}</h3>
+      </center>
+      <hr class="mt-0" />
+      <div id="reloadable_content_questions">{% include 'staff/questions_list.html' %}</div>
+    </div>
+  </div>
+  <div class="row remember_visibility" id="detailDiv">
+    <div class="col-sm-auto">
+    </div>
+    <div class="col-sm-5">
+      <label for="exampleFormControl1">{% trans "Lecture Title" %}</label><a href="{% url 'staff:lecture_update' lecture.id %}" class="float-right">{% trans 'Edit' %}</a>
+      <input class="form-control" id="exampleFormControl1" type="text" placeholder="{{lecture.title}}" readonly>
+      <label for="exampleFormControl2">{% trans "Lecture Author" %}</label>
+      <input class="form-control" id="exampleFormControl2" type="text" placeholder="{{user.get_full_name}} {{user.email}}" readonly>
+      <label for="exampleFormControl3">{% trans "No. Slides" %}</label>
+      <input class="form-control" id="exampleFormControl3" type="text" placeholder="{{lecture.slide_count}}" readonly>
+      <label for="notesArea">{% trans "Notes" %}</label>
+      <textarea name="name" rows="8" cols="80" class="form-control" id="notesArea" type="text" placeholder="{{lecture.notes}}" readonly></textarea>
+    </div>
+    <div class="col-sm-auto">
+    </div>
+  </div>
+</div>
+{% endblock %}

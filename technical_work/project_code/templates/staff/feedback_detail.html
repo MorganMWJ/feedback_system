@@ -1,0 +1,79 @@
+{% extends 'base_layout.html' %}
+{% load static %}
+{% load i18n %}
+{% load format_extras %}
+
+{% block title %}{% trans "Feedback Detail" %}{% endblock %}
+
+
+{% block script %}
+<script src="{% static 'js/feedback_detail.js' %}"></script>
+{% endblock %}
+
+{% block nav_options %}
+<div>
+  <ul class="navbar-nav mr-auto d-flex flex-row">
+    <li class="nav-item">
+      <a class="nav-link border-right border-white p-3" href="{% url 'staff:lecture_detail' lecture.id %}" role="button">{% trans "Lecture Detail" %}</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link border-left border-white p-3" href="{% url 'staff:logout' %}" role="button">{% trans "Logout" %}</a>
+    </li>
+  </ul>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid bg-light pb-3">
+  <div class="row">
+    <div class="col-sm-3">
+      <center>
+        <h3>{% trans "Choose a Session" %}</h3>
+      </center>
+      <hr class="mt-0" />
+      <table id="session_table" class="table table-bordered table-hover">
+        <thead class="thead-dark">
+          <tr>
+            <th scope="col">{% trans "Session" %}</th>
+            <th scope="col">{% trans "Startime" %}</th>
+            <th scope="col">{% trans "Endtime" %}</th>
+            <th scope="col">{% trans "Runtime" %}</th>
+          </tr>
+        </thead>
+        <tbody>
+        </tbody>
+      </table>
+    </div>
+    <div class="col-sm-9">
+      <center>
+        <h3>{% trans "View the Feedback" %}</h3>
+      </center>
+      <hr class="mt-0" />
+      <div class="row">
+        <div class="col-sm-3"></div>
+        <div class="col-sm-6">
+          <canvas id="pie-chart-1" width="800" height="450"></canvas>
+        </div>
+        <div class="col-sm-3"></div>
+      </div>
+      <div class="row">
+        <div class="col-sm-6">
+          <canvas id="pie-chart-2" width="800" height="450"></canvas>
+        </div>
+        <div class="col-sm-6">
+          <canvas id="pie-chart-3" width="800" height="450"></canvas>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-6">
+          <canvas id="pie-chart-4" width="800" height="450"></canvas>
+        </div>
+        <div class="col-sm-6">
+          <canvas id="pie-chart-5" width="800" height="450"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<input type="hidden" id="lectureID" name="lecture" value="{{ lecture.id }}">
+{% endblock %}
