@@ -24,14 +24,14 @@
 {% endblock %}
 
 {% block content %}
-<div class="container-fluid bg-light pb-3">
-  <div class="row">
-    <div class="col-sm-4">
+<div class="container-fluid bg-light">
+  <div class="row bg-dark">
+    <div class="col-sm-4 pt-3 text-white">
       <center>
         <h3>{% trans "Choose a Session" %}</h3>
       </center>
-      <hr class="mt-0" />
-      <table id="session_table" class="table table-bordered table-hover">
+      <hr class="mt-0 border border-white" />
+      <table id="session_table" class="table table-bordered text-white table-hover">
         <thead class="thead-dark">
           <tr>
             <th scope="col">{% trans "Session" %}</th>
@@ -45,7 +45,7 @@
         </tbody>
       </table>
     </div>
-    <div class="col-sm-8">
+    <div class="col-sm-8 pt-3 bg-light">
       <center>
         <h3>{% trans "View the Feedback" %}</h3>
       </center>

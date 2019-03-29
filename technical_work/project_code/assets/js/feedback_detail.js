@@ -2,11 +2,6 @@ let activeSessionID = -1
 let charts = [];
 
 $(document).ready(function() {
-  $('#session_table tbody tr').click(function(){
-    $('tr').removeClass("table-active");
-    $(this).addClass("table-active");
-    activeSessionID = $(this).attr('id');
-  });
 
   function updatePage(){
     let lectureID = $('#lectureID').attr("value");
@@ -20,10 +15,16 @@ $(document).ready(function() {
         var html = "";
         $("#session_table tbody").empty();
         $.each(responseData, function(i, session){
-          html = html + "<tr id=" + session.id.toString() + " class='session_row ";
-          if(activeSessionID==session.id || i==responseData.length-1){
-            html = html + "table-active'>"
+          if(activeSessionID==session.id){
+            html = html + "<tr id=" + session.id.toString() + " class='session_row table-active bg-info'>";
             activeSessionID = session.id;
+          }
+          else if(i==responseData.length-1 && activeSessionID==-1){
+            html = html + "<tr id=" + session.id.toString() + " class='session_row table-active bg-info'>";
+            activeSessionID = session.id;
+          }
+          else{
+            html = html + "<tr id=" + session.id.toString() + " class='session_row'>";
           }
           html = html + "<th>" + (i+1).toString() + "</th>";
           html = html + "<td>" + session.code + "</td>";
@@ -33,6 +34,7 @@ $(document).ready(function() {
           html = html + "</tr>"
         });
         $("#session_table tbody").html(html);
+        addTableRowsClick();
       }
     });
 
@@ -82,5 +84,15 @@ $(document).ready(function() {
     });
   }
   setInterval(updatePage, 1000);
+
+  function addTableRowsClick(){
+    $('#session_table tbody tr').click(function(){
+      $('tr').removeClass("table-active");
+      $('tr').removeClass("bg-info");
+      $(this).addClass("table-active");
+      $(this).addClass("bg-info");
+      activeSessionID = $(this).attr('id');
+    });
+  }
 
 });
