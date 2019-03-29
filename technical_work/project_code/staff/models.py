@@ -74,54 +74,64 @@ class Session(models.Model):
 
     def get_feedback_summary(self):
         summary = []
+        import pdb
+        #pdb.set_trace()
         titles = ["Overall Lecture Feedback", "Lecture Delivery Speed", "Complexity of Lecture Content",
                     "Lecture Interest/Enagment", "Quality of Lecture Presentation"]
+        three_option_colours = ["#3cba9f", "#c4c22f", "#c45850"] #green, yellow, red
+        five_option_colours = ["#0000ff", "#00ccff", "#3cba9f", "#c45850", "#ff0000"]
 
-        dict = {"title": "Overall Lecture Feedback",
+        dict = {"title": titles[0],
                         "labels": [],
-                        "counts": []}
+                        "data": []}
         choices = Feedback._meta.get_field('overall_feedback').choices
         for choice in choices:
             dict["labels"].append(choice[1])
-            dict["counts"].append(Feedback.objects.filter(overall_feedback=choice[1]).count())
-        summary += dict
+            dict["data"].append(Feedback.objects.filter(overall_feedback=choice[0], session=self).count())
+        dict["colours"] = three_option_colours
+        summary.append(dict)
 
-        dict = {"title": "Lecture Delivery Speed",
+        dict = {"title": titles[1],
                         "labels": [],
-                        "counts": []}
+                        "data": []}
         choices = Feedback._meta.get_field('delivery_speed').choices
         for choice in choices:
             dict["labels"].append(choice[1])
-            dict["counts"].append(Feedback.objects.filter(delivery_speed=choice[1]).count())
-        summary += dict
+            dict["data"].append(Feedback.objects.filter(delivery_speed=choice[0], session=self).count())
+        dict["colours"] = five_option_colours
+        summary.append(dict)
 
-        dict = {"title": "Complexity of Lecture Content",
+        dict = {"title": titles[2],
                         "labels": [],
-                        "counts": []}
+                        "data": []}
         choices = Feedback._meta.get_field('content_complexity').choices
         for choice in choices:
             dict["labels"].append(choice[1])
-            dict["counts"].append(Feedback.objects.filter(content_complexity=choice[1]).count())
-        summary += dict
+            dict["data"].append(Feedback.objects.filter(content_complexity=choice[0], session=self).count())
+        dict["colours"] = five_option_colours
+        summary.append(dict)
 
-        dict = {"title": "Lecture Interest/Enagment",
+        dict = {"title": titles[3],
                         "labels": [],
-                        "counts": []}
+                        "data": []}
         choices = Feedback._meta.get_field('level_of_engagement').choices
         for choice in choices:
             dict["labels"].append(choice[1])
-            dict["counts"].append(Feedback.objects.filter(level_of_engagement=choice[1]).count())
-        summary += dict
+            dict["data"].append(Feedback.objects.filter(level_of_engagement=choice[0], session=self).count())
+        dict["colours"] = three_option_colours
+        summary.append(dict)
 
-        dict = {"title": "Quality of Lecture Presentation",
+        dict = {"title": titles[4],
                         "labels": [],
-                        "counts": []}
+                        "data": []}
         choices = Feedback._meta.get_field('content_presentation').choices
         for choice in choices:
             dict["labels"].append(choice[1])
-            dict["counts"].append(Feedback.objects.filter(content_presentation=choice[1]).count())
-        summary += dict
-        return summary
+            dict["data"].append(Feedback.objects.filter(content_presentation=choice[0], session=self).count())
+        dict["colours"] = three_option_colours
+        summary.append(dict)
+
+        return {'feedback_summary': summary}
 
 
     def merge_previous(self):
@@ -164,8 +174,8 @@ class Question(models.Model):
 class Feedback(models.Model):
     OVERALL_FEEDBACK_CHOICES = (
         ('POSITIVE', 'Good'),
-        ('NEGATIVE', 'Bad'),
         ('NEUTRAL', 'So-So'),
+        ('NEGATIVE', 'Bad'),
     )
     DELIVERY_SPEED_CHOICES = (
         ('V-SLOW', 'Very Slow'),
@@ -175,21 +185,22 @@ class Feedback(models.Model):
         ('V-FAST', 'Very Fast'),
     )
     CONTENT_COMPLEXITY_CHOICES = (
-        ('V-HARD', 'Very Difficult'),
-        ('HARD', 'Slightly Difficult'),
-        ('NORMAL', 'Normal'),
-        ('EASY', 'Slightly Easy'),
         ('V-EASY', 'Very Easy'),
+        ('EASY', 'Slightly Easy'),
+        ('NORMAL', 'Normal'),
+        ('HARD', 'Slightly Difficult'),
+        ('V-HARD', 'Very Difficult'),
     )
     CONTENT_PRESENTATION_CHOICES = (
-        ('NEGATIVE','Not Well Presented'),
-        ('NEUTRAL','Well Presented'),
         ('POSITIVE','Very Well Presented'),
+        ('NEUTRAL','Well Presented'),
+        ('NEGATIVE','Not Well Presented'),
+
     )
     LEVEL_OF_ENGAGMENT_CHOICES = (
-        ('NEGATIVE','Not Engaging/Interesting'),
-        ('NEUTRAL','Engaging/Interesting'),
         ('POSITIVE','Very Engaging/Interesting'),
+        ('NEUTRAL','Engaging/Interesting'),
+        ('NEGATIVE','Not Engaging/Interesting'),
     )
 
     time_posted = models.DateTimeField()

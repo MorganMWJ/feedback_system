@@ -102,8 +102,7 @@ def lecture_detail(request, id=None):
 
 def session_feedback_chart_data(request, id=None):
     session = get_object_or_404(Session, id=id)
-    dict = {'feedback_summary': session.get_feedback_summary()}
-    return JsonResponse(dict)
+    return JsonResponse(session.get_feedback_summary())
 
 class LectureSessionData(generics.ListAPIView):
     serializer_class = SessionSerializer
