@@ -19,6 +19,9 @@ div.hidden_panel
 .fix_overflow{
    word-wrap: break-word;
 }
+html, body {
+    height:100%;
+}
 /* .scroll{
   overflow: scroll;
 } */

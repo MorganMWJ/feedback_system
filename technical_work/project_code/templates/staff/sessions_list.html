@@ -1,0 +1,55 @@
+{% load i18n %}
+{% load format_extras %}
+
+<center>
+  <h3>{% trans "Feedback Sessions" %}</h3>
+</center>
+<hr class="mt-0" />
+{% if sessions %}
+<table id="session_table" class="table table-bordered table-hover">
+  <thead class="thead-dark">
+    <tr>
+      <th scope="col">{% trans "Session" %}</th>
+      <th scope="col">{% trans "Code" %}</th>
+      <th scope="col">{% trans "Startime" %}</th>
+      <th scope="col">{% trans "Endtime" %}</th>
+      <th scope="col">{% trans "Runtime" %}</th>
+      <th scope="col">{% trans "Options" %}</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for session in sessions %}
+    <tr id="{{ session.id }}" class="session_row {% if forloop.last %}bg-info{% endif %}">
+      <th>{{ forloop.counter }}</th>
+      <td>{{ session.code }}</td>
+      <td>{{ session.start_time|date:'d M, Y - h:i a' }}</td>
+      {% if forloop.last and session.is_running %}
+      <td>{% trans "Session Running" %}</td>
+      {% else %}
+      <td>{{ session.end_time|date:'d M, Y - h:i a' }}</td>
+      {% endif %}
+      <td class="time">{{ session.get_runtime|runtime_format }}</td>
+      <td>
+        <div class="bg-light p-1 border rounded">
+        {% if not forloop.first %}<a href="{% url 'staff:session_merge_previous' session.id %}">Merge with Above Session</a><br />{% endif %}
+        {% if not forloop.last %}<a href="">Merge with Below Session</a><br />{% endif %}
+        <a href="{% url 'staff:session_toggle_questions' session.id %}">
+          {% if session.is_taking_questions %}
+            {% trans "Disable" %}
+          {% else %}
+            {% trans "Enable" %}
+          {% endif %}
+           {% trans "Questions" %}</a><br />
+        <a href="{% url 'staff:session_regenerate_code' session.id %}">{% trans "Generate New Code" %}</a><br />
+        <a href="{% url 'staff:session_delete' session.id %}" class="text-danger">Delete Session</a>
+        </div>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% else %}
+<center>
+  <h4>{% trans "No Sessions" %}</h4>
+</center>
+{% endif %}

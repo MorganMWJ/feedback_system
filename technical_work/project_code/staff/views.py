@@ -93,13 +93,6 @@ def lecture_detail(request, id=None):
         context['last_session_questions'] = context['last_session'].question_set.filter(is_reviewed=False).order_by("-time_posted")
     return render(request, 'staff/lecture_detail.html', context)
 
-# class SessionFeedbackData(generics.ListAPIView):
-#     serializer_class = FeedbackSerializer
-#
-#     def get_queryset(self):
-#         session = Session.objects.filter(id=self.kwargs['id'])
-#         return session
-
 def session_feedback_chart_data(request, id=None):
     session = get_object_or_404(Session, id=id)
     return JsonResponse(session.get_feedback_summary())
@@ -114,16 +107,6 @@ class LectureSessionData(generics.ListAPIView):
 class SessionData(generics.ListAPIView):
     serializer_class = SessionSerializer
     queryset = Session.objects.all()
-
-@login_required(login_url='/login/')
-def session_runtime(request, id=None):
-    session = get_object_or_404(Session, id=id)
-    if request.is_ajax() and request.method == 'GET':
-        resp_data = {
-            'runtime': runtime_format(session.get_runtime()),
-            # more data
-        }
-        return JsonResponse(resp_data, status=200)
 
 @login_required(login_url='/login/')
 def session_new(request, id=None):
@@ -265,11 +248,12 @@ def session_questions(request, id=None):
     questions = session.question_set.filter(is_reviewed=False).order_by("-time_posted")
     return render(request, 'staff/questions_list.html', {'session': session, 'questions': questions})
 
-# @login_required(login_url='/login/')
-# def session_questions(request, id=None):
-#     session = get_object_or_404(Session, id=id)
-#     questions = session.question_set.filter(is_reviewed=False).order_by("-time_posted")
-#     return JsonResponse({questions: list(questions)})
+@login_required(login_url='/login/')
+def lecture_sessions(request, id=None):
+    context = {}
+    lecture = get_object_or_404(Lecture, id=id)
+    context['sessions'] = lecture.session_set.all().order_by("start_time")
+    return render(request, 'staff/sessions_list.html', context)
 
 @login_required(login_url='/login/')
 def question_mark_reviewed(request, id=None):

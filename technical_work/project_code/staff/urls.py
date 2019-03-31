@@ -42,8 +42,6 @@ urlpatterns = [
     path('session/<int:id>/merge_with_previous/', views.session_merge_previous, name='session_merge_previous'),
     #/session/?/merge_with_previous/
     path('session/<int:id>/merge_with_next/', views.session_merge_next, name='session_merge_next'),
-    #/session/?/runtime/
-    path('session/<int:id>/runtime/', views.session_runtime, name='session_runtime'),
     #/lecture/?/generate_session_code/
     path('session/<int:id>/regenerate_code/', views.session_regenerate_code, name='session_regenerate_code'),
     #/lecture/?/toggle_questions/
@@ -58,7 +56,10 @@ urlpatterns = [
     path('feedback/new/', views.feedback_new, name='feedback_new'),
 
     path('session/<int:id>/questions/', views.session_questions, name='session_questions'),
+    path('lecture/<int:id>/sessions/', views.lecture_sessions, name='lecture_sessions'),
 
+
+    #probably no longer using these below
     path('api/session/<int:id>/feedback/', views.session_feedback_chart_data, name='session_feedback_chart_data'),
     path('api/lecture/<int:id>/sessions/', views.LectureSessionData.as_view()),
     path('api/sessions/', views.SessionData.as_view()),
