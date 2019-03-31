@@ -1,0 +1,25 @@
+{% extends 'staff/feedback_sessions_list.html' %}
+{% load i18n %}
+{% load format_extras %}
+
+
+{% block extra_table_heading %}<th scope="col">{% trans "Options" %}</th>{% endblock %}
+
+
+{% block extra_table_column %}
+<td>
+  <div class="bg-light p-1 border rounded">
+  {% if not forloop.first %}<a href="{% url 'staff:session_merge_previous' session.id %}">Merge with Above Session</a><br />{% endif %}
+  {% if not forloop.last %}<a href="">Merge with Below Session</a><br />{% endif %}
+  <a href="{% url 'staff:session_toggle_questions' session.id %}">
+    {% if session.is_taking_questions %}
+      {% trans "Disable" %}
+    {% else %}
+      {% trans "Enable" %}
+    {% endif %}
+     {% trans "Questions" %}</a><br />
+  <a href="{% url 'staff:session_regenerate_code' session.id %}">{% trans "Generate New Code" %}</a><br />
+  <a href="{% url 'staff:session_delete' session.id %}" class="text-danger">Delete Session</a>
+  </div>
+</td>
+{% endblock %}

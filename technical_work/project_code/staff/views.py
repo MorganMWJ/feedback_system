@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.http import HttpResponseRedirect, JsonResponse
+from django.http import HttpResponseRedirect, JsonResponse, HttpResponseNotFound
 from django.urls import reverse
 from django.utils import translation
 from django.utils.translation import ugettext as _
@@ -17,11 +17,9 @@ from django.contrib import messages
 from ldap3 import core
 from PyPDF2.utils import PdfReadError
 from itertools import chain
-from rest_framework import generics
 
 from staff.forms import LoginForm, LectureDetailsForm, PDFUploadForm, ConnectForm, FeedbackForm, QuestionForm
 from staff.models import Lecture, Session, Question, Feedback
-from staff.serializers import SessionSerializer, FeedbackSerializer
 from staff.pdf_extractor import get_info
 from staff.templatetags.format_extras import runtime_format, question_time_format
 
@@ -90,23 +88,11 @@ def lecture_detail(request, id=None):
     context['sessions'] = context['lecture'].session_set.all().order_by("start_time")
     if context['sessions']:
         context['last_session'] = context['sessions'].last()
-        context['last_session_questions'] = context['last_session'].question_set.filter(is_reviewed=False).order_by("-time_posted")
     return render(request, 'staff/lecture_detail.html', context)
 
 def session_feedback_chart_data(request, id=None):
     session = get_object_or_404(Session, id=id)
     return JsonResponse(session.get_feedback_summary())
-
-class LectureSessionData(generics.ListAPIView):
-    serializer_class = SessionSerializer
-
-    def get_queryset(self):
-        lecture = Lecture.objects.get(pk=self.kwargs['id'])
-        return lecture.session_set.all().order_by("start_time")
-
-class SessionData(generics.ListAPIView):
-    serializer_class = SessionSerializer
-    queryset = Session.objects.all()
 
 @login_required(login_url='/login/')
 def session_new(request, id=None):
@@ -249,11 +235,18 @@ def session_questions(request, id=None):
     return render(request, 'staff/questions_list.html', {'session': session, 'questions': questions})
 
 @login_required(login_url='/login/')
-def lecture_sessions(request, id=None):
+def lecture_sessions(request, id=None, version=None):
     context = {}
     lecture = get_object_or_404(Lecture, id=id)
     context['sessions'] = lecture.session_set.all().order_by("start_time")
-    return render(request, 'staff/sessions_list.html', context)
+    if version=='v1':
+        return render(request, 'staff/lecture_sessions_list.html', context)
+    elif version=='v2':
+        return render(request, 'staff/feedback_sessions_list.html', context)
+    else:
+        return HttpResponseNotFound("404 :(")
+
+
 
 @login_required(login_url='/login/')
 def question_mark_reviewed(request, id=None):
@@ -397,6 +390,7 @@ def question_delete(request, id=None):
 def feedback_detail(request, id=None):
     context ={}
     context['lecture'] = get_object_or_404(Lecture, id=id)
+    context['sessions'] = context['lecture'].session_set.all().order_by("start_time")
     return render(request, 'staff/feedback_detail.html', context)
 
 

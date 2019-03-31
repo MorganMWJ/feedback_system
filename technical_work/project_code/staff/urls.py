@@ -56,12 +56,10 @@ urlpatterns = [
     path('feedback/new/', views.feedback_new, name='feedback_new'),
 
     path('session/<int:id>/questions/', views.session_questions, name='session_questions'),
-    path('lecture/<int:id>/sessions/', views.lecture_sessions, name='lecture_sessions'),
+    path('lecture/<int:id>/sessions/<str:version>/', views.lecture_sessions, name='lecture_sessions'),
 
 
     #probably no longer using these below
     path('api/session/<int:id>/feedback/', views.session_feedback_chart_data, name='session_feedback_chart_data'),
-    path('api/lecture/<int:id>/sessions/', views.LectureSessionData.as_view()),
-    path('api/sessions/', views.SessionData.as_view()),
 
 ]

@@ -9,6 +9,9 @@
 #id_lecture_pdf_file{
   margin-left: 1rem;
 }
+#blackText{
+  color: black;
+}
 .rounded-bottom-right{
   border-bottom-right-radius: 15px;
 }

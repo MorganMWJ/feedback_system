@@ -32,63 +32,50 @@
 <div class="container-fluid bg-light h-100">
   <div class="row bg-dark">
     <div class="col-sm-4 pt-3 h-100 text-white">
-        <div class="">
-
-          <!-- <div class="card">
-            <div class="card-body">
-              <h5 class="card-title">Lecture Details</h5>
-              <h6 class="card-subtitle mb-2 text-muted">{% trans "Lecture Title" %}</h6><a href="{% url 'staff:lecture_update' lecture.id %}" class="float-right">{% trans 'Edit' %}</a>
-              <center><p class="card-text">{{lecture.title}}</p></center>
-              <h6 class="card-subtitle mb-2 text-muted">{% trans "Lecture Author" %}</h6>
-              <center><p class="card-text">{{ user.get_full_name }} {{user.email}}</p></center>
-              <h6 class="card-subtitle mb-2 text-muted">{% trans "No. Slides" %}</h6>
-              <center><p class="card-text">{{lecture.slide_count}}</p></center>
-              <h6 class="card-subtitle mb-2 text-muted">{% trans "Notes" %}</h6>
-              <p class="card-text">{{ lecture.notes }}</p>
-              <a href="{% url 'staff:lecture_update' lecture.id %}" class="float-right card-link">{% trans 'Edit' %}</a>
-            </div>
-          </div> -->
-          <label for="exampleFormControl1" class="h6">{% trans "Lecture Title" %}</label><a href="{% url 'staff:lecture_update' lecture.id %}" class="float-right">{% trans 'Edit' %}</a>
-          <input class="form-control " id="exampleFormControl1" type="text" placeholder="{{lecture.title}}" readonly>
-          <label for="exampleFormControl2" class="h6">{% trans "Lecture Author" %}</label>
-          <input class="form-control" id="exampleFormControl2" type="text" placeholder="{{user.get_full_name}} {{user.email}}" readonly>
-          <label for="exampleFormControl3" class="h6">{% trans "No. Slides" %}</label>
-          <input class="form-control" id="exampleFormControl3" type="text" placeholder="{{lecture.slide_count}}" readonly>
-          <label for="notesArea" class="h6">{% trans "Notes" %}</label>
-          <textarea name="name" rows="8" cols="80" class="form-control" id="notesArea" type="text" placeholder="{{lecture.notes}}" readonly></textarea>
-        </div>
-
-      <!-- <div class="">
-        <div class="border-bottom rounded text-white pt-2"><label><input type="checkbox" value="">Show Sessions</label></div>
-        <div class="border-top border-bottom rounded text-white pt-2"><label><input type="checkbox" value="">Show Questions</label></div>
-        <div class="border-top rounded text-white pt-2"><label><input type="checkbox" value="">Show Details</label></div>
-      </div> -->
-    </div>
-    <div class="col-sm-8 pt-3 h-100 bg-light">
-      <div>
-        <hr />
-        {% if sessions %}
+      <div class="d-flex flex-row justify-content-between">
+        <div>
+        {% if sessions and last_session.is_running %}
         <h1>{% trans "Session Code" %}: {{ last_session.code }}</h1>
         {% else %}
         <h1>{% trans "Start a feedback session" %}</h1>
         {% endif %}
-        <div class="col-sm-auto d-flex flex-row justify-content-center">
-          <div>
-            {% if last_session and last_session.is_running %}
-            <a href="{% url 'staff:session_stop' last_session.id %}" role="button" class="btn btn-lg btn-outline-danger mr-2">Stop Session</a>
-            {% else %}
-            <a href="{% url 'staff:session_new' lecture.id %}" role="button" class="btn btn-lg btn-outline-success mr-2">Start Session</a>
-            {% endif %}
-          </div>
+        </div>
+        <div>
+          {% if last_session and last_session.is_running %}
+          <a href="{% url 'staff:session_stop' last_session.id %}" role="button" class="btn btn-lg btn-outline-danger mr-2">End Session</a>
+          {% else %}
+          <a href="{% url 'staff:session_new' lecture.id %}" role="button" class="btn btn-lg btn-outline-success mr-2">New Session</a>
+          {% endif %}
         </div>
       </div>
-
-      <div class="remember_visibility" id="sessionDiv">
-        {% include 'staff/sessions_list.html' %}
+      <hr class="border border-white"/>
+      <div class="">
+        <label for="exampleFormControl1" class="h6">{% trans "Lecture Title" %}</label><a href="{% url 'staff:lecture_update' lecture.id %}" class="float-right">{% trans 'Edit' %}</a>
+        <input class="form-control " id="exampleFormControl1" type="text" placeholder="{{lecture.title}}" readonly>
+        <label for="exampleFormControl2" class="h6">{% trans "Lecture Author" %}</label>
+        <input class="form-control" id="exampleFormControl2" type="text" placeholder="{{user.get_full_name}} {{user.email}}" readonly>
+        <label for="exampleFormControl3" class="h6">{% trans "No. Slides" %}</label>
+        <input class="form-control" id="exampleFormControl3" type="text" placeholder="{{lecture.slide_count}}" readonly>
+        <label for="notesArea" class="h6">{% trans "Notes" %}</label>
+        <textarea name="name" rows="8" cols="80" class="form-control" id="notesArea" type="text" placeholder="{{lecture.notes}}" readonly></textarea>
       </div>
-      <div class=" remember_visibility" id="questionDiv">
-        {% include 'staff/questions_list.html' %}
+      <hr class="border border-white"/>
+      <div class="d-flex justify-content-center">
+        <label class="mx-1"><input id="sessionCheck" type="checkbox" checked>Show Sessions</label>
+        <label class="mx-1"><input id="questionCheck" type="checkbox" checked>Show Questions</label>
       </div>
+    </div>
+    <div class="col-sm-8 pt-3 h-100 bg-light">
+      {% if sessions %}
+        <div class="remember_visibility" id="sessionDiv">
+          {% include 'staff/lecture_sessions_list.html' %}
+        </div>
+        <div class=" remember_visibility" id="questionDiv">
+          {% include 'staff/questions_list.html' %}
+        </div>
+      {% else %}
+        <div class="alert alert-secondary m-5" role="alert"><center><h1 class="display-1 border border-top border-bottom">{% trans 'No Sessions' %}</h1></center></div>
+      {% endif %}
     </div>
   </div>
 </div>

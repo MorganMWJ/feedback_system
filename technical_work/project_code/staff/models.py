@@ -159,6 +159,11 @@ class Session(models.Model):
     def merge_next(self):
         pass
 
+class StartEndTime(models.Model):
+    start_time = models.DateTimeField()
+    end_time = models.DateTimeField(null=True)
+    session = models.ForeignKey(Session, on_delete=models.CASCADE)
+
 class Question(models.Model):
     question_text = models.CharField(max_length=300)
     time_posted = models.DateTimeField()
