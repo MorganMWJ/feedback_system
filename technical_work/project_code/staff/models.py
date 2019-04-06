@@ -19,26 +19,13 @@ class Lecture(models.Model):
     date_created = models.DateTimeField()
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
 
-    def get_first_started(self):
+    def get_last_active_date(self):
         sessions = self.session_set.all()
+        for session in sessions:
+            if session.is_running:
+                return timezone.now()
         if sessions.exists():
-            return sessions.order_by('start_time').first().start_time
-        else:
-            return None
-
-    def get_last_ended(self):
-        sessions = self.session_set.all()
-        if sessions.exists() and not sessions.order_by('start_time').last().is_running:
-            return sessions.order_by('start_time').last().end_time
-        elif sessions.exists() and sessions.order_by('start_time').last().is_running and len(sessions)>1:
-            return sessions.order_by('start_time').reverse()[1].end_time
-        else:
-            return None
-
-    def get_total_runtime(self):
-        sessions = self.session_set.all()
-        runtimes = [session.get_runtime() for session in sessions]
-        return sum(runtimes, datetime.timedelta())
+            return sessions.order_by('time__end').last()
 
     def __str__(self):
         return self.title
@@ -47,8 +34,8 @@ class Lecture(models.Model):
         return reverse('staff:lecture_detail', kwargs={'id': self.pk})
 
 class Session(models.Model):
-    start_time = models.DateTimeField()
-    end_time = models.DateTimeField(null=True)
+    # date_last_merged = models.DateTimeField(null=True)
+    # total_runtime = models.IntegerField(default=0)
     code = models.CharField(max_length=6, unique=True, validators=[alphanumeric])
     is_running = models.BooleanField(default=True)
     is_taking_questions = models.BooleanField(default=True)
@@ -63,14 +50,29 @@ class Session(models.Model):
                 code += random.choice(string.ascii_uppercase + string.digits)
         return code
 
-    def get_runtime(self):
-        if self.end_time is None:
-            return (timezone.now()-self.start_time)
-        else:
-            return (self.end_time-self.start_time)
+    def get_total_runtime(self):
+        times = self.time_set.all()
+        total = sum([int(time.get_runtime().total_seconds()) for time in times])
+        return total
 
     def is_owned_by_user(self, logged_in_user):
         return self.lecture.user==logged_in_user
+
+    def get_first_start_time(self):
+        times = self.time_set.all()
+        return times.order_by('start').first().start
+
+    def get_last_end_time(self):
+        times = self.time_set.all()
+        return times.order_by('end').last().end
+
+    def end(self):
+        instance = self.time_set.filter(end=None).first()
+        instance.end = timezone.now()
+        instance.save()
+
+    def __str__(self):
+        return self.code
 
     def get_feedback_summary(self):
         summary = []
@@ -134,35 +136,58 @@ class Session(models.Model):
         return {'feedback_summary': summary}
 
 
-    def merge_previous(self):
+    def merge(self, merge_type):
         #get the sessions ordered by start time
-        sessions = self.lecture.session_set.all().order_by("start_time")
+        sessions = self.lecture.session_set.all()
         #get the session before this session in the result
-        indexOfPrevious = -1
-        for index, item in enumerate(sessions, 0):
-            #if this is first one throw exception
-            if index==0 and item==self:
-                raise Exception('No previous session to merge with')
-            elif item==self:
-                indexOfPrevious = index-1
+        indexOfMergeTarget = -1
+        if merge_type=='previous':
+            for index, item in enumerate(sessions, 0):
+                #if this is first one throw exception
+                if index==0 and item==self:
+                    raise Exception('No MergeTarget session to merge with')
+                elif item==self:
+                    indexOfMergeTarget = index-1
+        elif merge_type=='next':
+            for index, item in enumerate(sessions, 0):
+                #if this is last one throw exception
+                if index==len(sessions)-1 and item==self:
+                    raise Exception('No MergeTarget session to merge with')
+                elif item==self:
+                    indexOfMergeTarget = index+1
         #merge with that session
-        previousSession = list(sessions)[indexOfPrevious]
-        previousSessionFeedback = previousSession.feedback_set.all()
-        for f in previousSessionFeedback:
+        mergeTargetSession = Session.objects.get(pk=list(sessions)[indexOfMergeTarget].id)
+        mergeTargetSessionFeedback = mergeTargetSession.feedback_set.all()
+        for f in mergeTargetSessionFeedback:
             f.session = self
             f.save()
-        self.start_time = previousSession.start_time
-        self.save()
+        mergeTargetSessionQuestions = mergeTargetSession.question_set.all()
+        for q in mergeTargetSessionQuestions:
+            q.session = self
+            q.save()
+        mergeTargetSessionTimes = mergeTargetSession.time_set.all()
+        for t in mergeTargetSessionTimes:
+            t.session = self
+            t.save()
         #when done delete the uneeded session
-        previousSession.delete()
+        mergeTargetSession.delete()
 
-    def merge_next(self):
-        pass
+    # class Meta:
+    #     ordering = ('time__start', )
 
-class StartEndTime(models.Model):
-    start_time = models.DateTimeField()
-    end_time = models.DateTimeField(null=True)
+class Time(models.Model):
+    start = models.DateTimeField()
+    end = models.DateTimeField(null=True)
     session = models.ForeignKey(Session, on_delete=models.CASCADE)
+
+    def get_runtime(self):
+        if self.session.is_running and self.end==None:
+            return timezone.now()-self.start
+        else:
+            return self.end-self.start
+
+    class Meta:
+        ordering = ('start', 'end',)
 
 class Question(models.Model):
     question_text = models.CharField(max_length=300)
@@ -226,14 +251,3 @@ class Feedback(models.Model):
                                         choices=LEVEL_OF_ENGAGMENT_CHOICES,
                                         default='')
     session = models.ForeignKey(Session, on_delete=models.CASCADE)
-
-
-
-    # def __str__(self):
-    #     res = str(self.slide_number) + "=>"
-    #     res += self.overall_feedback + "|"
-    #     res += self.delivery_speed + "|"
-    #     res += self.content_complexity + "|"
-    #     res += self.content_presentation + "|"
-    #     res += self.level_of_engagement + "|"
-    #     return res

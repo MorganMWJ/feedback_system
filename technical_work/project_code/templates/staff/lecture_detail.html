@@ -19,7 +19,7 @@
       <a class="nav-link border-right border-white p-3" href="{% url 'staff:feedback_detail' lecture.id %}" role="button">{% trans "View Feedback" %}</a>
     </li>
     <li class="nav-item">
-      <a class="nav-link border-right border-white p-3" href="{% url 'staff:index' %}" role="button">{% trans "Lecture History" %}</a>
+      <a class="nav-link border-right border-white p-3" href="{% url 'staff:lecture_list' %}" role="button">{% trans "Lecture History" %}</a>
     </li>
     <li class="nav-item">
       <a class="nav-link border-left border-white p-3" href="{% url 'staff:logout' %}" role="button">{% trans "Logout" %}</a>
@@ -31,22 +31,13 @@
 {% block content %}
 <div class="container-fluid bg-light h-100">
   <div class="row bg-dark">
-    <div class="col-sm-4 pt-3 h-100 text-white">
+    <div class="col-sm-3 pt-3 h-100 text-white">
       <div class="d-flex flex-row justify-content-between">
-        <div>
-        {% if sessions and last_session.is_running %}
-        <h1>{% trans "Session Code" %}: {{ last_session.code }}</h1>
+        {% if running_session %}
+          <a href="{% url 'staff:session_stop' running_session.id %}" role="button" class="btn btn-block btn-lg btn-outline-danger mx-1">End Running Session</a>
         {% else %}
-        <h1>{% trans "Start a feedback session" %}</h1>
+          <a href="{% url 'staff:session_new' lecture.id %}" role="button" id="newSessionBtn" class="btn btn-block btn-lg btn-outline-success mx-1">Start New Session</a>
         {% endif %}
-        </div>
-        <div>
-          {% if last_session and last_session.is_running %}
-          <a href="{% url 'staff:session_stop' last_session.id %}" role="button" class="btn btn-lg btn-outline-danger mr-2">End Session</a>
-          {% else %}
-          <a href="{% url 'staff:session_new' lecture.id %}" role="button" class="btn btn-lg btn-outline-success mr-2">New Session</a>
-          {% endif %}
-        </div>
       </div>
       <hr class="border border-white"/>
       <div class="">
@@ -60,22 +51,22 @@
         <textarea name="name" rows="8" cols="80" class="form-control" id="notesArea" type="text" placeholder="{{lecture.notes}}" readonly></textarea>
       </div>
       <hr class="border border-white"/>
+      <div id="actionsPanel">
+      </div>
       <div class="d-flex justify-content-center">
         <label class="mx-1"><input id="sessionCheck" type="checkbox" checked>Show Sessions</label>
         <label class="mx-1"><input id="questionCheck" type="checkbox" checked>Show Questions</label>
       </div>
     </div>
-    <div class="col-sm-8 pt-3 h-100 bg-light">
-      {% if sessions %}
+    <div class="col-sm-9 pt-3 h-100 bg-light">
         <div class="remember_visibility" id="sessionDiv">
           {% include 'staff/lecture_sessions_list.html' %}
         </div>
-        <div class=" remember_visibility" id="questionDiv">
-          {% include 'staff/questions_list.html' %}
-        </div>
-      {% else %}
-        <div class="alert alert-secondary m-5" role="alert"><center><h1 class="display-1 border border-top border-bottom">{% trans 'No Sessions' %}</h1></center></div>
-      {% endif %}
+        {%if sessions %}
+          <div class=" remember_visibility" id="questionDiv">
+            {% include 'staff/questions_list.html' %}
+          </div>
+        {% endif %}
     </div>
   </div>
 </div>

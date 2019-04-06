@@ -40,13 +40,12 @@
               </div>
               <div>
                 <span class="h5"><strong>Creation Date:</strong> {{ lecture.date_created|date:'d/m/Y' }} </span>
-                {% if lecture.get_first_started %}<span class="h5"><strong>First Session Date:</strong> {{ lecture.get_first_started|date:'d/m/Y' }}</span>{% endif %}
-                {% if lecture.get_last_ended %}<span class="h5"><strong>Last Session Date:</strong> {{ lecture.get_last_ended|date:'d/m/Y' }} </span>{% endif %}
+                {% if lecture.get_last_active_date %}<span class="h5"><strong>Last Active Date:</strong> {{ lecture.get_last_active_date|date:'d/m/Y' }}</span>{% endif %}
               </div>
             </div>
             <div class="col-sm-auto">
               <a href="{% url 'staff:lecture_delete' lecture.id %}" role="button" class="btn btn-lg btn-danger m-2">
-                <span class="glyphicon glyphicon-trash"></span> Delete
+                Delete
               </a>
             </div>
           </div>
@@ -54,9 +53,7 @@
         {% endfor %}
       </ul>
       {% else %}
-      <h3>
-        <center>{% trans "There are currently no lecture feedback sessions to display" %}</center>
-      </h3>
+      <div class="alert alert-secondary m-5" role="alert"><center><h1 class="display-1 border border-top border-bottom">{% trans 'No Lectures' %}</h1></center></div>
       {% endif %}
     </div>
   </div>

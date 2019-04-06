@@ -1,9 +1,7 @@
 {% load i18n %}
 {% load format_extras %}
 
-<center>
-  <h3>{% trans 'Session' %} {{ session.code }} {% trans "Questions List" %}{% if not session.is_taking_questions %} <small>[{% trans "Disabled" %}]</small>{% endif %}</h3>
-</center>
+<h3>{{ session.code }} {% trans "Questions" %}{% if not session.is_taking_questions %} <small>[{% trans "Disabled" %}]</small>{% endif %}</h3>
 <hr class="mt-0" />
 {% if questions %}
 <ul class="list-group list-group-flush">
@@ -22,7 +20,7 @@
   {% endfor %}
 </ul>
 {% else %}
-<center>
-  <h4>{% trans "No Questions for this Session" %}</h4>
-</center>
+<div class="alert alert-secondary m-5" role="alert"><center>
+  <h1 class="display-5 border border-top border-bottom">{% trans 'No Questions for this Session' %}</h1>
+</center></div>
 {% endif %}

@@ -1,7 +1,7 @@
 from django.urls import path
 
 from . import views
-
+from staff.views import LectureList, LectureDetail
 #this sets the application namespace so that the {% url %} template tag
 #creates links based of the names in this file  for this app
 #might be mutliple urls with name='detail' across the project
@@ -14,20 +14,22 @@ urlpatterns = [
     path('connect/', views.connect, name='connect'),
     path('disconnect/', views.disconnect, name='disconnect'),
     path('feedback/', views.feedback, name='feedback'),
+
+
     #/login/
     path('login/', views.login, name='login'),
     #/logout/
     path('logout/', views.logout, name='logout'),
     #/lectures/
-    path('lectures/', views.index, name='index'),
+    path('lectures/', LectureList.as_view(), name="lecture_list"),
     #/lecturs/new/
     path('lecture/new/', views.lecture_create, name='lecture_create'),
     #/lecture/?
-    path('lecture/<int:id>/', views.lecture_detail, name='lecture_detail'),
+    path('lecture/<int:pk>/', LectureDetail.as_view(), name='lecture_detail'),
     #/lecture/?/feedback_detail
     path('lecture/<int:id>/feedback_detail/', views.feedback_detail, name='feedback_detail'),
     #/lecture/?/edit/
-    path('lecture/<int:id>/edit/', views.lecture_update, name='lecture_update'),
+    path('lecture/<int:pk>/edit/', views.lecture_update, name='lecture_update'),
     #/lecture/?/delete/
     path('lecture/<int:id>/delete/', views.lecture_delete, name='lecture_delete'),
     #/lecture/?/start_session/

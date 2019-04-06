@@ -25,7 +25,6 @@ urlpatterns = [
 #append url patterns for different locales
 urlpatterns += i18n_patterns(
     path('', include('staff.urls')),
-    prefix_default_language=False
 )
 # #append url patterns for all cross-app static files
 urlpatterns += staticfiles_urlpatterns()

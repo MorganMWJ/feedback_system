@@ -43,7 +43,6 @@ $(document).ready(function() {
 
 
   let activeSessionID = $('.bg-info').attr('id');
-
   function updatePage(){
     // update sessions
     let lectureID = $('#lectureID').attr("value");
@@ -59,33 +58,48 @@ $(document).ready(function() {
           $('tr').removeClass("bg-info");
           $('#'+activeSessionID.toString()).addClass('bg-info');
           addRowClickFunctionality();
+          displaySessionActions();
         }
       });
 
-    // update questions
-    urlStr = "/session/123/questions/".replace('123', activeSessionID);
-    $.ajax({
-      url: urlStr,
-      method: "GET",
-      success: function(responseData){
-          console.log(responseData);
-          $('#questionDiv').empty();
-          $('#questionDiv').html(responseData);
-        }
-      });
-
+    if(activeSessionID!=undefined){
+      // update questions
+      urlStr = "/session/123/questions/".replace('123', activeSessionID);
+      $.ajax({
+        url: urlStr,
+        method: "GET",
+        success: function(responseData){
+            console.log(responseData);
+            $('#questionDiv').empty();
+            $('#questionDiv').html(responseData);
+          }
+        });
+    }
   }
-  setInterval(updatePage, 1000);
+  setInterval(updatePage, 1000000);
   addRowClickFunctionality();
+  displaySessionActions();
 
+  function displaySessionActions(){
+    if(activeSessionID!=undefined){
+      var $options = $("#" + activeSessionID + " .options").clone();
+      $('#actionsPanel').html($options);
+    }
+  }
 
   function addRowClickFunctionality(){
     $('#session_table tbody tr').click(function(){
       $('tr').removeClass("bg-info");
       $(this).addClass("bg-info");
       activeSessionID = $(this).attr('id');
+      displaySessionActions();
       updatePage();
     });
   }
+
+  // $('#newSessionBtn').click(function(){
+  //   $(this).attr("disabled", true);
+  // });
+
 
 });

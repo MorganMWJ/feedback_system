@@ -1,5 +1,5 @@
 from django import forms
-from staff.models import Feedback
+from staff.models import Feedback, Lecture
 from staff.validators import validate_file_extension
 from django.core.validators import RegexValidator
 from django.utils.translation import ugettext_lazy as _
@@ -10,7 +10,24 @@ class LoginForm(forms.Form):
     uid = forms.CharField(label=_('Username'), max_length=10, widget=forms.TextInput(attrs={'placeholder': _("Your Username")}))
     pswd = forms.CharField(label=_("Password"), widget=forms.PasswordInput(attrs={'placeholder': _("Your Password")}))
 
-class LectureDetailsForm(forms.Form):
+class LectureDetailsForm(forms.ModelForm):
+
+    class Meta:
+        model = Lecture
+        fields = ['title', 'slide_count', 'notes']
+        labels = {
+            'title': _('Lecture/Workshop Title'),
+            'slide_count': _('Number of Slides'),
+            'notes': _('Extra Notes')
+        }
+        widgets = {
+            'title': forms.TextInput(attrs={'placeholder': _("Title here...")}),
+            'slide_count': forms.NumberInput(attrs={'placeholder': _("Slide Count here...")}),
+            'notes': forms.Textarea(attrs={'placeholder': _("Notes here...")})
+        }
+        max_length = {'title': 150}
+        min_value = {'slide_count': 1}
+        required = {'notes': False}
 
     # def __init__(self, lecture, *args, **kwargs):
     #     super(LectureDetailsForm, self).__init__(*args, **kwargs)
@@ -18,9 +35,9 @@ class LectureDetailsForm(forms.Form):
     #     self.fields['slide_count'] = forms.IntegerField(label=_('Number of Slides'), min_value=1, widget=forms.NumberInput(attrs={'placeholder': str(lecture.slide_count)}))
     #     self.fields['notes'] = forms.CharField(label=_('Extra Notes'), required=False, widget=forms.Textarea(attrs={'placeholder': lecture.notes}))
 
-    title = forms.CharField(label=_('Lecture/Workshop Title'), max_length=150, widget=forms.TextInput(attrs={'placeholder': _("Title here...")}))
-    slide_count = forms.IntegerField(label=_('Number of Slides'), min_value=1, widget=forms.NumberInput(attrs={'placeholder': _("Slide Count here...")}))
-    notes = forms.CharField(label=_('Extra Notes'), required=False, widget=forms.Textarea(attrs={'placeholder': _("Notes here...")}))
+    # title = forms.CharField(label=_('Lecture/Workshop Title'), max_length=150, widget=forms.TextInput(attrs={'placeholder': _("Title here...")}))
+    # slide_count = forms.IntegerField(label=_('Number of Slides'), min_value=1, widget=forms.NumberInput(attrs={'placeholder': _("Slide Count here...")}))
+    # notes = forms.CharField(label=_('Extra Notes'), required=False, widget=forms.Textarea(attrs={'placeholder': _("Notes here...")}))
 
 class PDFUploadForm(forms.Form):
     lecture_pdf_file = forms.FileField(required=False, validators=[validate_file_extension])

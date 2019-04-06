@@ -1,25 +1,59 @@
-{% extends 'staff/feedback_sessions_list.html' %}
 {% load i18n %}
 {% load format_extras %}
 
 
-{% block extra_table_heading %}<th scope="col">{% trans "Options" %}</th>{% endblock %}
-
-
-{% block extra_table_column %}
-<td>
-  <div class="bg-light p-1 border rounded">
-  {% if not forloop.first %}<a href="{% url 'staff:session_merge_previous' session.id %}">Merge with Above Session</a><br />{% endif %}
-  {% if not forloop.last %}<a href="">Merge with Below Session</a><br />{% endif %}
-  <a href="{% url 'staff:session_toggle_questions' session.id %}">
-    {% if session.is_taking_questions %}
-      {% trans "Disable" %}
-    {% else %}
-      {% trans "Enable" %}
-    {% endif %}
-     {% trans "Questions" %}</a><br />
-  <a href="{% url 'staff:session_regenerate_code' session.id %}">{% trans "Generate New Code" %}</a><br />
-  <a href="{% url 'staff:session_delete' session.id %}" class="text-danger">Delete Session</a>
-  </div>
-</td>
-{% endblock %}
+{% if sessions %}
+<h3>{% trans "Feedback Sessions" %}</h3>
+<hr class="mt-0 border"/>
+<div class="table-responsive">
+  <table id="session_table" class="table table-bordered table-hover">
+    <thead class="thead-dark">
+      <tr>
+        <th scope="col">{% trans "Session" %}</th>
+        <th scope="col">{% trans "Code" %}</th>
+        <th scope="col">{% trans "Startime" %}</th>
+        <th scope="col">{% trans "Endtime" %}</th>
+        <th scope="col">{% trans "Runtime" %}</th>
+      </tr>
+    </thead>
+    <tbody class="bg-light">
+      {% for session in sessions %}
+      <tr id="{{ session.id }}" class="session_row {% if forloop.last %}bg-info{% endif %}">
+        <th><div class="bg-light p-1 border rounded">{{ forloop.counter }}</div></th>
+        <td><div class="bg-light p-1 border rounded">{{ session.code }}</div></td>
+        <td><div class="bg-light p-1 border rounded">{{ session.get_first_start_time|date:'d M, Y - h:i a' }}</div></td>
+        {% if session.is_running %}
+          <td><div class="bg-light p-1 border rounded">{% trans "Session Running" %}</div></td>
+        {% else %}
+        <td><div class="bg-light p-1 border rounded">{{ session.get_last_end_time|date:'d M, Y - h:i a' }}</div></td>
+        {% endif %}
+        <td class="time"><div class="bg-light p-1 border rounded">{{ session.get_total_runtime|runtime_format }}</div></td>
+        <td class="d-none">
+          <div class="bg-light p-1 border rounded options">
+            <div class="d-flex flex-row">
+              {% if not forloop.first %}<a href="{% url 'staff:session_merge_previous' session.id %}" role="button" class="btn btn-block btn-sm btn-primary m-1">Merge with Above Session</a><br />{% endif %}
+              {% if not forloop.last %}<a href="{% url 'staff:session_merge_next' session.id %}" role="button" class="btn btn-block btn-sm btn-primary m-1">Merge with Below Session</a><br />{% endif %}
+            </div>
+            <div class="d-flex flex-row">
+              <a href="{% url 'staff:session_toggle_questions' session.id %}" role="button" class="btn btn-block btn-sm btn-secondary m-1">
+                {% if session.is_taking_questions %}
+                  {% trans "Disable" %}
+                {% else %}
+                  {% trans "Enable" %}
+                {% endif %}
+                 {% trans "Questions" %}</a><br />
+              <a href="{% url 'staff:session_regenerate_code' session.id %}" role="button" class="btn btn-block btn-sm btn-secondary m-1">{% trans "Generate New Code" %}</a><br />
+            </div>
+            <a href="{% url 'staff:session_delete' session.id %}" role="button" class="btn btn-block btn-sm btn-danger m-1">Delete Session</a>
+          </div>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% else %}
+  <div class="alert alert-secondary m-5" role="alert"><center>
+    <h1 class="display-1 border border-top border-bottom">{% trans 'No Sessions' %}</h1>
+  </center></div>
+{% endif %}

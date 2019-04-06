@@ -1,11 +1,12 @@
 {% load i18n %}
 {% load format_extras %}
 
+
+{% if sessions %}
 <center>
   <h3>{% trans "Feedback Sessions" %}</h3>
 </center>
 <hr class="border border-white"/>
-{% if sessions %}
 <div class="table-responsive">
   <table id="session_table" class="table table-bordered table-hover">
     <thead class="thead-dark">
@@ -15,7 +16,6 @@
         <th scope="col">{% trans "Startime" %}</th>
         <th scope="col">{% trans "Endtime" %}</th>
         <th scope="col">{% trans "Runtime" %}</th>
-        {% block extra_table_heading %}{% endblock %}
       </tr>
     </thead>
     <tbody class="bg-light">
@@ -23,21 +23,22 @@
       <tr id="{{ session.id }}" class="session_row {% if forloop.last %}bg-info{% endif %}">
         <th>{{ forloop.counter }}</th>
         <td>{{ session.code }}</td>
-        <td>{{ session.start_time|date:'d M, Y - h:i a' }}</td>
-        {% if forloop.last and session.is_running %}
-        <td>{% trans "Session Running" %}</td>
+        <td>{{ session.get_first_start_time|date:'d M, Y - h:i a' }}</td>
+        {% if session.is_running %}
+          <td>
+            {% trans "Session Running" %}<br />
+          </td>
         {% else %}
-        <td>{{ session.end_time|date:'d M, Y - h:i a' }}</td>
+        <td>{{ session.get_last_end_time|date:'d M, Y - h:i a' }}</td>
         {% endif %}
-        <td class="time">{{ session.get_runtime|runtime_format }}</td>
-        {% block extra_table_column %}{% endblock %}
+        <td class="time">{{ session.get_total_runtime|runtime_format }}</td>
       </tr>
       {% endfor %}
     </tbody>
   </table>
 </div>
 {% else %}
-<center>
-  <h4>{% trans "No Sessions" %}</h4>
-</center>
+  <div class="alert alert-secondary m-5" role="alert"><center>
+    <h1 class="display-1 border border-top border-bottom">{% trans 'No Sessions' %}</h1>
+  </center></div>
 {% endif %}

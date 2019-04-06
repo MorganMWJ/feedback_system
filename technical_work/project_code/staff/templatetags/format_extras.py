@@ -3,8 +3,7 @@ from django import template
 register = template.Library()
 
 @register.filter
-def runtime_format(timedelta):
-    total_seconds = int(timedelta.total_seconds())
+def runtime_format(total_seconds):
     hours, remainder = divmod(total_seconds,60*60)
     minutes, seconds = divmod(remainder,60)
     return '{} hrs {} mins {} secs'.format(hours,minutes,seconds)
