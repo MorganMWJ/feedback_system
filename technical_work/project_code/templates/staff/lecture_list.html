@@ -29,9 +29,9 @@
   </div>
   <div class="row">
     <div class="col-sm">
-      {% if lecture_list %}
+      {% if object_list %}
       <ul class="list-group list-group-flush">
-        {% for lecture in lecture_list %}
+        {% for lecture in object_list %}
         <li class="list-group-item container-fluid">
           <div class="row d-flex justify-content-between">
             <div class="col-sm-auto d-flex flex-column">
@@ -60,18 +60,18 @@
   <div class="row d-flex justify-content-center">
     <div class="pagination">
       <span class="step-links">
-        {% if lecture_list.has_previous %}
+        {% if page_obj.has_previous %}
         <a href="?page=1">&laquo; {% trans "First" %}</a>
-        <a href="?page={{ lecture_list.previous_page_number }}">{% trans "previous" %}</a>
+        <a href="?page={{ page_obj.previous_page_number }}">{% trans "previous" %}</a>
         {% endif %}
 
         <span class="current">
-          Page {{ lecture_list.number }} of {{ lecture_list.paginator.num_pages }}.
+          Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
         </span>
 
-        {% if lecture_list.has_next %}
-        <a href="?page={{ lecture_list.next_page_number }}">{% trans "next" %}</a>
-        <a href="?page={{ lecture_list.paginator.num_pages }}">{% trans "Last" %} &raquo;</a>
+        {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}">{% trans "next" %}</a>
+        <a href="?page={{ page_obj.paginator.num_pages }}">{% trans "Last" %} &raquo;</a>
         {% endif %}
       </span>
     </div>

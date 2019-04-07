@@ -46,7 +46,8 @@ $(document).ready(function() {
   function updatePage(){
     // update sessions
     let lectureID = $('#lectureID').attr("value");
-    let urlStr = "/lecture/123/sessions/v1".replace('123', lectureID);
+    let sessionPage = $('#session_page').attr('value');
+    let urlStr = ("/lecture/123/sessions/v1/?page="+sessionPage).replace('123', lectureID);
     $.ajax({
       url: urlStr,
       method: "GET",
@@ -77,8 +78,9 @@ $(document).ready(function() {
     }
   }
   setInterval(updatePage, 1000000);
-  addRowClickFunctionality();
-  displaySessionActions();
+  // addRowClickFunctionality();
+  // displaySessionActions();
+  updatePage();
 
   function displaySessionActions(){
     if(activeSessionID!=undefined){
@@ -98,7 +100,7 @@ $(document).ready(function() {
   }
 
   // $('#newSessionBtn').click(function(){
-  //   $(this).attr("disabled", true);
+  //   $(this).removeAttr("href");
   // });
 
 

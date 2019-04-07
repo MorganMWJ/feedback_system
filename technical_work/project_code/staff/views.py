@@ -43,7 +43,7 @@ def login(request):
             user = authenticate(request, username=username, password=password)
             if user is not None:
                 auth_login(request, user)
-                return HttpResponseRedirect(reverse('staff:index'))
+                return HttpResponseRedirect(reverse('staff:lecture_list'))
             else:
                 # Return an 'invalid login' error message.
                 context['login_error'] = True
@@ -61,7 +61,7 @@ def logout(request):
 class LectureList(LoginRequiredMixin, ListView):
     login_url = '/login/'
     model = Lecture
-    paginate_by = 10
+    paginate_by = 8
     template_name = 'staff/lecture_list.html'
 
     def get_queryset(self):
@@ -73,32 +73,36 @@ class LectureList(LoginRequiredMixin, ListView):
                     Q(date_created__icontains=query))
         return lectures
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['lecture_list'] = self.get_queryset()
-        return context
-
 
 class LectureDetail(LoginRequiredMixin, DetailView):
     login_url = '/login/'
     model = Lecture
     template_name = 'staff/lecture_detail.html'
 
+    # def get_context_data(self, **kwargs):
+    #     context = super().get_context_data(**kwargs)
+    #     # context['sessions'] = self.get_object().session_set.all()
+    #
+    #     sessions_list = self.get_object().session_set.all()
+    #     paginator = Paginator(sessions_list, 5)
+    #     page = self.request.GET.get('page', paginator.num_pages)
+    #     try:
+    #         context['sessions'] = paginator.page(page)
+    #     except PageNotAnInteger:
+    #         context['sessions'] = paginator.page(paginator.num_pages)
+    #     except EmptyPage:
+    #         context['sessions'] = paginator.page(paginator.num_pages)
+    #
+    #     context['session'] = sessions_list.last()
+    #     for session in context['sessions']:
+    #         if session.is_running:
+    #             context['running_session'] = session
+    #     return context
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['sessions'] = self.get_object().session_set.all()
-        context['session'] = context['sessions'].last()
-        for session in context['sessions']:
-            if session.is_running:
-                context['running_session'] = session
-        return context
-
-@login_required(login_url='/login/')
-def lecture_delete(request, id=None):
-    instance = get_object_or_404(Lecture, id=id)
-    instance.delete()
-    return redirect(reverse('staff:index'))
+class LectureDelete(LoginRequiredMixin, DeleteView):
+    login_url = '/login/'
+    model = Lecture
+    success_url =  '/lectures/'
 
 @login_required(login_url='/login/')
 def lecture_create(request):
@@ -122,7 +126,7 @@ def lecture_create(request):
                                 date_created=timezone.now(),
                                 user=request.user)
             #redirect to view lecture index
-            return HttpResponseRedirect(reverse('staff:index'))
+            return HttpResponseRedirect(reverse('staff:lecture_list'))
         #check pdf is valid
         elif pdf_form.is_valid():
             try:
@@ -266,7 +270,22 @@ def lecture_sessions(request, id=None, version=None):
     context = {}
     #pdb.set_trace()
     lecture = get_object_or_404(Lecture, id=id)
-    context['sessions'] = lecture.session_set.all().distinct('code')
+
+    sessions_list = lecture.session_set.all()
+    paginator = Paginator(sessions_list, 5)
+    page = request.GET.get('page', paginator.num_pages)
+    try:
+        context['sessions'] = paginator.page(page)
+    except PageNotAnInteger:
+        context['sessions'] = paginator.page(paginator.num_pages)
+    except EmptyPage:
+        context['sessions'] = paginator.page(paginator.num_pages)
+
+    context['session'] = sessions_list.last()
+    for session in context['sessions']:
+        if session.is_running:
+            context['running_session'] = session
+
     if version=='v1':
         return render(request, 'staff/lecture_sessions_list.html', context)
     elif version=='v2':

@@ -12,6 +12,12 @@ class LoginForm(forms.Form):
 
 class LectureDetailsForm(forms.ModelForm):
 
+    def __init__(self, *args, **kwargs):
+        super(LectureDetailsForm, self).__init__(*args, **kwargs)
+        self.fields['title'].max_length = 150
+        self.fields['slide_count'].min_value = 1
+        self.fields['notes'].required = False
+
     class Meta:
         model = Lecture
         fields = ['title', 'slide_count', 'notes']
@@ -25,19 +31,6 @@ class LectureDetailsForm(forms.ModelForm):
             'slide_count': forms.NumberInput(attrs={'placeholder': _("Slide Count here...")}),
             'notes': forms.Textarea(attrs={'placeholder': _("Notes here...")})
         }
-        max_length = {'title': 150}
-        min_value = {'slide_count': 1}
-        required = {'notes': False}
-
-    # def __init__(self, lecture, *args, **kwargs):
-    #     super(LectureDetailsForm, self).__init__(*args, **kwargs)
-    #     self.fields['title'] = forms.CharField(label=_('Lecture/Workshop Title'), max_length=150, widget=forms.TextInput(attrs={'placeholder': lecture.title}))
-    #     self.fields['slide_count'] = forms.IntegerField(label=_('Number of Slides'), min_value=1, widget=forms.NumberInput(attrs={'placeholder': str(lecture.slide_count)}))
-    #     self.fields['notes'] = forms.CharField(label=_('Extra Notes'), required=False, widget=forms.Textarea(attrs={'placeholder': lecture.notes}))
-
-    # title = forms.CharField(label=_('Lecture/Workshop Title'), max_length=150, widget=forms.TextInput(attrs={'placeholder': _("Title here...")}))
-    # slide_count = forms.IntegerField(label=_('Number of Slides'), min_value=1, widget=forms.NumberInput(attrs={'placeholder': _("Slide Count here...")}))
-    # notes = forms.CharField(label=_('Extra Notes'), required=False, widget=forms.Textarea(attrs={'placeholder': _("Notes here...")}))
 
 class PDFUploadForm(forms.Form):
     lecture_pdf_file = forms.FileField(required=False, validators=[validate_file_extension])

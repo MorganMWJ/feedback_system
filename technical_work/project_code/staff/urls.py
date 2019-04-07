@@ -1,7 +1,7 @@
 from django.urls import path
 
 from . import views
-from staff.views import LectureList, LectureDetail
+from staff.views import LectureList, LectureDetail, LectureDelete
 #this sets the application namespace so that the {% url %} template tag
 #creates links based of the names in this file  for this app
 #might be mutliple urls with name='detail' across the project
@@ -31,7 +31,7 @@ urlpatterns = [
     #/lecture/?/edit/
     path('lecture/<int:pk>/edit/', views.lecture_update, name='lecture_update'),
     #/lecture/?/delete/
-    path('lecture/<int:id>/delete/', views.lecture_delete, name='lecture_delete'),
+    path('lecture/<int:pk>/delete/', LectureDelete.as_view(), name='lecture_delete'),
     #/lecture/?/start_session/
     path('lecture/<int:id>/session/new/', views.session_new, name='session_new'),
     #/lecture/?/stop_session/

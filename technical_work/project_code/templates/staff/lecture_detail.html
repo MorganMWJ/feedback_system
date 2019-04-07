@@ -13,16 +13,16 @@
 
 {% block nav_options %}
 
-<div>
+<div class="shift-nav">
   <ul class="navbar-nav mr-auto d-flex flex-row">
     <li class="nav-item">
-      <a class="nav-link border-right border-white p-3" href="{% url 'staff:feedback_detail' lecture.id %}" role="button">{% trans "View Feedback" %}</a>
+      <a class="nav-link p-3" href="{% url 'staff:feedback_detail' lecture.id %}" role="button">{% trans "View Feedback" %}</a>
     </li>
     <li class="nav-item">
-      <a class="nav-link border-right border-white p-3" href="{% url 'staff:lecture_list' %}" role="button">{% trans "Lecture History" %}</a>
+      <a class="nav-link p-3" href="{% url 'staff:lecture_list' %}" role="button">{% trans "Lecture History" %}</a>
     </li>
     <li class="nav-item">
-      <a class="nav-link border-left border-white p-3" href="{% url 'staff:logout' %}" role="button">{% trans "Logout" %}</a>
+      <a class="nav-link p-3" href="{% url 'staff:logout' %}" role="button">{% trans "Logout" %}</a>
     </li>
   </ul>
 </div>
@@ -62,7 +62,7 @@
         <div class="remember_visibility" id="sessionDiv">
           {% include 'staff/lecture_sessions_list.html' %}
         </div>
-        {%if sessions %}
+        {% if sessions %}
           <div class=" remember_visibility" id="questionDiv">
             {% include 'staff/questions_list.html' %}
           </div>
