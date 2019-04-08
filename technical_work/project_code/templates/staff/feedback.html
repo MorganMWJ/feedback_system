@@ -50,6 +50,9 @@
         {% if message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
           <div class="alert alert-success text-center" role="alert">{{ message }}</div>
         {% endif %}
+        {% if message.level == DEFAULT_MESSAGE_LEVELS.WARNING %}
+          <div class="alert alert-warning text-center" role="alert">{{ message }}</div>
+        {% endif %}
       {% endfor %}
     </div>
     <div class="col-sm-5 border-right border-left">

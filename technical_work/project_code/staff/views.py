@@ -107,9 +107,7 @@ def lecture_create(request):
         context['form'] = form
         pdf_form = PDFUploadForm(request.POST, request.FILES)
         context['pdf_form'] = pdf_form
-        #check new lecture data is valid
         if form.is_valid():
-            #create new lecture from cleaned_data
             title = form.cleaned_data.get('title')
             slide_count = form.cleaned_data.get('slide_count')
             notes = form.cleaned_data.get('notes')
@@ -119,9 +117,7 @@ def lecture_create(request):
                                 notes=notes,
                                 date_created=timezone.now(),
                                 user=request.user)
-            #redirect to view lecture index
             return HttpResponseRedirect(reverse('staff:lecture_list'))
-        #check pdf is valid
         elif pdf_form.is_valid():
             try:
                 info = get_info(request.FILES['lecture_pdf_file'])
@@ -254,7 +250,7 @@ def session_toggle_questions(request, id=None):
 
 @login_required(login_url='/login/')
 def session_questions(request, id=None):
-    pdb.set_trace()
+    #pdb.set_trace()
     context = {}
     context['session'] = get_object_or_404(Session, id=id)
     questions_list = context['session'].question_set.filter(is_reviewed=False).order_by("-time_posted")
@@ -373,7 +369,6 @@ def feedback_new(request):
         messages.error(request, _('Please connect to active session with valid feedback code'))
         return redirect(reverse('staff:connect'))
 
-    pdb.set_trace()
     if session.is_running:
         if request.method == 'POST':
             form = FeedbackForm(session.lecture, request.POST)
@@ -387,7 +382,7 @@ def feedback_new(request):
                 presentation = form.cleaned_data.get('content_presentation')
                 engagment = form.cleaned_data.get('level_of_engagement')
                 if overall==None and speed==None and complexity==None and presentation==None and engagment==None:
-                    messages.error(request, _('Please Specify Some Feedback Options'))
+                    messages.warning(request, _('Please Specify Some Feedback Options'))
                 elif 'slides_with_feedback' in request.session and slide in [x[1] for x in request.session['slides_with_feedback']]:
                     index = -1
                     for idx, val in enumerate(request.session['slides_with_feedback']):
@@ -416,6 +411,10 @@ def feedback_new(request):
                                     session=session)
                     if 'slides_with_feedback' in request.session:
                         request.session['slides_with_feedback'].append((new_feedback.id, new_feedback.slide_number))
+                    if int(slide)==0:
+                        messages.success(request, _('General Feedback submitted'))
+                    else:
+                        messages.success(request, _('Slide ' + slide + ' feedback submitted'))
             else:
                 messages.error(request, _('Invalid POST Data'))
     else:

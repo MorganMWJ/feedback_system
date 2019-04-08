@@ -133,7 +133,7 @@ class Session(models.Model):
         dict["colours"] = three_option_colours
         summary.append(dict)
 
-        return summary
+        return dict(summary)
 
 
     def merge(self, merge_type):
