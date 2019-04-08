@@ -2,8 +2,7 @@
 {% load format_extras %}
 
 {% if sessions %}
-<h3>{% trans "Feedback Sessions" %}</h3>
-<hr class="mt-0 border"/>
+<h3 class="">{% trans "Feedback Sessions" %}</h3>
 <div class="table-responsive">
   <table id="session_table" class="table table-bordered table-hover">
     <thead class="thead-dark">
@@ -18,7 +17,7 @@
     <tbody class="bg-light">
       {% for session in sessions %}
       <tr id="{{ session.id }}" class="session_row">
-        <th><div class="bg-light p-1 border rounded">{% session_numbering forloop.counter sessions.number %}</div></th>
+        <th><div class="bg-light p-1 border rounded">{% session_numbering forloop.counter sessions.number per_page %}</div></th>
         <td><div class="bg-light p-1 border rounded">{{ session.code }}</div></td>
         <td><div class="bg-light p-1 border rounded">{{ session.get_first_start_time|date:'d M, Y - h:i a' }}</div></td>
         {% if session.is_running %}

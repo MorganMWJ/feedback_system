@@ -6,10 +6,10 @@
 {% block title %}{% trans "Lecture Feedback" %}{% endblock %}
 {% block session_code %}{{session.code}}{% endblock %}
 {% block nav_options %}
-  <div>
+  <div class="shift-nav">
     <ul class="navbar-nav mr-auto d-flex flex-row">
       <li class="nav-item">
-        <a class="nav-link border-white p-3" href="{% url 'staff:disconnect' %}" role="button">{% trans "Disconnect" %}</a>
+        <a class="nav-link p-3" href="{% url 'staff:disconnect' %}" role="button">{% trans "Disconnect" %}</a>
       </li>
     </ul>
   </div>

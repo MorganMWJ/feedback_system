@@ -13,30 +13,39 @@
       <tr>
         <th scope="col">{% trans "Session" %}</th>
         <th scope="col">{% trans "Code" %}</th>
-        <th scope="col">{% trans "Startime" %}</th>
-        <th scope="col">{% trans "Endtime" %}</th>
-        <th scope="col">{% trans "Runtime" %}</th>
+        <th scope="col">{% trans "Date" %}</th>
       </tr>
     </thead>
     <tbody class="bg-light">
       {% for session in sessions %}
       <tr id="{{ session.id }}" class="session_row {% if forloop.last %}bg-info{% endif %}">
-        <th>{{ forloop.counter }}</th>
+        <th>{% session_numbering forloop.counter sessions.number per_page %}</th>
         <td>{{ session.code }}</td>
-        <td>{{ session.get_first_start_time|date:'d M, Y - h:i a' }}</td>
-        {% if session.is_running %}
-          <td>
-            {% trans "Session Running" %}<br />
-          </td>
-        {% else %}
-        <td>{{ session.get_last_end_time|date:'d M, Y - h:i a' }}</td>
-        {% endif %}
-        <td class="time">{{ session.get_total_runtime|runtime_format }}</td>
+        <td>{{ session.get_first_start_time|date:'d M, Y' }}</td>
       </tr>
       {% endfor %}
     </tbody>
   </table>
 </div>
+
+<div class="pagination">
+    <span class="step-links">
+        {% if sessions.has_previous %}
+            <a class="pagination_link" href="?page=1">&laquo; first</a>
+            <a class="pagination_link" href="?page={{ sessions.previous_page_number }}">previous</a>
+        {% endif %}
+
+        <span id="session_page" class="current" value="{{ sessions.number }}">
+            Page {{ sessions.number }} of {{ sessions.paginator.num_pages }}.
+        </span>
+
+        {% if sessions.has_next %}
+            <a class="pagination_link" href="?page={{ sessions.next_page_number }}">next</a>
+            <a class="pagination_link" href="?page={{ sessions.paginator.num_pages }}">last &raquo;</a>
+        {% endif %}
+    </span>
+</div>
+
 {% else %}
   <div class="alert alert-secondary m-5" role="alert"><center>
     <h1 class="display-1 border border-top border-bottom">{% trans 'No Sessions' %}</h1>

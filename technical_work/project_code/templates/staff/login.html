@@ -6,13 +6,13 @@
 
 {% block nav_options %}
   {% if user.is_authenticated %}
-  <div>
+  <div class="shift-nav">
     <ul class="navbar-nav mr-auto d-flex flex-row">
       <li class="nav-item">
-        <a class="nav-link border-right border-white p-3" href="{% url 'staff:lecture_list' %}" role="button">{% trans "Lecture History" %}</a>
+        <a class="nav-link p-3" href="{% url 'staff:lecture_list' %}" role="button">{% trans "Lecture History" %}</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link border-left border-white p-3" href="{% url 'staff:logout' %}" role="button">{% trans "Logout" %}</a>
+        <a class="nav-link p-3" href="{% url 'staff:logout' %}" role="button">{% trans "Logout" %}</a>
       </li>
     </ul>
   </div>
@@ -41,12 +41,14 @@
       </div>
     </div>
   {% endif %}
-  {% if login_error %}
-  <div class="row d-flex justify-content-center">
-    <div class="col-sm-6">
-      <div class="alert alert-danger text-center" role="alert">{% trans "Invalid Staff Login Details" %}</div>
-    </div>
-  </div>
-  {% endif %}
+  {% for message in messages %}
+    {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
+      <div class="row d-flex justify-content-center">
+        <div class="col-sm-6">
+          <div class="alert alert-danger text-center" role="alert">{{ message }}</div>
+        </div>
+      </div>
+    {% endif %}
+  {% endfor %}
 </div>
 {% endblock %}

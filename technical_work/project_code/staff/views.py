@@ -27,6 +27,20 @@ from staff.templatetags.format_extras import runtime_format, question_time_forma
 
 import pdb #pdb.set_trace() to start
 
+def get_session_list(request, lecture, per_page):
+    context = {'per_page': per_page}
+    sessions_list = lecture.session_set.all().order_by('time__start')
+    paginator = Paginator(sessions_list, context['per_page'])
+    page = request.GET.get('page', paginator.num_pages)
+    try:
+        context['sessions'] = paginator.page(page)
+    except PageNotAnInteger:
+        context['sessions'] = paginator.page(paginator.num_pages)
+    except EmptyPage:
+        context['sessions'] = paginator.page(paginator.num_pages)
+    context['session'] = sessions_list.last()
+    return context
+
 # Create your views here.
 def login(request):
     context = {}
@@ -45,10 +59,9 @@ def login(request):
                 auth_login(request, user)
                 return HttpResponseRedirect(reverse('staff:lecture_list'))
             else:
-                # Return an 'invalid login' error message.
-                context['login_error'] = True
+                messages.error(request, _('Invalid Staff Login Details'))
         else:
-            context['invalid_form_error'] = True
+            messages.error(request, _('Invalid form data'))
     else:
         context['form'] = LoginForm()
 
@@ -81,16 +94,7 @@ class LectureDetail(LoginRequiredMixin, DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        sessions_list = self.get_object().session_set.all().order_by('time__start')
-        paginator = Paginator(sessions_list, 5)
-        page = self.request.GET.get('page', paginator.num_pages)
-        try:
-            context['sessions'] = paginator.page(page)
-        except PageNotAnInteger:
-            context['sessions'] = paginator.page(paginator.num_pages)
-        except EmptyPage:
-            context['sessions'] = paginator.page(paginator.num_pages)
-        context['session'] = sessions_list.last()
+        context.update(get_session_list(self.request, self.get_object(), 5))
         return context
 
 class LectureDelete(LoginRequiredMixin, DeleteView):
@@ -125,7 +129,7 @@ def lecture_create(request):
             except PdfReadError:
                 messages.error(request, _('File has not been decrypted'))
         else:
-            context['invalid_form_error'] = True
+            messages.error(request, _('Invalid form data'))
     else:
         context['form'] = LectureDetailsForm()
         context['pdf_form'] = PDFUploadForm()
@@ -158,21 +162,17 @@ def lecture_update(request, pk=None):
     lecture = get_object_or_404(Lecture, id=pk)
     context['lecture'] = lecture
     if request.method == 'POST':
-        #create a form instance populated with the data sent in the form
         form = LectureDetailsForm(request.POST)
         context['form'] = form
         pdf_form = PDFUploadForm(request.POST, request.FILES)
         context['pdf_form'] = pdf_form
-        #check new lecture data is valid
         if form.is_valid():
             lecture.title = form.cleaned_data.get('title')
             lecture.slide_count = form.cleaned_data.get('slide_count')
             lecture.notes = form.cleaned_data.get('notes')
             lecture.save()
 
-            #redirect to view lecture index
             return redirect(reverse('staff:lecture_detail', kwargs={'pk': lecture.id}))
-        #check pdf is valid
         elif pdf_form.is_valid():
             try:
                 info = get_info(request.FILES['lecture_pdf_file'])
@@ -180,7 +180,7 @@ def lecture_update(request, pk=None):
             except PdfReadError:
                 messages.error(request, _('File has not been decrypted'))
         else:
-            context['invalid_form_error'] = True
+            messages.error(request, _('Invalid form data'))
     else:
         context['form'] = LectureDetailsForm(initial={'title': lecture.title, 'slide_count': lecture.slide_count, 'notes': lecture.notes})
         context['pdf_form'] = PDFUploadForm()
@@ -194,7 +194,13 @@ def session_feedback_chart_data(request, id=None):
 @login_required(login_url='/login/')
 def session_new(request, id=None):
     lecture = get_object_or_404(Lecture, id=id)
-    #create a new feedback session and set it to be running (start time now)
+
+    for session in lecture.session_set.all():
+        if session.is_running:
+            messages.error(request, _('A session is already running'))
+            return redirect(reverse('staff:lecture_detail', kwargs={'pk': id}))
+
+    #create session and set it running (start time now)
     session = Session.objects.create(code=Session.generate_code(), lecture=lecture)
     Time.objects.create(start=timezone.now(), session=session)
     return redirect(reverse('staff:lecture_detail', kwargs={'pk': id}))
@@ -206,14 +212,14 @@ def session_delete(request, id=None):
         session.delete()
     return redirect(reverse('staff:lecture_detail', kwargs={'pk': session.lecture.id}))
 
-@login_required(login_url='/login/')#Issues with this may need to remove?
+@login_required(login_url='/login/')
 def session_merge_previous(request, id=None):
     session = get_object_or_404(Session, id=id)
     if session.is_owned_by_user(request.user):
         session.merge('previous')
     return redirect(reverse('staff:lecture_detail', kwargs={'pk': session.lecture.id}))
 
-@login_required(login_url='/login/')#Issues with this may need to remove?
+@login_required(login_url='/login/')
 def session_merge_next(request, id=None):
     session = get_object_or_404(Session, id=id)
     if session.is_owned_by_user(request.user):
@@ -224,9 +230,8 @@ def session_merge_next(request, id=None):
 def session_stop(request, id=None):
     session = get_object_or_404(Session, id=id)
     if session.is_running:
-        #set session as no longer running and update end_time
-        session.is_running = False
-        session.end()
+        session.is_running = False #set session as no longer running
+        session.end() #update end_time
         session.save()
     return redirect(reverse('staff:lecture_detail', kwargs={'pk': session.lecture.id}))
 
@@ -270,26 +275,14 @@ def session_questions(request, id=None):
 def lecture_sessions(request, id=None, version=None):
     context = {}
     lecture = get_object_or_404(Lecture, id=id)
-
-    sessions_list = lecture.session_set.all().order_by('time__start')
-    paginator = Paginator(sessions_list, 5)
-    page = request.GET.get('page', paginator.num_pages)
-    try:
-        context['sessions'] = paginator.page(page)
-    except PageNotAnInteger:
-        context['sessions'] = paginator.page(paginator.num_pages)
-    except EmptyPage:
-        context['sessions'] = paginator.page(paginator.num_pages)
-    context['session'] = sessions_list.last()
-
     if version=='v1':
+        context.update(get_session_list(request, lecture, 5))
         return render(request, 'staff/lecture_sessions_list.html', context)
     elif version=='v2':
+        context.update(get_session_list(request, lecture, 10))
         return render(request, 'staff/feedback_sessions_list.html', context)
     else:
         return HttpResponseNotFound("404 :(")
-
-
 
 @login_required(login_url='/login/')
 def question_mark_reviewed(request, id=None):
@@ -469,7 +462,7 @@ def question_delete(request, id=None):
 def feedback_detail(request, id=None):
     context ={}
     context['lecture'] = get_object_or_404(Lecture, id=id)
-    context['sessions'] = context['lecture'].session_set.all().order_by("time__start")
+    context.update(get_session_list(request, context['lecture'], 10))
     return render(request, 'staff/feedback_detail.html', context)
 
 

@@ -41,6 +41,7 @@ $(document).ready(function() {
     savePanels();
   });
 
+/////////////////////////////////////////////////////////////////
 
   let activeSessionID = getActiveSession();
   function updatePage(){
@@ -57,7 +58,7 @@ $(document).ready(function() {
           $('#sessionDiv').html(responseData);
           highlightActiveSession();
           addRowClickFunctionality();
-          paginationLinkSessionReset();
+          paginationClickFunctionality();
           displaySessionActions();
         }
       });
@@ -92,10 +93,10 @@ $(document).ready(function() {
       $('tr').removeClass("bg-info");
       $('#'+getActiveSession().toString()).addClass('bg-info');
     }
-    else{
-      $('#session_table tr:last').addClass('bg-info');
-      setActiveSession($('#session_table tr:last').attr('id'));
-    }
+    // else{
+    //   $('#session_table tr:last').addClass('bg-info');
+    //   setActiveSession($('#session_table tr:last').attr('id'));
+    // }
   }
 
   function addRowClickFunctionality(){
@@ -123,10 +124,10 @@ $(document).ready(function() {
 
   /* Sets activeSession to undefined when navigation num_pages
      so it can be set to the last session on new page automatically */
-  function paginationLinkSessionReset(){
+  function paginationClickFunctionality(){
     $('.pagination_link').each(function(){
       $(this).click(function(){
-        setActiveSession(undefined);
+        $('#actionsPanel').html("<p>Select a session</p>");
       });
     });
   }
