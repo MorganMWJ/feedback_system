@@ -33,11 +33,7 @@
   <div class="row bg-dark">
     <div class="col-sm-3 pt-3 h-100 text-white">
       <div class="d-flex flex-row justify-content-between">
-        {% if running_session %}
-          <a href="{% url 'staff:session_stop' running_session.id %}" role="button" class="btn btn-block btn-lg btn-outline-danger mx-1">End Running Session</a>
-        {% else %}
-          <a href="{% url 'staff:session_new' lecture.id %}" role="button" id="newSessionBtn" class="btn btn-block btn-lg btn-outline-success mx-1">Start New Session</a>
-        {% endif %}
+        <a id="new_session_link" href="{% url 'staff:session_new' lecture.id %}" role="button" id="newSessionBtn" class="btn btn-block btn-lg btn-outline-success mx-1">Start New Session</a>
       </div>
       <hr class="border border-white"/>
       <div class="">

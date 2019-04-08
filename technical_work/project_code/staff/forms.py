@@ -41,14 +41,16 @@ class ConnectForm(forms.Form):
 class QuestionForm(forms.Form):
     question = forms.CharField(label=_('Ask a question?'), max_length=250, widget=forms.Textarea(attrs={'placeholder': _("Enter a question or comment")}))
 
-class FeedbackForm(forms.Form):
+class FeedbackForm(forms.ModelForm):
 
-    def __init__(self, lecture, *args, **kwargs):
+    def __init__(self, lecture, *args, **kwargs): #add in options to exclude!!??
         super(FeedbackForm, self).__init__(*args, **kwargs)
-        self.fields['slide_options'] = forms.ChoiceField(label=_('Feedback for which slide'), choices=[(x, x) for x in range(1,lecture.slide_count+1)])
+        #build list from number of lecture slides
+        choice_list = [(x, 'Slide '+str(x)) for x in range(1,lecture.slide_count+1)]
+        #add gneral option for not associating feedback with a specific slide
+        choice_list.insert(0, (0,"Not Specified (General Feedback)"))
+        self.fields['slide_number'] =  forms.ChoiceField(label=_('Feedback for which slide'), choices=choice_list)
 
-    overall_option = forms.ChoiceField(label=_('Overall Feedback'), choices=Feedback.OVERALL_FEEDBACK_CHOICES)
-    speed_options = forms.ChoiceField(label=_('Delivery Speed'), choices=Feedback.DELIVERY_SPEED_CHOICES)
-    complexity_options = forms.ChoiceField(label=_('Content Complexity'), choices=Feedback.CONTENT_COMPLEXITY_CHOICES)
-    presentation_options = forms.ChoiceField(label=_('Interest/Engagement'), choices=Feedback.CONTENT_PRESENTATION_CHOICES)
-    engagment_options = forms.ChoiceField(label=_('Content Presentation'), choices=Feedback.LEVEL_OF_ENGAGMENT_CHOICES)
+    class Meta:
+        model = Feedback
+        fields = ['overall_feedback', 'delivery_speed', 'content_complexity', 'content_presentation', 'level_of_engagement', 'slide_number']

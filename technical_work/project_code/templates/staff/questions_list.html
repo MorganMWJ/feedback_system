@@ -22,6 +22,25 @@
   </li>
   {% endfor %}
 </ul>
+
+<div class="pagination">
+    <span class="step-links">
+        {% if questions.has_previous %}
+            <a href="?page=1">&laquo; first</a>
+            <a href="?page={{ questions.previous_page_number }}">previous</a>
+        {% endif %}
+
+        <span id="question_page" class="current" value="{{ questions.number }}">
+            Page {{ questions.number }} of {{ questions.paginator.num_pages }}.
+        </span>
+
+        {% if questions.has_next %}
+            <a href="?page={{ questions.next_page_number }}">next</a>
+            <a href="?page={{ questions.paginator.num_pages }}">last &raquo;</a>
+        {% endif %}
+    </span>
+</div>
+
 {% else %}
 <div class="alert alert-secondary mx-5" role="alert"><center>
   <h1 class="display-5 border border-top border-bottom">{% trans 'No Questions for this Session' %}</h1>

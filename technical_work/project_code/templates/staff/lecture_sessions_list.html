@@ -17,7 +17,7 @@
     </thead>
     <tbody class="bg-light">
       {% for session in sessions %}
-      <tr id="{{ session.id }}" class="session_row {% if forloop.last %}bg-info{% endif %}">
+      <tr id="{{ session.id }}" class="session_row">
         <th><div class="bg-light p-1 border rounded">{% session_numbering forloop.counter sessions.number %}</div></th>
         <td><div class="bg-light p-1 border rounded">{{ session.code }}</div></td>
         <td><div class="bg-light p-1 border rounded">{{ session.get_first_start_time|date:'d M, Y - h:i a' }}</div></td>
@@ -29,21 +29,28 @@
         <td class="time"><div class="bg-light p-1 border rounded">{{ session.get_total_runtime|runtime_format }}</div></td>
         <td class="d-none">
           <div class="bg-light p-1 border rounded options">
+            {% if session.is_running %}
             <div class="d-flex flex-row">
-              {% if not forloop.first %}<a href="{% url 'staff:session_merge_previous' session.id %}" role="button" class="btn btn-block btn-sm btn-primary m-1">Merge with Above Session</a><br />{% endif %}
-              {% if not forloop.last %}<a href="{% url 'staff:session_merge_next' session.id %}" role="button" class="btn btn-block btn-sm btn-primary m-1">Merge with Below Session</a><br />{% endif %}
+              <a id="stop_session_link" href="{% url 'staff:session_stop' session.id %}" role="button" class="btn btn-block btn-lg btn-warning m-2">End Running Session</a>
+            </div>
+            {% endif %}
+            <div class="d-flex flex-row">
+              {% if not forloop.first %}<a href="{% url 'staff:session_merge_previous' session.id %}" role="button" class="btn btn-block btn-primary m-1">Merge with Above Session</a><br />{% endif %}
+              {% if not forloop.last %}<a href="{% url 'staff:session_merge_next' session.id %}" role="button" class="btn btn-block btn-primary m-1">Merge with Below Session</a><br />{% endif %}
             </div>
             <div class="d-flex flex-row">
-              <a href="{% url 'staff:session_toggle_questions' session.id %}" role="button" class="btn btn-block btn-sm btn-secondary m-1">
+              <a href="{% url 'staff:session_toggle_questions' session.id %}" role="button" class="btn btn-block btn-secondary m-1">
                 {% if session.is_taking_questions %}
                   {% trans "Disable" %}
                 {% else %}
                   {% trans "Enable" %}
                 {% endif %}
                  {% trans "Questions" %}</a><br />
-              <a href="{% url 'staff:session_regenerate_code' session.id %}" role="button" class="btn btn-block btn-sm btn-secondary m-1">{% trans "Generate New Code" %}</a><br />
+              <a href="{% url 'staff:session_regenerate_code' session.id %}" role="button" class="btn btn-block btn-secondary m-1">{% trans "Generate New Code" %}</a><br />
             </div>
-            <a href="{% url 'staff:session_delete' session.id %}" role="button" class="btn btn-block btn-sm btn-danger m-1">Delete Session</a>
+            <div class="d-flex flex-row">
+              <a href="{% url 'staff:session_delete' session.id %}" role="button" class="btn btn-block btn-danger m-1">Delete Session</a>
+            </div>
           </div>
         </td>
       </tr>
@@ -55,8 +62,8 @@
 <div class="pagination">
     <span class="step-links">
         {% if sessions.has_previous %}
-            <a href="?page=1">&laquo; first</a>
-            <a href="?page={{ sessions.previous_page_number }}">previous</a>
+            <a class="pagination_link" href="?page=1">&laquo; first</a>
+            <a class="pagination_link" href="?page={{ sessions.previous_page_number }}">previous</a>
         {% endif %}
 
         <span id="session_page" class="current" value="{{ sessions.number }}">
@@ -64,8 +71,8 @@
         </span>
 
         {% if sessions.has_next %}
-            <a href="?page={{ sessions.next_page_number }}">next</a>
-            <a href="?page={{ sessions.paginator.num_pages }}">last &raquo;</a>
+            <a class="pagination_link" href="?page={{ sessions.next_page_number }}">next</a>
+            <a class="pagination_link" href="?page={{ sessions.paginator.num_pages }}">last &raquo;</a>
         {% endif %}
     </span>
 </div>

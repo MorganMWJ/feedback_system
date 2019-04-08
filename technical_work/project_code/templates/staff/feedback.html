@@ -26,7 +26,9 @@
   {% endif %}
   {% if messages %}
   {% for message in messages %}
-    <div class="alert alert-danger text-center" role="alert">{{ message }}</div>
+    {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
+      <div class="alert alert-danger text-center" role="alert">{{ message }}</div>
+    {% endif %}
   {% endfor %}
   {% endif %}
   <div class="row">
@@ -44,6 +46,11 @@
         </button>
         {% endbuttons %}
       </form>
+      {% for message in messages %}
+        {% if message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
+          <div class="alert alert-success text-center" role="alert">{{ message }}</div>
+        {% endif %}
+      {% endfor %}
     </div>
     <div class="col-sm-5 border-right border-left">
       {% if session.is_taking_questions %}

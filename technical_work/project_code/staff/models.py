@@ -133,7 +133,7 @@ class Session(models.Model):
         dict["colours"] = three_option_colours
         summary.append(dict)
 
-        return {'feedback_summary': summary}
+        return summary
 
 
     def merge(self, merge_type):
@@ -203,11 +203,13 @@ class Question(models.Model):
 
 class Feedback(models.Model):
     OVERALL_FEEDBACK_CHOICES = (
+        (None, 'Not Specified'),
         ('POSITIVE', 'Good'),
         ('NEUTRAL', 'So-So'),
         ('NEGATIVE', 'Bad'),
     )
     DELIVERY_SPEED_CHOICES = (
+        (None, 'Not Specified'),
         ('V-SLOW', 'Very Slow'),
         ('SLOW', 'Little Slow'),
         ('NORMAL', 'Just Right'),
@@ -215,6 +217,7 @@ class Feedback(models.Model):
         ('V-FAST', 'Very Fast'),
     )
     CONTENT_COMPLEXITY_CHOICES = (
+        (None, 'Not Specified'),
         ('V-EASY', 'Very Easy'),
         ('EASY', 'Slightly Easy'),
         ('NORMAL', 'Normal'),
@@ -222,32 +225,39 @@ class Feedback(models.Model):
         ('V-HARD', 'Very Difficult'),
     )
     CONTENT_PRESENTATION_CHOICES = (
+        (None, 'Not Specified'),
         ('POSITIVE','Very Well Presented'),
         ('NEUTRAL','Well Presented'),
         ('NEGATIVE','Not Well Presented'),
 
     )
     LEVEL_OF_ENGAGMENT_CHOICES = (
+        (None, 'Not Specified'),
         ('POSITIVE','Very Engaging/Interesting'),
         ('NEUTRAL','Engaging/Interesting'),
         ('NEGATIVE','Not Engaging/Interesting'),
     )
 
     time_posted = models.DateTimeField()
-    slide_number = models.IntegerField(null=True, validators=[MinValueValidator(1)])
+    slide_number = models.IntegerField(validators=[MinValueValidator(0)])
     overall_feedback = models.CharField(max_length=30,
-                                        choices=OVERALL_FEEDBACK_CHOICES,
-                                        default='')
+                                        blank=True,
+                                        null=True,
+                                        choices=OVERALL_FEEDBACK_CHOICES)
     delivery_speed = models.CharField(max_length=30,
-                                        choices=DELIVERY_SPEED_CHOICES,
-                                        default='NORMAL')
+                                        blank=True,
+                                        null=True,
+                                        choices=DELIVERY_SPEED_CHOICES)
     content_complexity = models.CharField(max_length=30,
-                                        choices=CONTENT_COMPLEXITY_CHOICES,
-                                        default='')
+                                        blank=True,
+                                        null=True,
+                                        choices=CONTENT_COMPLEXITY_CHOICES)
     content_presentation = models.CharField(max_length=30,
-                                        choices=CONTENT_PRESENTATION_CHOICES,
-                                        default='')
+                                        blank=True,
+                                        null=True,
+                                        choices=CONTENT_PRESENTATION_CHOICES)
     level_of_engagement = models.CharField(max_length=30,
-                                        choices=LEVEL_OF_ENGAGMENT_CHOICES,
-                                        default='')
+                                        blank=True,
+                                        null=True,
+                                        choices=LEVEL_OF_ENGAGMENT_CHOICES)
     session = models.ForeignKey(Session, on_delete=models.CASCADE)

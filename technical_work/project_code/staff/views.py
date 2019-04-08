@@ -22,7 +22,7 @@ from itertools import chain
 
 from staff.forms import LoginForm, LectureDetailsForm, PDFUploadForm, ConnectForm, FeedbackForm, QuestionForm
 from staff.models import Lecture, Session, Time, Question, Feedback
-from staff.pdf_extractor import get_info
+from staff.helpers import get_info
 from staff.templatetags.format_extras import runtime_format, question_time_format
 
 import pdb #pdb.set_trace() to start
@@ -79,25 +79,19 @@ class LectureDetail(LoginRequiredMixin, DetailView):
     model = Lecture
     template_name = 'staff/lecture_detail.html'
 
-    # def get_context_data(self, **kwargs):
-    #     context = super().get_context_data(**kwargs)
-    #     # context['sessions'] = self.get_object().session_set.all()
-    #
-    #     sessions_list = self.get_object().session_set.all()
-    #     paginator = Paginator(sessions_list, 5)
-    #     page = self.request.GET.get('page', paginator.num_pages)
-    #     try:
-    #         context['sessions'] = paginator.page(page)
-    #     except PageNotAnInteger:
-    #         context['sessions'] = paginator.page(paginator.num_pages)
-    #     except EmptyPage:
-    #         context['sessions'] = paginator.page(paginator.num_pages)
-    #
-    #     context['session'] = sessions_list.last()
-    #     for session in context['sessions']:
-    #         if session.is_running:
-    #             context['running_session'] = session
-    #     return context
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        sessions_list = self.get_object().session_set.all().order_by('time__start')
+        paginator = Paginator(sessions_list, 5)
+        page = self.request.GET.get('page', paginator.num_pages)
+        try:
+            context['sessions'] = paginator.page(page)
+        except PageNotAnInteger:
+            context['sessions'] = paginator.page(paginator.num_pages)
+        except EmptyPage:
+            context['sessions'] = paginator.page(paginator.num_pages)
+        context['session'] = sessions_list.last()
+        return context
 
 class LectureDelete(LoginRequiredMixin, DeleteView):
     login_url = '/login/'
@@ -260,18 +254,28 @@ def session_toggle_questions(request, id=None):
 
 @login_required(login_url='/login/')
 def session_questions(request, id=None):
-    #pdb.set_trace()
-    session = get_object_or_404(Session, id=id)
-    questions = session.question_set.filter(is_reviewed=False).order_by("-time_posted")
-    return render(request, 'staff/questions_list.html', {'session': session, 'questions': questions})
+    pdb.set_trace()
+    context = {}
+    context['session'] = get_object_or_404(Session, id=id)
+    questions_list = context['session'].question_set.filter(is_reviewed=False).order_by("-time_posted")
+
+    paginator = Paginator(questions_list, 6)
+    page = request.GET.get('page', paginator.num_pages)
+    try:
+        context['questions'] = paginator.page(page)
+    except PageNotAnInteger:
+        context['questions'] = paginator.page(paginator.num_pages)
+    except EmptyPage:
+        context['questions'] = paginator.page(paginator.num_pages)
+
+    return render(request, 'staff/questions_list.html', context)
 
 @login_required(login_url='/login/')
 def lecture_sessions(request, id=None, version=None):
     context = {}
-    #pdb.set_trace()
     lecture = get_object_or_404(Lecture, id=id)
 
-    sessions_list = lecture.session_set.all()
+    sessions_list = lecture.session_set.all().order_by('time__start')
     paginator = Paginator(sessions_list, 5)
     page = request.GET.get('page', paginator.num_pages)
     try:
@@ -280,11 +284,7 @@ def lecture_sessions(request, id=None, version=None):
         context['sessions'] = paginator.page(paginator.num_pages)
     except EmptyPage:
         context['sessions'] = paginator.page(paginator.num_pages)
-
     context['session'] = sessions_list.last()
-    for session in context['sessions']:
-        if session.is_running:
-            context['running_session'] = session
 
     if version=='v1':
         return render(request, 'staff/lecture_sessions_list.html', context)
@@ -315,6 +315,7 @@ def connect(request):
                 #ensure that session is running
                 if session.is_running:
                     request.session['connected_session_id'] = session.id
+                    request.session['slides_with_feedback'] = []
                     request.session.set_expiry(0) #exipre upon web browser close
                     return HttpResponseRedirect(reverse('staff:feedback'))
                 else:
@@ -334,6 +335,10 @@ def disconnect(request):
         del request.session['connected_session_id']
     if 'questions_asked' in request.session:
         del request.session['questions_asked']
+    if 'slides_with_feedback' in request.session:
+        del request.session['slides_with_feedback']
+    if 'previous_feedback_form_state' in request.session:
+        del request.session['previous_feedback_form_state']
     return HttpResponseRedirect(reverse('staff:connect'))
 
 def feedback(request):
@@ -344,10 +349,13 @@ def feedback(request):
         messages.error(request, _('Please connect to active session with valid feedback code'))
         return redirect(reverse('staff:connect'))
 
-    #ensure that lecture is active (running a session)
+    #ensure that session is active
     if session.is_running:
         context['session'] = session
-        context['feedback_form'] = FeedbackForm(session.lecture)
+        if 'previous_feedback_form_state' in request.session:
+            context['feedback_form'] = FeedbackForm(session.lecture, request.session['previous_feedback_form_state'])
+        else:
+            context['feedback_form'] = FeedbackForm(session.lecture)
         context['question_form'] = QuestionForm()
         if 'questions_asked' in request.session:
             context['questions'] = Question.objects.filter(pk__in=request.session['questions_asked']).order_by("-time_posted")
@@ -365,24 +373,49 @@ def feedback_new(request):
         messages.error(request, _('Please connect to active session with valid feedback code'))
         return redirect(reverse('staff:connect'))
 
+    pdb.set_trace()
     if session.is_running:
         if request.method == 'POST':
             form = FeedbackForm(session.lecture, request.POST)
             if form.is_valid():
-                overall = form.cleaned_data.get('overall_option')
-                speed = form.cleaned_data.get('speed_options')
-                complexity = form.cleaned_data.get('complexity_options')
-                presentation = form.cleaned_data.get('presentation_options')
-                engagment = form.cleaned_data.get('engagment_options')
-                slide = form.cleaned_data.get('slide_options')
-                Feedback.objects.create(time_posted=timezone.now(),
-                                slide_number=slide,
-                                overall_feedback=overall,
-                                delivery_speed=speed,
-                                content_complexity=complexity,
-                                content_presentation=presentation,
-                                level_of_engagement=engagment,
-                                session=session)
+                request.session['previous_feedback_form_state'] = request.POST
+
+                slide = form.cleaned_data.get('slide_number')
+                overall = form.cleaned_data.get('overall_feedback')
+                speed = form.cleaned_data.get('delivery_speed')
+                complexity = form.cleaned_data.get('content_complexity')
+                presentation = form.cleaned_data.get('content_presentation')
+                engagment = form.cleaned_data.get('level_of_engagement')
+                if overall==None and speed==None and complexity==None and presentation==None and engagment==None:
+                    messages.error(request, _('Please Specify Some Feedback Options'))
+                elif 'slides_with_feedback' in request.session and slide in [x[1] for x in request.session['slides_with_feedback']]:
+                    index = -1
+                    for idx, val in enumerate(request.session['slides_with_feedback']):
+                        if(val[1]==int(slide)):
+                            index = idx
+                    feedback_to_update = get_object_or_404(Feedback, pk=request.session['slides_with_feedback'][index][0])
+                    feedback_to_update.overall_feedback = overall
+                    feedback_to_update.delivery_speed = speed
+                    feedback_to_update.content_complexity = complexity
+                    feedback_to_update.content_presentation = presentation
+                    feedback_to_update.level_of_engagement = engagment
+                    feedback_to_update.save()
+
+                    if int(slide)==0:
+                        messages.success(request, _('General Feedback re-submitted'))
+                    else:
+                        messages.success(request, _('Slide ' + slide + ' feedback  re-submitted'))
+                else:
+                    new_feedback = Feedback.objects.create(time_posted=timezone.now(),
+                                    slide_number=slide,
+                                    overall_feedback=overall,
+                                    delivery_speed=speed,
+                                    content_complexity=complexity,
+                                    content_presentation=presentation,
+                                    level_of_engagement=engagment,
+                                    session=session)
+                    if 'slides_with_feedback' in request.session:
+                        request.session['slides_with_feedback'].append((new_feedback.id, new_feedback.slide_number))
             else:
                 messages.error(request, _('Invalid POST Data'))
     else:
@@ -444,4 +477,4 @@ def feedback_detail(request, id=None):
 def session_feedback(request, id=None):
     session = get_object_or_404(Session, id=id)
     feedback = session.feedback_set.all()
-    return JsonResponse({feedback: list(feedback)})
+    return JsonResponse({'feedback': feedback})

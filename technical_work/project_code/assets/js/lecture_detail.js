@@ -42,7 +42,7 @@ $(document).ready(function() {
   });
 
 
-  let activeSessionID = $('.bg-info').attr('id');
+  let activeSessionID = getActiveSession();
   function updatePage(){
     // update sessions
     let lectureID = $('#lectureID').attr("value");
@@ -55,17 +55,17 @@ $(document).ready(function() {
           console.log(responseData);
           $('#sessionDiv').empty();
           $('#sessionDiv').html(responseData);
-          // highlight active session
-          $('tr').removeClass("bg-info");
-          $('#'+activeSessionID.toString()).addClass('bg-info');
+          highlightActiveSession();
           addRowClickFunctionality();
+          paginationLinkSessionReset();
           displaySessionActions();
         }
       });
 
-    if(activeSessionID!=undefined){
+    if(getActiveSession()!=undefined){
       // update questions
-      urlStr = "/session/123/questions/".replace('123', activeSessionID);
+      let questionPage = $('#question_page').attr('value');
+      urlStr = ("/session/123/questions/?page="+questionPage).replace('123', getActiveSession());
       $.ajax({
         url: urlStr,
         method: "GET",
@@ -77,31 +77,59 @@ $(document).ready(function() {
         });
     }
   }
-  setInterval(updatePage, 1000000);
-  // addRowClickFunctionality();
-  // displaySessionActions();
+  setInterval(updatePage, 1000);
   updatePage();
 
   function displaySessionActions(){
-    if(activeSessionID!=undefined){
-      var $options = $("#" + activeSessionID + " .options").clone();
+    if(getActiveSession()!=undefined){
+      var $options = $("#" + getActiveSession() + " .options").clone();
       $('#actionsPanel').html($options);
+    }
+  }
+
+  function highlightActiveSession(){
+    if(getActiveSession()!=undefined && getActiveSession()!="undefined"){
+      $('tr').removeClass("bg-info");
+      $('#'+getActiveSession().toString()).addClass('bg-info');
+    }
+    else{
+      $('#session_table tr:last').addClass('bg-info');
+      setActiveSession($('#session_table tr:last').attr('id'));
     }
   }
 
   function addRowClickFunctionality(){
     $('#session_table tbody tr').click(function(){
-      $('tr').removeClass("bg-info");
-      $(this).addClass("bg-info");
-      activeSessionID = $(this).attr('id');
+      setActiveSession($(this).attr('id'));
+      highlightActiveSession();
       displaySessionActions();
-      updatePage();
     });
   }
 
-  // $('#newSessionBtn').click(function(){
-  //   $(this).removeAttr("href");
-  // });
+  function setActiveSession(id){
+    activeSessionID = id;
+    localStorage.setItem("activeSessionID", activeSessionID);
+  }
+
+  function getActiveSession(){
+    try{
+      activeSessionID = localStorage.getItem("activeSessionID");
+    }
+    catch(err){
+      return undefined;
+    }
+    return activeSessionID;
+  }
+
+  /* Sets activeSession to undefined when navigation num_pages
+     so it can be set to the last session on new page automatically */
+  function paginationLinkSessionReset(){
+    $('.pagination_link').each(function(){
+      $(this).click(function(){
+        setActiveSession(undefined);
+      });
+    });
+  }
 
 
 });
