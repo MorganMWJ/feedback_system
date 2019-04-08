@@ -37,7 +37,7 @@
       </div>
       <hr class="border border-white"/>
       <div class="">
-        <label for="exampleFormControl1" class="h6">{% trans "Lecture Title" %}</label><a href="{% url 'staff:lecture_update' lecture.id %}" class="float-right">{% trans 'Edit' %}</a>
+        <label for="exampleFormControl1" class="h6">{% trans "Lecture Title" %}</label><a href="{% url 'staff:lecture_update' lecture.id %}" title="Edit this lecture's details" class="float-right">{% trans 'Edit' %}</a>
         <input class="form-control " id="exampleFormControl1" type="text" placeholder="{{lecture.title}}" readonly>
         <label for="exampleFormControl2" class="h6">{% trans "Lecture Author" %}</label>
         <input class="form-control" id="exampleFormControl2" type="text" placeholder="{{user.get_full_name}} {{user.email}}" readonly>
