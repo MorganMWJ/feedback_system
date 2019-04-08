@@ -73,7 +73,7 @@ $(document).ready(function() {
         });
       }
   }
-  setInterval(updatePage, 1000000);
+  setInterval(updatePage, 1000);
   updatePage();
 
   function addRowClickFunctionality(){
@@ -87,7 +87,7 @@ $(document).ready(function() {
   $('select').on('change', function() {
     chartType = this.value;
     while (charts.length) {
-      charts.pop();
+      charts.pop().destroy();
     }
   });
 

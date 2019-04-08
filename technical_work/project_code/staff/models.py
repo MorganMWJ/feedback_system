@@ -88,8 +88,9 @@ class Session(models.Model):
                         "data": []}
         choices = Feedback._meta.get_field('overall_feedback').choices
         for choice in choices:
-            dict["labels"].append(choice[1])
-            dict["data"].append(Feedback.objects.filter(overall_feedback=choice[0], session=self).count())
+            if choice[0]!=None:
+                dict["labels"].append(choice[1])
+                dict["data"].append(Feedback.objects.filter(overall_feedback=choice[0], session=self).count())
         dict["colours"] = three_option_colours
         summary.append(dict)
 
@@ -98,8 +99,9 @@ class Session(models.Model):
                         "data": []}
         choices = Feedback._meta.get_field('delivery_speed').choices
         for choice in choices:
-            dict["labels"].append(choice[1])
-            dict["data"].append(Feedback.objects.filter(delivery_speed=choice[0], session=self).count())
+            if choice[0]!=None:
+                dict["labels"].append(choice[1])
+                dict["data"].append(Feedback.objects.filter(delivery_speed=choice[0], session=self).count())
         dict["colours"] = five_option_colours
         summary.append(dict)
 
@@ -108,8 +110,9 @@ class Session(models.Model):
                         "data": []}
         choices = Feedback._meta.get_field('content_complexity').choices
         for choice in choices:
-            dict["labels"].append(choice[1])
-            dict["data"].append(Feedback.objects.filter(content_complexity=choice[0], session=self).count())
+            if choice[0]!=None:
+                dict["labels"].append(choice[1])
+                dict["data"].append(Feedback.objects.filter(content_complexity=choice[0], session=self).count())
         dict["colours"] = five_option_colours
         summary.append(dict)
 
@@ -118,8 +121,9 @@ class Session(models.Model):
                         "data": []}
         choices = Feedback._meta.get_field('level_of_engagement').choices
         for choice in choices:
-            dict["labels"].append(choice[1])
-            dict["data"].append(Feedback.objects.filter(level_of_engagement=choice[0], session=self).count())
+            if choice[0]!=None:
+                dict["labels"].append(choice[1])
+                dict["data"].append(Feedback.objects.filter(level_of_engagement=choice[0], session=self).count())
         dict["colours"] = three_option_colours
         summary.append(dict)
 
@@ -128,12 +132,13 @@ class Session(models.Model):
                         "data": []}
         choices = Feedback._meta.get_field('content_presentation').choices
         for choice in choices:
-            dict["labels"].append(choice[1])
-            dict["data"].append(Feedback.objects.filter(content_presentation=choice[0], session=self).count())
+            if choice[0]!=None:
+                dict["labels"].append(choice[1])
+                dict["data"].append(Feedback.objects.filter(content_presentation=choice[0], session=self).count())
         dict["colours"] = three_option_colours
         summary.append(dict)
 
-        return dict(summary)
+        return summary
 
 
     def merge(self, merge_type):

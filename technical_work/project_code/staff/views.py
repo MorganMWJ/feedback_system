@@ -189,7 +189,7 @@ def lecture_update(request, pk=None):
 
 def session_feedback_chart_data(request, id=None):
     session = get_object_or_404(Session, id=id)
-    return JsonResponse(session.get_feedback_summary())
+    return JsonResponse({'feedback_summary': session.get_feedback_summary()})
 
 @login_required(login_url='/login/')
 def session_new(request, id=None):
