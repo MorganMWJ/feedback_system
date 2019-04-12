@@ -14,6 +14,7 @@ urlpatterns = [
     path('connect/', views.connect, name='connect'),
     path('disconnect/', views.disconnect, name='disconnect'),
     path('feedback/', views.feedback, name='feedback'),
+    path('feedback/new/', views.feedback_new, name='feedback_new'),
 
 
     #/login/
@@ -38,8 +39,6 @@ urlpatterns = [
     path('session/<int:id>/stop/', views.session_stop, name='session_stop'),
     #/session/?/delete/
     path('session/<int:id>/delete/', views.session_delete, name='session_delete'),
-    #/session/?/feedback/
-    path('session/<int:id>/feedback/', views.session_feedback, name='session_feedback'),
     #/session/?/merge_with_previous/
     path('session/<int:id>/merge_with_previous/', views.session_merge_previous, name='session_merge_previous'),
     #/session/?/merge_with_previous/
@@ -54,14 +53,15 @@ urlpatterns = [
     path('question/<int:id>/delete/', views.question_delete, name='question_delete'),
     #/questions/new/
     path('question/new/', views.question_new, name='question_new'),
-    #/feedback/new/
-    path('feedback/new/', views.feedback_new, name='feedback_new'),
 
+
+
+    #html reloaded via ajax
     path('session/<int:id>/questions/', views.session_questions, name='session_questions'),
     path('lecture/<int:id>/sessions/<str:version>/', views.lecture_sessions, name='lecture_sessions'),
 
 
     #probably no longer using these below
-    path('api/session/<int:id>/feedback/', views.session_feedback_chart_data, name='session_feedback_chart_data'),
+    path('api/feedbackdata/', views.session_feedback_chart_data, name='session_feedback_chart_data'),
 
 ]

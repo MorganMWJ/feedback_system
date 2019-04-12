@@ -40,7 +40,14 @@
           <canvas id="pie-chart-1" width="800" height="450"></canvas>
         </div>
         <div class="col-sm-3">
-          <select class="float-right">
+          <select id="feedback_choice" class="float-right">
+            <option value="all">All Feedback</option>
+            <option value="general">General Feedback Only</option>
+            {% for i in i|rjust:lecture.slide_count %}
+                <option value="{{ forloop.counter }}">Slide {{ forloop.counter }} Feedback Only</option>
+            {% endfor %}
+          </select>
+          <select id="chart_choice" class="float-right">
             <option value="pie">Pie Charts</option>
             <option value="bar">Bar Charts</option>
           </select>

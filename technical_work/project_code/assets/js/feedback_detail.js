@@ -3,8 +3,18 @@ let charts = [];
 
 $(document).ready(function() {
   let chartType = "pie";
-  let hasChartTypeChanged = false;
+  let feedbackType = "all";
   let activeSessionID = localStorage.getItem("activeSessionID");
+
+  function addRowClickFunctionality(){
+    $('#session_table tbody tr').click(function(){
+      $('tr').removeClass("bg-info");
+      $(this).addClass("bg-info");
+      activeSessionID = $(this).attr('id');
+      updatePage();//remove
+    });
+  }
+  addRowClickFunctionality();
 
   function updatePage(){
     let lectureID = $('#lectureID').attr("value");
@@ -31,41 +41,51 @@ $(document).ready(function() {
       });
 
       if(sessionPage != undefined){
-        endpoint = "/api/session/123/feedback/".replace('123', activeSessionID);
+        endpoint = "/api/feedbackdata/";
         $.ajax({
           url: endpoint,
           method: "GET",
-          datatype: 'json',
+          data: {session: activeSessionID, feedback_request: feedbackType},
+          error: function(response){
+
+          },
           success: function(responseData){
             console.log(responseData);
-            for(var i=0; i<responseData.feedback_summary.length; i++){
+            const entries = Object.values(responseData);
+            for(var i=0; i<entries.length; i++){
               if(typeof charts[i] === 'undefined'){
                 let chart = new Chart(document.getElementById("pie-chart-" + (i+1).toString()), {
                   type: chartType,
                   data: {
-                    labels: responseData.feedback_summary[i].labels,
+                    labels: entries[i].labels,
                     datasets: [{
                       label: "No. Responses",
-                      backgroundColor: responseData.feedback_summary[i].colours,
-                      data: responseData.feedback_summary[i].data
+                      backgroundColor: entries[i].colours,
+                      data: entries[i].data
                     }]
                   },
                   options: {
                     title: {
                       display: true,
-                      text: responseData.feedback_summary[i].title
+                      text: entries[i].title
                     }
                   }
                 });
+                if(chartType=='bar'){
+                  chart.options.scales.yAxes[0].ticks.min = 0;
+                  chart.options.scales.yAxes[0].ticks.beginAtZero = true;
+                  chart.options.scales.yAxes[0].ticks.stepSize = 1;
+                  chart.update();
+                }
                 charts.push(chart);
               }
               else{
-                charts[i].data.labels = responseData.feedback_summary[i].labels;
+                charts[i].data.labels = entries[i].labels;
                 for(var c=0; c<charts[i].data.datasets[0].data.length; c++){
-                  charts[i].data.datasets[0].data[c] = responseData.feedback_summary[i].data[c];
+                  charts[i].data.datasets[0].data[c] = entries[i].data[c];
                 }
-                charts[i].data.datasets.backgroundColor = responseData.feedback_summary[i].colours;
-                charts[i].options.title.text = responseData.feedback_summary[i].title;
+                charts[i].data.datasets.backgroundColor = entries[i].colours;
+                charts[i].options.title.text = entries[i].title;
                 charts[i].update();
               }
             }
@@ -73,22 +93,22 @@ $(document).ready(function() {
         });
       }
   }
-  setInterval(updatePage, 1000);
-  updatePage();
+  //setInterval(updatePage, 5000);
+  //updatePage();
 
-  function addRowClickFunctionality(){
-    $('#session_table tbody tr').click(function(){
-      $('tr').removeClass("bg-info");
-      $(this).addClass("bg-info");
-      activeSessionID = $(this).attr('id');
-    });
-  }
 
-  $('select').on('change', function() {
+
+  $('#chart_choice').on('change', function() {
     chartType = this.value;
     while (charts.length) {
       charts.pop().destroy();
     }
+    updatePage() //remove
+  });
+
+  $('#feedback_choice').on('change', function() {
+    feedbackType = this.value;
+    updatePage() //remove
   });
 
 });

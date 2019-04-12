@@ -1,12 +1,12 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.http import HttpResponseRedirect, JsonResponse, HttpResponseNotFound
+from django.http import HttpResponseRedirect, JsonResponse, HttpResponseNotFound,HttpResponseBadRequest
 from django.urls import reverse
 from django.utils import translation
 from django.utils.translation import ugettext as _
 from django.utils import timezone
 from django.template import RequestContext
 from django.db.models import Q
-from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, View
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 from django.contrib.auth import authenticate
@@ -186,10 +186,6 @@ def lecture_update(request, pk=None):
         context['pdf_form'] = PDFUploadForm()
 
     return render(request, 'staff/lecture_edit.html', context)
-
-def session_feedback_chart_data(request, id=None):
-    session = get_object_or_404(Session, id=id)
-    return JsonResponse({'feedback_summary': session.get_feedback_summary()})
 
 @login_required(login_url='/login/')
 def session_new(request, id=None):
@@ -460,13 +456,24 @@ def question_delete(request, id=None):
 
 ####################################################################################################
 def feedback_detail(request, id=None):
-    context ={}
+    context = {}
     context['lecture'] = get_object_or_404(Lecture, id=id)
     context.update(get_session_list(request, context['lecture'], 10))
     return render(request, 'staff/feedback_detail.html', context)
 
 
-def session_feedback(request, id=None):
-    session = get_object_or_404(Session, id=id)
-    feedback = session.feedback_set.all()
-    return JsonResponse({'feedback': feedback})
+def session_feedback_chart_data(request):
+    #pdb.set_trace()
+    if 'session' in request.GET and 'feedback_request' in request.GET:
+        print("session: " + request.GET.get('session'))#DEBUG
+        print("feedback_request: " + request.GET.get('feedback_request'))#DEBUG
+        session = get_object_or_404(Session, id=request.GET['session'])
+        try:
+            if request.GET.get('feedback_request').isdigit():
+                feedback = session.get_feedback_summary(int(request.GET.get('feedback_request')))
+            else:
+                feedback = session.get_feedback_summary(request.GET.get('feedback_request'))
+            return JsonResponse(feedback)
+        except ValueError:
+            pass
+    return HttpResponseBadRequest()

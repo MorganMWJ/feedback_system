@@ -74,72 +74,37 @@ class Session(models.Model):
     def __str__(self):
         return self.code
 
-    def get_feedback_summary(self):
-        summary = []
-        import pdb
-        #pdb.set_trace()
-        titles = ["Overall Lecture Feedback", "Lecture Delivery Speed", "Complexity of Lecture Content",
-                    "Lecture Interest/Enagment", "Quality of Lecture Presentation"]
-        three_option_colours = ["#3cba9f", "#c4c22f", "#c45850"] #green, yellow, red
-        five_option_colours = ["#0000ff", "#00ccff", "#3cba9f", "#c45850", "#ff0000"]
+    def get_feedback_summary(self, feedback_subset):
+        if feedback_subset not in ['all', 'general'] and not isinstance(feedback_subset, int):
+            raise ValueError("Not valid feedback subset option")
+        if isinstance(feedback_subset, int) and (feedback_subset<=1 or feedback_subset>=self.lecture.slide_count):
+            raise ValueError("Not valid feedback subset option")
 
-        dict = {"title": titles[0],
-                        "labels": [],
-                        "data": []}
-        choices = Feedback._meta.get_field('overall_feedback').choices
-        for choice in choices:
-            if choice[0]!=None:
-                dict["labels"].append(choice[1])
-                dict["data"].append(Feedback.objects.filter(overall_feedback=choice[0], session=self).count())
-        dict["colours"] = three_option_colours
-        summary.append(dict)
+        summary = {}
+        three_chart_colours = ["#3cba9f", "#c4c22f", "#c45850"] #green, yellow, red
+        five_chart_colours = ["#0000ff", "#00ccff", "#3cba9f", "#c45850", "#ff0000"]
+        feedback_meta_info =  [["overall_feedback", "Overall Lecture Feedback", three_chart_colours],
+                               ["delivery_speed", "Lecture Delivery Speed", five_chart_colours],
+                               ["content_complexity", "Complexity of Lecture Content", five_chart_colours],
+                               ["level_of_engagement", "Lecture Interest/Enagment", three_chart_colours],
+                               ["content_presentation", "Quality of Lecture Presentation", three_chart_colours]]
 
-        dict = {"title": titles[1],
-                        "labels": [],
-                        "data": []}
-        choices = Feedback._meta.get_field('delivery_speed').choices
-        for choice in choices:
-            if choice[0]!=None:
-                dict["labels"].append(choice[1])
-                dict["data"].append(Feedback.objects.filter(delivery_speed=choice[0], session=self).count())
-        dict["colours"] = five_option_colours
-        summary.append(dict)
-
-        dict = {"title": titles[2],
-                        "labels": [],
-                        "data": []}
-        choices = Feedback._meta.get_field('content_complexity').choices
-        for choice in choices:
-            if choice[0]!=None:
-                dict["labels"].append(choice[1])
-                dict["data"].append(Feedback.objects.filter(content_complexity=choice[0], session=self).count())
-        dict["colours"] = five_option_colours
-        summary.append(dict)
-
-        dict = {"title": titles[3],
-                        "labels": [],
-                        "data": []}
-        choices = Feedback._meta.get_field('level_of_engagement').choices
-        for choice in choices:
-            if choice[0]!=None:
-                dict["labels"].append(choice[1])
-                dict["data"].append(Feedback.objects.filter(level_of_engagement=choice[0], session=self).count())
-        dict["colours"] = three_option_colours
-        summary.append(dict)
-
-        dict = {"title": titles[4],
-                        "labels": [],
-                        "data": []}
-        choices = Feedback._meta.get_field('content_presentation').choices
-        for choice in choices:
-            if choice[0]!=None:
-                dict["labels"].append(choice[1])
-                dict["data"].append(Feedback.objects.filter(content_presentation=choice[0], session=self).count())
-        dict["colours"] = three_option_colours
-        summary.append(dict)
-
+        #create the feedback dictionary to return
+        for fmi in feedback_meta_info:
+            summary[fmi[0]] = {'title': fmi[1],
+                                'labels': [],
+                                'data': [],
+                                'colours': fmi[2]}
+            for choice in Feedback._meta.get_field(fmi[0]).choices:
+                if choice[0]!=None:
+                    summary[fmi[0]]['labels'].append(choice[1])
+                    if feedback_subset=='all':
+                        exec("summary[fmi[0]]['data'].append(Feedback.objects.filter("+ fmi[0] +"=choice[0], session=self).count())")
+                    elif feedback_subset=='general':
+                        exec("summary[fmi[0]]['data'].append(Feedback.objects.filter("+ fmi[0] +"=choice[0], slide_number=0, session=self).count())")
+                    else:
+                        exec("summary[fmi[0]]['data'].append(Feedback.objects.filter("+ fmi[0] +"=choice[0], slide_number="+ str(feedback_subset) +", session=self).count())")
         return summary
-
 
     def merge(self, merge_type):
         #get the sessions ordered by start time
