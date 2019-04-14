@@ -1,7 +1,7 @@
 {% extends 'base_layout.html' %}
 {% load i18n %}
 
-{% block title %}{% trans "Lecture History" %}{% endblock %}
+{% block title %}{% trans "Lecture List" %}{% endblock %}
 
 {% block nav_options %}
   <div class="shift-nav">
@@ -18,13 +18,20 @@
 
 {% block content %}
 <div class="container-fluid bg-light h-100">
-  <div class="row">
+  <div class="row d-flex justify-content-between">
     <div class="col-sm-auto bg-dark d-flex flex-row p-3 rounded-bottom-right">
       <form method="GET" action="" class="form-inline my-2 my-lg-0">
         <input class="form-control mr-sm-2" type="search" name="q" placeholder="{% trans 'Search' %}" value="{{ request.GET.q }}" aria-label="Search">
         <button class="btn btn-outline-success my-2 my-sm-0" type="submit">{% trans "Search" %}</button>
       </form>
       <!-- <button href="" type="button" class="btn btn-danger my-2 mx-1">{% trans "Delete Selected" %}</button> -->
+    </div>
+    <div clas=col-sm-auto">
+      {% for message in messages %}
+        {% if message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
+          <div class="alert alert-success text-center" role="alert">{{ message }}</div>
+        {% endif %}
+      {% endfor %}
     </div>
   </div>
   <div class="row">

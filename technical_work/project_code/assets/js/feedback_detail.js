@@ -11,6 +11,7 @@ $(document).ready(function() {
       $('tr').removeClass("bg-info");
       $(this).addClass("bg-info");
       activeSessionID = $(this).attr('id');
+      $('#prompt').hide();
       updatePage();//remove
     });
   }
@@ -47,7 +48,7 @@ $(document).ready(function() {
           method: "GET",
           data: {session: activeSessionID, feedback_request: feedbackType},
           error: function(response){
-
+            console.log(responseData);
           },
           success: function(responseData){
             console.log(responseData);

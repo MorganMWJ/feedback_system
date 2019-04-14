@@ -32,8 +32,10 @@
 <div class="container-fluid bg-light h-100">
   <div class="row bg-dark">
     <div class="col-sm-3 pt-3 h-100 text-white">
-      <div class="d-flex flex-row justify-content-between">
-        <a id="new_session_link" href="{% url 'staff:session_new' lecture.id %}" role="button" id="newSessionBtn" class="btn btn-block btn-lg btn-outline-success mx-1">Start New Session</a>
+      <a id="new_session_link" href="{% url 'staff:session_new' lecture.id %}" role="button" id="newSessionBtn" class="btn btn-block btn-lg btn-success mr-4">Start New Session</a>
+      <div class="my-3"></div>
+      <div id="actionsPanel">
+        <p>{% trans 'Select a Session' %}</p>
       </div>
       <hr class="border border-white"/>
       <div class="">
@@ -47,9 +49,6 @@
         <textarea name="name" rows="8" cols="80" class="form-control" id="notesArea" type="text" placeholder="{{lecture.notes}}" readonly></textarea>
       </div>
       <hr class="border border-white"/>
-      <div id="actionsPanel">
-        <p>{% trans 'Select a Session' %}</p>
-      </div>
       <div class="d-flex justify-content-center">
         <label class="mx-1"><input id="sessionCheck" type="checkbox" checked>Show Sessions</label>
         <label class="mx-1"><input id="questionCheck" type="checkbox" checked>Show Questions</label>

@@ -30,10 +30,9 @@
       {% include 'staff/feedback_sessions_list.html' %}
     </div>
     <div class="col-sm-9 pt-3 bg-light">
-      <center>
-        <h3>{% trans "View the Feedback" %}</h3>
-      </center>
-      <hr class="mt-0" />
+      <div id="prompt" class="alert alert-secondary m-5" role="alert"><center>
+        <h1 class="display-4 border border-top border-bottom">{% trans 'Click on a session to view feedback data' %}</h1>
+      </center></div>
       <div class="row">
         <div class="col-sm-3"></div>
         <div class="col-sm-6">

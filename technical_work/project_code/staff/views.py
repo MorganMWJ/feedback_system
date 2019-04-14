@@ -41,23 +41,22 @@ def get_session_list(request, lecture, per_page):
     context['session'] = sessions_list.last()
     return context
 
-# Create your views here.
 def login(request):
     context = {}
-    #if POST request
     if request.method == 'POST':
-        #create a form instance populated with the data sent in the form
         form = LoginForm(request.POST)
         context['form'] = form
-        #check provided data is valid
         if form.is_valid():
-            #process data form.cleaned_data (ldap authenticate)
             username = form.cleaned_data.get('uid')
             password = form.cleaned_data.get('pswd')
+            # LDAP Authenticate
             user = authenticate(request, username=username, password=password)
             if user is not None:
                 auth_login(request, user)
-                return HttpResponseRedirect(reverse('staff:lecture_list'))
+                if 'next' in request.POST:
+                    return HttpResponseRedirect(request.POST.get('next'))
+                else:
+                    return HttpResponseRedirect(reverse('staff:lecture_list'))
             else:
                 messages.error(request, _('Invalid Staff Login Details'))
         else:
@@ -102,6 +101,10 @@ class LectureDelete(LoginRequiredMixin, DeleteView):
     model = Lecture
     success_url =  '/lectures/'
 
+    def delete(self, request, *args, **kwargs):
+        messages.success(request, "Lecture Deleted: "+self.get_object().title)
+        return super().delete(request, *args, **kwargs)
+
 @login_required(login_url='/login/')
 def lecture_create(request):
     context = {}
@@ -121,6 +124,7 @@ def lecture_create(request):
                                 notes=notes,
                                 date_created=timezone.now(),
                                 user=request.user)
+            messages.success(request, "Lecture Created: "+title)
             return HttpResponseRedirect(reverse('staff:lecture_list'))
         elif pdf_form.is_valid():
             try:

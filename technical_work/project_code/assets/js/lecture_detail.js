@@ -66,6 +66,9 @@ $(document).ready(function() {
     if(getActiveSession()!=undefined){
       // update questions
       let questionPage = $('#question_page').attr('value');
+      if(questionPage==undefined){
+        questionPage = 1;
+      }
       urlStr = ("/session/123/questions/?page="+questionPage).replace('123', getActiveSession());
       $.ajax({
         url: urlStr,
@@ -78,8 +81,8 @@ $(document).ready(function() {
         });
     }
   }
-  setInterval(updatePage, 1000);
-  updatePage();
+  //setInterval(updatePage, 1000);
+  // updatePage();
 
   function displaySessionActions(){
     if(getActiveSession()!=undefined){
@@ -104,8 +107,10 @@ $(document).ready(function() {
       setActiveSession($(this).attr('id'));
       highlightActiveSession();
       displaySessionActions();
+      updatePage();
     });
   }
+  addRowClickFunctionality();
 
   function setActiveSession(id){
     activeSessionID = id;

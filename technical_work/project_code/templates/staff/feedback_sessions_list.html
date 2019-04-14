@@ -4,7 +4,7 @@
 
 {% if sessions %}
 <center>
-  <h3>{% trans "Feedback Sessions" %}</h3>
+  <h3>{% trans "Your Sessions" %}</h3>
 </center>
 <hr class="border border-white"/>
 <div class="table-responsive">
@@ -18,7 +18,7 @@
     </thead>
     <tbody class="bg-light">
       {% for session in sessions %}
-      <tr id="{{ session.id }}" class="session_row {% if forloop.last %}bg-info{% endif %}">
+      <tr id="{{ session.id }}" title="Click to view this session's feedback" class="session_row {% if forloop.last %}bg-info{% endif %}">
         <th>{% session_numbering forloop.counter sessions.number per_page %}</th>
         <td>{{ session.code }}</td>
         <td>{{ session.get_first_start_time|date:'d M, Y' }}</td>
