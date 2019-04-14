@@ -8,6 +8,11 @@
 {% block nav_options %}
   <div class="shift-nav">
     <ul class="navbar-nav mr-auto d-flex flex-row">
+      {% if lecture.file %}
+      <li class="nav-item">
+        <a class="nav-link p-3" href="{% url 'staff:lecture_file_view' lecture.id %}" role="button">{% trans "View Lecture PDF" %}</a>
+      </li>
+      {% endif %}
       <li class="nav-item">
         <a class="nav-link p-3" href="{% url 'staff:disconnect' %}" role="button">{% trans "Disconnect" %}</a>
       </li>

@@ -16,7 +16,8 @@ class Lecture(models.Model):
                     default=1,
                     validators=[MinValueValidator(1)])
     notes = models.TextField(null=True)
-    date_created = models.DateTimeField()
+    file = models.FileField(null=True, upload_to='documents/')
+    date_created = models.DateTimeField(auto_now_add=True)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
 
     def get_last_active_date(self):
@@ -31,7 +32,7 @@ class Lecture(models.Model):
         return self.title
 
     def get_absolute_url(self):
-        return reverse('staff:lecture_detail', kwargs={'id': self.pk})
+        return reverse('staff:lecture_detail', kwargs={'pk': self.pk})
 
 class Session(models.Model):
     # date_last_merged = models.DateTimeField(null=True)

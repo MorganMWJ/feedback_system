@@ -29,7 +29,6 @@ def session_numbering(counter, page_num, per_page):
     if(page_num<=1):
         return counter
     return ((page_num-1)*per_page)+counter
-
 # @register.simple_tag
 # def not_first_session_displayed(counter, page_num):
 #     return session_numbering(counter, page_num)!=1

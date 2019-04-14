@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.http import HttpResponseRedirect, JsonResponse, HttpResponseNotFound,HttpResponseBadRequest
+from django.http import HttpResponseRedirect, JsonResponse, HttpResponseNotFound,HttpResponseBadRequest, FileResponse, HttpResponse
 from django.urls import reverse
 from django.utils import translation
 from django.utils.translation import ugettext as _
@@ -19,8 +19,9 @@ from django.contrib import messages
 from ldap3 import core
 from PyPDF2.utils import PdfReadError
 from itertools import chain
+import datetime
 
-from staff.forms import LoginForm, LectureDetailsForm, PDFUploadForm, ConnectForm, FeedbackForm, QuestionForm
+from staff.forms import LoginForm, LectureDetailsForm, ConnectForm, FeedbackForm, QuestionForm
 from staff.models import Lecture, Session, Time, Question, Feedback
 from staff.helpers import get_info
 from staff.templatetags.format_extras import runtime_format, question_time_format
@@ -80,9 +81,16 @@ class LectureList(LoginRequiredMixin, ListView):
         lectures = Lecture.objects.filter(user__username=self.request.user.username).order_by('-date_created')
         query = self.request.GET.get("q")
         if query:
-            lectures = lectures.filter(
-                    Q(title__icontains=query) |
-                    Q(date_created__icontains=query))
+            try:
+                date_obj = datetime.datetime.strptime(query, '%d/%m/%Y')
+                lectures = lectures.filter(
+                        Q(title__icontains=query) |
+                        Q(date_created__icontains=str(date_obj)[:10]))
+            except:
+                lectures = lectures.filter(
+                        Q(title__icontains=query) |
+                        Q(date_created__icontains=query))
+        messages.success(self.request, "Search Result For: " + query)
         return lectures
 
 
@@ -105,91 +113,66 @@ class LectureDelete(LoginRequiredMixin, DeleteView):
         messages.success(request, "Lecture Deleted: "+self.get_object().title)
         return super().delete(request, *args, **kwargs)
 
-@login_required(login_url='/login/')
-def lecture_create(request):
-    context = {}
-    if request.method == 'POST':
-        #create a form instance populated with the data sent in the form
-        form = LectureDetailsForm(request.POST)
-        context['form'] = form
-        pdf_form = PDFUploadForm(request.POST, request.FILES)
-        context['pdf_form'] = pdf_form
-        if form.is_valid():
-            title = form.cleaned_data.get('title')
-            slide_count = form.cleaned_data.get('slide_count')
-            notes = form.cleaned_data.get('notes')
+class LectureCreate(LoginRequiredMixin, CreateView):
+    login_url = '/login/'
+    model = Lecture
+    success_url =  '/lectures/'
+    form_class = LectureDetailsForm
+    template_name_suffix = '_new'
 
-            Lecture.objects.create(title=title,
-                                slide_count=slide_count,
-                                notes=notes,
-                                date_created=timezone.now(),
-                                user=request.user)
-            messages.success(request, "Lecture Created: "+title)
-            return HttpResponseRedirect(reverse('staff:lecture_list'))
-        elif pdf_form.is_valid():
-            try:
-                info = get_info(request.FILES['lecture_pdf_file'])
-                context['form'] = LectureDetailsForm(initial={'title': info['title'], 'slide_count': info['pageCount']})
-            except PdfReadError:
-                messages.error(request, _('File has not been decrypted'))
+    def form_valid(self, form):
+        self.object = form.save(commit=False)
+        self.object.file = self.request.FILES.get('file')
+        self.object.user = self.request.user
+        self.object.save()
+        messages.success(self.request, "Lecture Created: " + self.object.title)
+        return HttpResponseRedirect(reverse('staff:lecture_list'))
+
+    def form_invalid(self, form):
+        messages.error(self.request, _('Invalid form data'))
+        return super().form_invalid(form)
+
+class LectureUpdate(LoginRequiredMixin, UpdateView):
+    login_url = '/login/'
+    model = Lecture
+    form_class = LectureDetailsForm
+    template_name_suffix = '_edit'
+
+    def get_success_url(self, **kwargs):
+        return self.object.get_absolute_url()
+
+    def form_valid(self, form):
+        pdb.set_trace()
+        self.object = form.save(commit=False)
+        self.object.file = self.request.FILES.get('file')
+        self.object.save()
+        messages.success(self.request, "Lecture Updated")
+        return HttpResponseRedirect(self.get_success_url())
+
+    def form_invalid(self, form):
+        messages.error(self.request, _('Invalid form data'))
+        return super().form_invalid(form)
+
+def extarct_pdf(request):
+    pass
+
+def lecture_file_view(request, id=None):
+    #pdb.set_trace()
+    lecture = get_object_or_404(Lecture, id=id)
+    filename = lecture.file.path
+    try:
+        if request.user.is_authenticated and lecture.user==request.user:
+            return FileResponse(open(filename, 'rb'), content_type='application/pdf')
+        elif lecture==Session.objects.get(pk=request.session['connected_session_id']).lecture:
+            return FileResponse(open(filename, 'rb'), content_type='application/pdf')
         else:
-            messages.error(request, _('Invalid form data'))
-    else:
-        context['form'] = LectureDetailsForm()
-        context['pdf_form'] = PDFUploadForm()
+            return HttpResponse('Unauthorized', status=401)
 
-    return render(request, 'staff/lecture_new.html', context)
-
-# class LectureUpdate(LoginRequiredMixin, UpdateView):
-#     login_url = '/login/'
-#     model = Lecture
-#     template_name_suffix = '_edit_form'
-#     form_class = LectureDetailsForm
-#
-#     def get_initial(self):
-#         return {'title': self.object.title,
-#                 'slide_count': self.object.slide_count,
-#                 'notes': self.object.notes}
-#
-#     def get_context_data(self, **kwargs):
-#         pdb.set_trace()
-#         context = super().get_context_data(**kwargs)
-#         return context
-#
-#     def get_success_url(self):
-#         return reverse('staff:lecture_detail', kwargs={'pk': self.kwargs.get('pk')})
-
-
-@login_required(login_url='/login/')
-def lecture_update(request, pk=None):
-    context = {}
-    lecture = get_object_or_404(Lecture, id=pk)
-    context['lecture'] = lecture
-    if request.method == 'POST':
-        form = LectureDetailsForm(request.POST)
-        context['form'] = form
-        pdf_form = PDFUploadForm(request.POST, request.FILES)
-        context['pdf_form'] = pdf_form
-        if form.is_valid():
-            lecture.title = form.cleaned_data.get('title')
-            lecture.slide_count = form.cleaned_data.get('slide_count')
-            lecture.notes = form.cleaned_data.get('notes')
-            lecture.save()
-
-            return redirect(reverse('staff:lecture_detail', kwargs={'pk': lecture.id}))
-        elif pdf_form.is_valid():
-            try:
-                info = get_info(request.FILES['lecture_pdf_file'])
-                context['form'] = LectureDetailsForm(initial={'title': info['title'], 'slide_count': info['pageCount']})
-            except PdfReadError:
-                messages.error(request, _('File has not been decrypted'))
-        else:
-            messages.error(request, _('Invalid form data'))
-    else:
-        context['form'] = LectureDetailsForm(initial={'title': lecture.title, 'slide_count': lecture.slide_count, 'notes': lecture.notes})
-        context['pdf_form'] = PDFUploadForm()
-
-    return render(request, 'staff/lecture_edit.html', context)
+    except (KeyError, Session.DoesNotExist):
+        messages.error(request, _('Please connect to active session with valid feedback code'))
+        return redirect(reverse('staff:connect'))
+    except FileNotFoundError:
+        raise Http404()
 
 @login_required(login_url='/login/')
 def session_new(request, id=None):
@@ -352,6 +335,7 @@ def feedback(request):
         messages.error(request, _('Session is not active'))
         return HttpResponseRedirect(reverse('staff:disconnect'))
 
+    context['lecture'] = session.lecture
     return render(request, 'staff/feedback.html', context)
 
 def feedback_new(request):

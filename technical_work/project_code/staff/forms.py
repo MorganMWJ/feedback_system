@@ -17,23 +17,27 @@ class LectureDetailsForm(forms.ModelForm):
         self.fields['title'].max_length = 150
         self.fields['slide_count'].min_value = 1
         self.fields['notes'].required = False
+        self.fields['file'].required = False
+        self.fields['file'].validators = [validate_file_extension]
 
     class Meta:
         model = Lecture
-        fields = ['title', 'slide_count', 'notes']
+        fields = ['title', 'slide_count', 'notes', 'file',]
         labels = {
             'title': _('Lecture/Workshop Title'),
             'slide_count': _('Number of Slides'),
-            'notes': _('Extra Notes')
+            'notes': _('Extra Notes'),
+            'file': _('Lecture PDF')
         }
         widgets = {
-            'title': forms.TextInput(attrs={'placeholder': _("Title here...")}),
-            'slide_count': forms.NumberInput(attrs={'placeholder': _("Slide Count here...")}),
-            'notes': forms.Textarea(attrs={'placeholder': _("Notes here...")})
+            'title': forms.TextInput(attrs={'placeholder': _("Title here..."), 'class': 'form-control'}),
+            'slide_count': forms.NumberInput(attrs={'placeholder': _("Slide Count here..."), 'class': 'form-control'}),
+            'notes': forms.Textarea(attrs={'placeholder': _("Notes here..."), 'class': 'form-control'}),
+            'file': forms.ClearableFileInput(attrs={'class': 'form-control'})
         }
 
-class PDFUploadForm(forms.Form):
-    lecture_pdf_file = forms.FileField(required=False, validators=[validate_file_extension])
+# class PDFUploadForm(forms.Form):
+#     lecture_pdf_file = forms.FileField(label=_('LECTURE FILE'), required=False, validators=[validate_file_extension])
 
 class ConnectForm(forms.Form):
     code = forms.CharField(label=_('Session Code'), min_length=6, max_length=6, validators=[alphanumeric], widget=forms.TextInput(attrs={'placeholder': _("Code here...")}))

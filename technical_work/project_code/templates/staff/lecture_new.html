@@ -1,6 +1,5 @@
 {% extends 'base_layout.html' %}
 {% load i18n %}
-{% load bootstrap3 %}
 
 {% block title %}{% trans "New Lecture" %}{% endblock %}
 
@@ -8,7 +7,7 @@
 <div class="shift-nav">
   <ul class="navbar-nav mr-auto d-flex flex-row">
     <li class="nav-item">
-      <a class="nav-link p-3" href="{% url 'staff:lecture_list' %}" role="button">{% trans "Lecture History" %}</a>
+      <a class="nav-link p-3" href="{% url 'staff:lecture_list' %}" role="button">{% trans "Lecture List" %}</a>
     </li>
     <li class="nav-item">
       <a class="nav-link p-3" href="{% url 'staff:logout' %}" role="button">{% trans "Logout" %}</a>
@@ -21,30 +20,16 @@
 <div class="container p-3">
   <div class="row d-flex justify-content-center">
     <div class="col-sm-8">
-      <form action="{% url 'staff:lecture_create' %}" method="post" class="bg-light border rounded p-2">
+      <form action="{% url 'staff:lecture_create' %}" enctype="multipart/form-data" method="post" class="bg-light border rounded p-2">
         {% csrf_token %}
-        {% bootstrap_form form %}
-        {% buttons %}
-          <button type="submit" class="btn btn-default">
-            {% trans "Create" %}
-          </button>
-        {% endbuttons %}
+        {{ form }}
+        <button type="submit" class="btn btn-default mt-2">
+          {% trans "Create" %}
+        </button>
       </form>
     </div>
   </div>
-  <div class="row d-flex justify-content-center">
-    <div class="col-sm-auto">
-      <form action="{% url 'staff:lecture_create' %}" method="post" enctype="multipart/form-data" class="bg-light border rounded p-2">
-        {% csrf_token %}
-        {% bootstrap_form pdf_form %}
-        {% buttons %}
-          <button type="submit" class="btn btn-default">
-            {% trans "Extract" %}
-          </button>
-        {% endbuttons %}
-      </form>
-    </div>
-  </div>
+
   {% if messages %}
   {% for message in messages %}
     <div class="alert alert-danger text-center" role="alert">{{ message }}</div>

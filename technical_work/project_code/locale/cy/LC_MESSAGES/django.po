@@ -248,7 +248,7 @@ msgstr "Gweld Adborth"
 #: .\templates\staff\lecture_detail.html:22
 #: .\templates\staff\lecture_list.html:4 .\templates\staff\lecture_new.html:11
 #: .\templates\staff\login.html:12
-msgid "Lecture History"
+msgid "Lecture List"
 msgstr "Hanes y Ddarlith"
 
 #: .\templates\staff\lecture_detail.html:40
