@@ -38,9 +38,7 @@ html, body {
 /* body{
   background-image: url("{% static "img/aber_landscape12.jpg" %}");
 } */
-html {
-  font-size: 1rem;
-}
+
 
 
 

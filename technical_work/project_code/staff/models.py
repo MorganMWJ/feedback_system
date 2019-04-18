@@ -34,11 +34,12 @@ class Lecture(models.Model):
     def get_absolute_url(self):
         return reverse('staff:lecture_detail', kwargs={'pk': self.pk})
 
+    class Meta:
+        ordering = ('-date_created', )
+
 class Session(models.Model):
-    # date_last_merged = models.DateTimeField(null=True)
-    # total_runtime = models.IntegerField(default=0)
     code = models.CharField(max_length=6, unique=True, validators=[alphanumeric])
-    is_running = models.BooleanField(default=True)
+    is_running = models.BooleanField(default=False)
     is_taking_questions = models.BooleanField(default=True)
     lecture = models.ForeignKey(Lecture, on_delete=models.CASCADE)
 
@@ -60,12 +61,22 @@ class Session(models.Model):
         return self.lecture.user==logged_in_user
 
     def get_first_start_time(self):
-        times = self.time_set.all()
-        return times.order_by('start').first().start
+        try:
+            time = self.time_set.earliest('start')
+            first_start_time = time.start
+            return first_start_time
+        except Time.DoesNotExist:
+            print("This session has no start times")
+            return None
 
     def get_last_end_time(self):
-        times = self.time_set.all()
-        return times.order_by('end').last().end
+        try:
+            time = self.time_set.filter(end__isnull=False).latest('end')
+            last_end_time = time.end
+            return last_end_time
+        except Time.DoesNotExist:
+            print("This session has no end times")
+            return None
 
     def end(self):
         instance = self.time_set.filter(end=None).first()
@@ -74,38 +85,6 @@ class Session(models.Model):
 
     def __str__(self):
         return self.code
-
-    def get_feedback_summary(self, feedback_subset):
-        if feedback_subset not in ['all', 'general'] and not isinstance(feedback_subset, int):
-            raise ValueError("Not valid feedback subset option")
-        if isinstance(feedback_subset, int) and (feedback_subset<=1 or feedback_subset>=self.lecture.slide_count):
-            raise ValueError("Not valid feedback subset option")
-
-        summary = {}
-        three_chart_colours = ["#3cba9f", "#c4c22f", "#c45850"] #green, yellow, red
-        five_chart_colours = ["#0000ff", "#00ccff", "#3cba9f", "#c45850", "#ff0000"]
-        feedback_meta_info =  [["overall_feedback", "Overall Lecture Feedback", three_chart_colours],
-                               ["delivery_speed", "Lecture Delivery Speed", five_chart_colours],
-                               ["content_complexity", "Complexity of Lecture Content", five_chart_colours],
-                               ["level_of_engagement", "Lecture Interest/Enagment", three_chart_colours],
-                               ["content_presentation", "Quality of Lecture Presentation", three_chart_colours]]
-
-        #create the feedback dictionary to return
-        for fmi in feedback_meta_info:
-            summary[fmi[0]] = {'title': fmi[1],
-                                'labels': [],
-                                'data': [],
-                                'colours': fmi[2]}
-            for choice in Feedback._meta.get_field(fmi[0]).choices:
-                if choice[0]!=None:
-                    summary[fmi[0]]['labels'].append(choice[1])
-                    if feedback_subset=='all':
-                        exec("summary[fmi[0]]['data'].append(Feedback.objects.filter("+ fmi[0] +"=choice[0], session=self).count())")
-                    elif feedback_subset=='general':
-                        exec("summary[fmi[0]]['data'].append(Feedback.objects.filter("+ fmi[0] +"=choice[0], slide_number=0, session=self).count())")
-                    else:
-                        exec("summary[fmi[0]]['data'].append(Feedback.objects.filter("+ fmi[0] +"=choice[0], slide_number="+ str(feedback_subset) +", session=self).count())")
-        return summary
 
     def merge(self, merge_type):
         #get the sessions ordered by start time
@@ -143,22 +122,24 @@ class Session(models.Model):
         #when done delete the uneeded session
         mergeTargetSession.delete()
 
-    # class Meta:
-    #     ordering = ('time__start', )
+    class Meta:
+        ordering = ('time', )
 
 class Time(models.Model):
-    start = models.DateTimeField()
+    start = models.DateTimeField(auto_now_add=True)
     end = models.DateTimeField(null=True)
     session = models.ForeignKey(Session, on_delete=models.CASCADE)
 
     def get_runtime(self):
         if self.session.is_running and self.end==None:
             return timezone.now()-self.start
-        else:
+        elif self.end!=None and self.start!=None:
             return self.end-self.start
+        else:
+            return datetime.timedelta(0, 0, 0)
 
     class Meta:
-        ordering = ('start', 'end',)
+        ordering = ('start', )
 
 class Question(models.Model):
     question_text = models.CharField(max_length=300)
@@ -171,6 +152,39 @@ class Question(models.Model):
 
     def __str__(self):
         return self.question_text
+
+class FeedbackManager(models.Manager):
+    def get_feedback_summary(self, session, feedback_subset):
+        if feedback_subset not in ['all', 'general'] and not isinstance(feedback_subset, int):
+            raise ValueError("Not valid feedback subset option")
+        if isinstance(feedback_subset, int) and (feedback_subset<=1 or feedback_subset>=session.lecture.slide_count):
+            raise ValueError("Not valid feedback subset option")
+
+        summary = {}
+        three_chart_colours = ["#3cba9f", "#c4c22f", "#c45850"] #green, yellow, red
+        five_chart_colours = ["#0000ff", "#00ccff", "#3cba9f", "#c45850", "#ff0000"]
+        feedback_meta_info =  [["overall_feedback", "Overall Lecture Feedback", three_chart_colours],
+                               ["delivery_speed", "Lecture Delivery Speed", five_chart_colours],
+                               ["content_complexity", "Complexity of Lecture Content", five_chart_colours],
+                               ["level_of_engagement", "Lecture Interest/Enagment", three_chart_colours],
+                               ["content_presentation", "Quality of Lecture Presentation", three_chart_colours]]
+
+        #create the feedback dictionary to return
+        for fmi in feedback_meta_info:
+            summary[fmi[0]] = {'title': fmi[1],
+                                'labels': [],
+                                'data': [],
+                                'colours': fmi[2]}
+            for choice in Feedback._meta.get_field(fmi[0]).choices:
+                if choice[0]!=None:
+                    summary[fmi[0]]['labels'].append(choice[1])
+                    if feedback_subset=='all':
+                        exec("summary[fmi[0]]['data'].append(Feedback.objects.filter("+ fmi[0] +"=choice[0], session=session).count())")
+                    elif feedback_subset=='general':
+                        exec("summary[fmi[0]]['data'].append(Feedback.objects.filter("+ fmi[0] +"=choice[0], slide_number=0, session=session).count())")
+                    else:
+                        exec("summary[fmi[0]]['data'].append(Feedback.objects.filter("+ fmi[0] +"=choice[0], slide_number="+ str(feedback_subset) +", session=session).count())")
+        return summary
 
 class Feedback(models.Model):
     OVERALL_FEEDBACK_CHOICES = (
@@ -232,3 +246,4 @@ class Feedback(models.Model):
                                         null=True,
                                         choices=LEVEL_OF_ENGAGMENT_CHOICES)
     session = models.ForeignKey(Session, on_delete=models.CASCADE)
+    objects = FeedbackManager()

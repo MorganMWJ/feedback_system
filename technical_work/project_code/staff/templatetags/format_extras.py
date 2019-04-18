@@ -20,19 +20,8 @@ def question_time_format(timedelta):
     minutes, seconds = divmod(remainder,60)
     return 'Posted {} mins {} secs ago'.format(minutes,seconds)
 
-@register.filter
-def range(start, end):
-    return range(start, end)
-
 @register.simple_tag
 def session_numbering(counter, page_num, per_page):
     if(page_num<=1):
         return counter
     return ((page_num-1)*per_page)+counter
-# @register.simple_tag
-# def not_first_session_displayed(counter, page_num):
-#     return session_numbering(counter, page_num)!=1
-#
-# @register.simple_tag
-# def not_last_session_displayed(counter, page_num, session_count):
-#     return session_numbering(counter, page_num)!=session_count

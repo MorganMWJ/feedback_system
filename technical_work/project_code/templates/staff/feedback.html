@@ -73,6 +73,8 @@
           </button>
           {% endbuttons %}
         </form>
+      {% else %}
+        <div class="alert alert-info text-center" role="alert">{% trans 'Session not currently taking questions' %}</div>
       {% endif %}
       <center><h3>{% trans "Your Questions" %}</h3></center>
       <hr class="mt-0"/>

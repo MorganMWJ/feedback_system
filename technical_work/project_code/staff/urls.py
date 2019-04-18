@@ -31,13 +31,17 @@ urlpatterns = [
     path('lecture/<int:id>/feedback_detail/', views.feedback_detail, name='feedback_detail'),
     #/lecture/?/edit/
     path('lecture/<int:pk>/edit/', LectureUpdate.as_view(), name='lecture_update'),
+    #/lecture/?/extarct
+    path('lecture/<int:pk>/extract/', views.extarct_from_pdf, name='lecture_extarct'),
     #/lecture/?/delete/
     path('lecture/<int:pk>/delete/', LectureDelete.as_view(), name='lecture_delete'),
     #/lecture/?/start_session/
     path('lecture/<int:id>/session/new/', views.session_new, name='session_new'),
     #lecture/?/file/
     path('lecture/<int:id>/file/', views.lecture_file_view, name='lecture_file_view'),
-    #/lecture/?/stop_session/
+    #/session/?/start/
+    path('session/<int:id>/start/', views.session_start, name='session_start'),
+    #/session/?/stop/
     path('session/<int:id>/stop/', views.session_stop, name='session_stop'),
     #/session/?/delete/
     path('session/<int:id>/delete/', views.session_delete, name='session_delete'),

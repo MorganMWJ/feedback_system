@@ -24,7 +24,6 @@
         <input class="form-control mr-sm-2" type="search" name="q" placeholder="{% trans 'Search' %}" value="{{ request.GET.q }}" aria-label="Search">
         <button class="btn btn-outline-success my-2 my-sm-0" type="submit">{% trans "Search" %}</button>
       </form>
-      <!-- <button href="" type="button" class="btn btn-danger my-2 mx-1">{% trans "Delete Selected" %}</button> -->
     </div>
     <div clas=col-sm-auto">
       {% for message in messages %}
@@ -46,13 +45,13 @@
                 <a href="{% url 'staff:lecture_detail' lecture.id %}" class="mr-2 h4">{{ lecture.title }}</a>
               </div>
               <div>
-                <span class="h5"><strong>Creation Date:</strong> {{ lecture.date_created|date:'d/m/Y' }} </span>
-                {% if lecture.get_last_active_date %}<span class="h5"><strong>Last Active Date:</strong> {{ lecture.get_last_active_date|date:'d/m/Y' }}</span>{% endif %}
+                <span class="h5" title="{{ lecture.date_created }}"><strong>{% trans "Creation Date" %}:</strong> {{ lecture.date_created|date:'d/m/Y' }} </span>
+                {% if lecture.get_last_active_date %}<span class="h5" title="{{ lecture.get_last_active_date }}"><strong>{% trans "Last Active Date" %}:</strong> {{ lecture.get_last_active_date|date:'d/m/Y' }}</span>{% endif %}
               </div>
             </div>
             <div class="col-sm-auto">
               <a href="{% url 'staff:lecture_delete' lecture.id %}" role="button" class="btn btn-lg btn-danger m-2">
-                Delete
+                {% trans "Delete" %}
               </a>
             </div>
           </div>

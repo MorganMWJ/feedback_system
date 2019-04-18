@@ -9,8 +9,8 @@
       <tr>
         <th scope="col">{% trans "Session" %}</th>
         <th scope="col">{% trans "Code" %}</th>
-        <th scope="col">{% trans "Startime" %}</th>
-        <th scope="col">{% trans "Endtime" %}</th>
+        <th scope="col">{% trans "First Startime" %}</th>
+        <th scope="col">{% trans "Last Endtime" %}</th>
         <th scope="col">{% trans "Runtime" %}</th>
       </tr>
     </thead>
@@ -19,18 +19,34 @@
       <tr id="{{ session.id }}" class="session_row">
         <th><div class="bg-light p-1 border rounded">{% session_numbering forloop.counter sessions.number per_page %}</div></th>
         <td><div class="bg-light p-1 border rounded">{{ session.code }}</div></td>
-        <td><div class="bg-light p-1 border rounded">{{ session.get_first_start_time|date:'d M, Y - h:i a' }}</div></td>
+        <td><div class="bg-light p-1 border rounded" title="{% for time in session.time_set.all %}{% if forloop.first %}Start Times:&#013;{% endif %}{{ time.start }}&#013;{% endfor %}">
+          {% if session.get_first_start_time %}
+            {{ session.get_first_start_time|date:'d M, Y - h:i a' }}
+          {% else %}
+            N/A
+          {% endif %}
+        </div></td>
         {% if session.is_running %}
           <td><div class="bg-light p-1 border rounded">{% trans "Session Running" %}</div></td>
         {% else %}
-        <td><div class="bg-light p-1 border rounded">{{ session.get_last_end_time|date:'d M, Y - h:i a' }}</div></td>
+          <td><div class="bg-light p-1 border rounded" title="{% for time in session.time_set.all %}{% if forloop.first %}End Times:&#013;{% endif %}{{ time.end }}&#013;{% endfor %}">
+            {% if session.get_last_end_time %}
+              {{ session.get_last_end_time|date:'d M, Y - h:i a' }}
+            {% else %}
+              N/A
+            {% endif %}
+          </div></td>
         {% endif %}
         <td class="time"><div class="bg-light p-1 border rounded">{{ session.get_total_runtime|runtime_format }}</div></td>
         <td class="d-none">
           <div class="bg-light p-1 border rounded options">
             {% if session.is_running %}
             <div class="d-flex flex-row">
-              <a id="stop_session_link" href="{% url 'staff:session_stop' session.id %}" role="button" class="btn btn-block btn-lg btn-warning m-2">End Running Session</a>
+              <a id="stop_session_link" href="{% url 'staff:session_stop' session.id %}" role="button" class="btn btn-block btn-lg btn-warning m-2">End Session</a>
+            </div>
+            {% else %}
+            <div class="d-flex flex-row">
+              <a id="start_session_link" href="{% url 'staff:session_start' session.id %}" role="button" class="btn btn-block btn-lg btn-success m-2">Start Session</a>
             </div>
             {% endif %}
             <div class="d-flex flex-row">

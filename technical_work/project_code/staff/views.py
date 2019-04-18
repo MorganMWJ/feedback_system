@@ -23,14 +23,20 @@ import datetime
 
 from staff.forms import LoginForm, LectureDetailsForm, ConnectForm, FeedbackForm, QuestionForm
 from staff.models import Lecture, Session, Time, Question, Feedback
-from staff.helpers import get_info
+from staff.helpers import get_pdf_pages
 from staff.templatetags.format_extras import runtime_format, question_time_format
 
 import pdb #pdb.set_trace() to start
 
 def get_session_list(request, lecture, per_page):
+    """
+    Helper method to reduce duplictate Code
+    Paginates sessions ready to send to the templates
+    """
     context = {'per_page': per_page}
-    sessions_list = lecture.session_set.all().order_by('time__start')
+    sessions_queryset = lecture.session_set.all()
+    #hack to remove pesky duplicates
+    sessions_list = list(dict.fromkeys(list(sessions_queryset)))
     paginator = Paginator(sessions_list, context['per_page'])
     page = request.GET.get('page', paginator.num_pages)
     try:
@@ -39,7 +45,8 @@ def get_session_list(request, lecture, per_page):
         context['sessions'] = paginator.page(paginator.num_pages)
     except EmptyPage:
         context['sessions'] = paginator.page(paginator.num_pages)
-    context['session'] = sessions_list.last()
+    if sessions_list!=[]:
+        context['session'] = sessions_list[-1]
     return context
 
 def login(request):
@@ -78,19 +85,14 @@ class LectureList(LoginRequiredMixin, ListView):
     template_name = 'staff/lecture_list.html'
 
     def get_queryset(self):
-        lectures = Lecture.objects.filter(user__username=self.request.user.username).order_by('-date_created')
+        lectures = Lecture.objects.filter(user=self.request.user)
         query = self.request.GET.get("q")
         if query:
-            try:
-                date_obj = datetime.datetime.strptime(query, '%d/%m/%Y')
+            for q in query.split('/'):
                 lectures = lectures.filter(
-                        Q(title__icontains=query) |
-                        Q(date_created__icontains=str(date_obj)[:10]))
-            except:
-                lectures = lectures.filter(
-                        Q(title__icontains=query) |
-                        Q(date_created__icontains=query))
-        messages.success(self.request, "Search Result For: " + query)
+                        Q(title__icontains=q) |
+                        Q(date_created__icontains=q))
+            messages.success(self.request, "Search Result For: " + query)
         return lectures
 
 
@@ -142,7 +144,6 @@ class LectureUpdate(LoginRequiredMixin, UpdateView):
         return self.object.get_absolute_url()
 
     def form_valid(self, form):
-        pdb.set_trace()
         self.object = form.save(commit=False)
         self.object.file = self.request.FILES.get('file')
         self.object.save()
@@ -153,11 +154,21 @@ class LectureUpdate(LoginRequiredMixin, UpdateView):
         messages.error(self.request, _('Invalid form data'))
         return super().form_invalid(form)
 
-def extarct_pdf(request):
-    pass
+def extarct_from_pdf(request, pk=None):
+    """
+    Extarcts the number of slides of a lecture from a PDF of the lecture slides
+    Useful incase users are unsure of the number of slides in the presentation they are giving
+    """
+    lecture = get_object_or_404(Lecture, id=pk)
+    if lecture.file:
+        lecture.slide_count = get_pdf_pages(lecture.file)
+        lecture.save()
+        messages.success(request, _("Number of slides got from PDF"))
+    else:
+        messages.error(request, _("There is no PDF associated with this lecture"))
+    return redirect(reverse('staff:lecture_detail', kwargs={'pk': lecture.id}))
 
 def lecture_file_view(request, id=None):
-    #pdb.set_trace()
     lecture = get_object_or_404(Lecture, id=id)
     filename = lecture.file.path
     try:
@@ -177,22 +188,40 @@ def lecture_file_view(request, id=None):
 @login_required(login_url='/login/')
 def session_new(request, id=None):
     lecture = get_object_or_404(Lecture, id=id)
-
-    for session in lecture.session_set.all():
-        if session.is_running:
-            messages.error(request, _('A session is already running'))
-            return redirect(reverse('staff:lecture_detail', kwargs={'pk': id}))
-
-    #create session and set it running (start time now)
-    session = Session.objects.create(code=Session.generate_code(), lecture=lecture)
-    Time.objects.create(start=timezone.now(), session=session)
+    lecture.session_set.create(code=Session.generate_code())
+    messages.success(request, _('Created New Session'))
     return redirect(reverse('staff:lecture_detail', kwargs={'pk': id}))
+
+@login_required(login_url='/login/')
+def session_start(request, id=None):
+    pdb.set_trace()
+    session = get_object_or_404(Session, id=id)
+    if session.is_owned_by_user(request.user):
+        if session.is_running:
+            messages.error(request, _('Session') + ' ' + str(session) + ': ' + _('Already running'))
+        else:
+            session.is_running = True
+            session.save()
+            Time.objects.create(start=timezone.now(), session=session)
+            messages.success(request, _('Session') + ' ' + str(session) + ': ' + _('Started'))
+    return redirect(reverse('staff:lecture_detail', kwargs={'pk': session.lecture.id}))
+
+@login_required(login_url='/login/')
+def session_stop(request, id=None):
+    session = get_object_or_404(Session, id=id)
+    if session.is_running:
+        session.is_running = False #set session as no longer running
+        session.end() #update end_time
+        session.save()
+    messages.success(request, _('Session') + ' ' + str(session) + ': ' + _('Ended'))
+    return redirect(reverse('staff:lecture_detail', kwargs={'pk': session.lecture.id}))
 
 @login_required(login_url='/login/')
 def session_delete(request, id=None):
     session = get_object_or_404(Session, id=id)
     if session.is_owned_by_user(request.user):
         session.delete()
+    messages.success(request, _('Session') + ' ' + str(session) + ': ' + _('Deleted'))
     return redirect(reverse('staff:lecture_detail', kwargs={'pk': session.lecture.id}))
 
 @login_required(login_url='/login/')
@@ -210,20 +239,12 @@ def session_merge_next(request, id=None):
     return redirect(reverse('staff:lecture_detail', kwargs={'pk': session.lecture.id}))
 
 @login_required(login_url='/login/')
-def session_stop(request, id=None):
-    session = get_object_or_404(Session, id=id)
-    if session.is_running:
-        session.is_running = False #set session as no longer running
-        session.end() #update end_time
-        session.save()
-    return redirect(reverse('staff:lecture_detail', kwargs={'pk': session.lecture.id}))
-
-@login_required(login_url='/login/')
 def session_regenerate_code(request, id=None):
-    instance = get_object_or_404(Session, id=id)
-    instance.code = Session.generate_code()
-    instance.save()
-    return redirect(reverse('staff:lecture_detail', kwargs={'pk': instance.lecture.id}))
+    session = get_object_or_404(Session, id=id)
+    session.code = Session.generate_code()
+    session.save()
+    messages.success(request, _('Session') + ' ' + str(session) + ': ' + _('New Code Generated'))
+    return redirect(reverse('staff:lecture_detail', kwargs={'pk': session.lecture.id}))
 
 @login_required(login_url='/login/')
 def session_toggle_questions(request, id=None):
@@ -241,16 +262,7 @@ def session_questions(request, id=None):
     #pdb.set_trace()
     context = {}
     context['session'] = get_object_or_404(Session, id=id)
-    questions_list = context['session'].question_set.filter(is_reviewed=False).order_by("-time_posted")
-
-    paginator = Paginator(questions_list, 6)
-    page = request.GET.get('page', paginator.num_pages)
-    try:
-        context['questions'] = paginator.page(page)
-    except PageNotAnInteger:
-        context['questions'] = paginator.page(paginator.num_pages)
-    except EmptyPage:
-        context['questions'] = paginator.page(paginator.num_pages)
+    context['questions'] = context['session'].question_set.filter(is_reviewed=False).order_by("time_posted")
 
     return render(request, 'staff/questions_list.html', context)
 
@@ -273,7 +285,7 @@ def question_mark_reviewed(request, id=None):
     instance.is_reviewed = True
     instance.save()
     lecture = instance.session.lecture
-    return redirect(reverse('staff:lecture_detail', kwargs={'id': lecture.id}))
+    return redirect(reverse('staff:lecture_detail', kwargs={'pk': lecture.id}))
 
 def connect(request):
     context = {}
@@ -451,16 +463,15 @@ def feedback_detail(request, id=None):
 
 
 def session_feedback_chart_data(request):
-    #pdb.set_trace()
     if 'session' in request.GET and 'feedback_request' in request.GET:
         print("session: " + request.GET.get('session'))#DEBUG
         print("feedback_request: " + request.GET.get('feedback_request'))#DEBUG
         session = get_object_or_404(Session, id=request.GET['session'])
         try:
             if request.GET.get('feedback_request').isdigit():
-                feedback = session.get_feedback_summary(int(request.GET.get('feedback_request')))
+                feedback = Feedback.objects.get_feedback_summary(session, int(request.GET.get('feedback_request')))
             else:
-                feedback = session.get_feedback_summary(request.GET.get('feedback_request'))
+                feedback = Feedback.objects.get_feedback_summary(session, request.GET.get('feedback_request'))
             return JsonResponse(feedback)
         except ValueError:
             pass

@@ -1,47 +1,4 @@
-
-
-
 $(document).ready(function() {
-  //save the panels user has open
-  function savePanels() {
-    var visiblePanels = [];
-    $(".remember_visibility").each(function(index) {
-      if ($(this).is(':visible')) {
-        visiblePanels.push("#" + $(this).attr('id'));
-      }
-    });
-    localStorage.setItem("visiblePanelList", JSON.stringify(visiblePanels));
-  }
-
-  //hide the panels the user previously had hidden
-  var visiblePanels = JSON.parse(localStorage.getItem("visiblePanelList"));
-  if (visiblePanels != null && visiblePanels != undefined) {
-    for (i = 0; i < visiblePanels.length; i++) {
-      $(visiblePanels[i]).removeClass("hidden_panel");
-    }
-  }
-
-  $("#sessionCheck").change(function() {
-    if(this.checked) {
-      $("#sessionDiv").show("fast");
-    }
-    else{
-      $("#sessionDiv").hide("fast");
-    }
-    savePanels();
-  });
-
-  $("#questionCheck").change(function() {
-    if(this.checked) {
-      $("#questionDiv").show("fast");
-    }
-    else{
-      $("#questionDiv").hide("fast");
-    }
-    savePanels();
-  });
-
-/////////////////////////////////////////////////////////////////
 
   let activeSessionID = getActiveSession();
   function updatePage(){
@@ -81,7 +38,7 @@ $(document).ready(function() {
         });
     }
   }
-  //setInterval(updatePage, 1000);
+  setInterval(updatePage, 1000);
   // updatePage();
 
   function displaySessionActions(){
@@ -90,6 +47,7 @@ $(document).ready(function() {
       $('#actionsPanel').html($options);
     }
   }
+  displaySessionActions();
 
   function highlightActiveSession(){
     if(getActiveSession()!=undefined && getActiveSession()!="undefined"){
@@ -101,6 +59,7 @@ $(document).ready(function() {
     //   setActiveSession($('#session_table tr:last').attr('id'));
     // }
   }
+  highlightActiveSession();
 
   function addRowClickFunctionality(){
     $('#session_table tbody tr').click(function(){
