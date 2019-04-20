@@ -157,7 +157,7 @@ class FeedbackManager(models.Manager):
     def get_feedback_summary(self, session, feedback_subset):
         if feedback_subset not in ['all', 'general'] and not isinstance(feedback_subset, int):
             raise ValueError("Not valid feedback subset option")
-        if isinstance(feedback_subset, int) and (feedback_subset<=1 or feedback_subset>=session.lecture.slide_count):
+        if isinstance(feedback_subset, int) and (feedback_subset<1 or feedback_subset>session.lecture.slide_count):
             raise ValueError("Not valid feedback subset option")
 
         summary = {}

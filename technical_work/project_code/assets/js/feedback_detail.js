@@ -48,7 +48,7 @@ $(document).ready(function() {
           method: "GET",
           data: {session: activeSessionID, feedback_request: feedbackType},
           error: function(response){
-            console.log(responseData);
+            console.log(response);
           },
           success: function(responseData){
             console.log(responseData);
