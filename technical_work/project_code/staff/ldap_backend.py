@@ -1,9 +1,12 @@
 from ldap3 import Server, Connection, ALL, NTLM, ALL_ATTRIBUTES, core
 from django.contrib.auth.models import User
 import re, string
+from django.utils.translation import ugettext as _
+from django.contrib import messages
 
 class LDAPBackend():
     def authenticate(self, request, username=None, password=None):
+        import pdb; pdb.set_trace()
         dn = "uid=" + username + ",ou=People,dc=dcs,dc=aber,dc=ac,dc=uk"
         try:
             #connect to server via ldap
@@ -59,10 +62,12 @@ class LDAPBackend():
         except core.exceptions.LDAPBindError as e:
             #LDAP bind failure perhaps due to authentication error
             print("LDAP bind failure perhaps due to authentication error") #should be log messages
+            messages.error(request, _('LDAP bind failure perhaps due to authentication error'))
             return None
         except core.exceptions.LDAPSocketOpenError as e:
             #server did not respond - cannot find server probably because not on univerity network
             print("Failed to open socket to server probably becasue not on univerity network")
+            messages.error(request, _('Failed to open socket to server probably becasue not on univerity network'))
             return None
 
     def get_user(self, user_id):

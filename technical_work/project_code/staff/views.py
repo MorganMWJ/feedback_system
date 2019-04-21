@@ -65,8 +65,6 @@ def login(request):
                     return HttpResponseRedirect(request.POST.get('next'))
                 else:
                     return HttpResponseRedirect(reverse('staff:lecture_list'))
-            else:
-                messages.error(request, _('Invalid Staff Login Details'))
         else:
             messages.error(request, _('Invalid form data'))
     else:
