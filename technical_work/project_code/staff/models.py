@@ -21,12 +21,20 @@ class Lecture(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
 
     def get_last_active_date(self):
-        sessions = self.session_set.all()
-        for session in sessions:
+        #if there is a session running today is the last active date
+        for session in self.session_set.all():
             if session.is_running:
                 return timezone.now()
-        if sessions.exists():
-            return sessions.order_by('time__end').last()
+        #if there is no sessions running the most recent end time is the last active date
+        times = Time.objects.filter(session__lecture=self).order_by('-end')
+        if times.exists():
+            return times[0].end
+        else:
+            return None
+
+
+
+
 
     def __str__(self):
         return self.title

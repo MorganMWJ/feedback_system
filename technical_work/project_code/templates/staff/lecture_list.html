@@ -46,7 +46,11 @@
               </div>
               <div>
                 <span class="h5" title="{{ lecture.date_created }}"><strong>{% trans "Creation Date" %}:</strong> {{ lecture.date_created|date:'d/m/Y' }} </span>
-                {% if lecture.get_last_active_date %}<span class="h5" title="{{ lecture.get_last_active_date }}"><strong>{% trans "Last Active Date" %}:</strong> {{ lecture.get_last_active_date|date:'d/m/Y' }}</span>{% endif %}
+                {% if lecture.get_last_active_date %}
+                  <span class="h5" title="{{ lecture.get_last_active_date }}">
+                    <strong>{% trans "Last Active Date" %}:</strong> {{ lecture.get_last_active_date|date:'d/m/Y' }}
+                  </span>
+                {% endif %}
               </div>
             </div>
             <div class="col-sm-auto">

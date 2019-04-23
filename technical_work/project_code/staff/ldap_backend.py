@@ -6,7 +6,6 @@ from django.contrib import messages
 
 class LDAPBackend():
     def authenticate(self, request, username=None, password=None):
-        import pdb; pdb.set_trace()
         dn = "uid=" + username + ",ou=People,dc=dcs,dc=aber,dc=ac,dc=uk"
         try:
             #connect to server via ldap
