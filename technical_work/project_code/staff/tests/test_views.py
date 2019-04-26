@@ -309,7 +309,7 @@ class TestExtractFromPdfView(TestCase):
             slide_count=3,
             user = test_user1
         )
-        f = open('assets/test_lecture.pdf')
+        f = open('assets/test_lecture.pdf', 'rb')
         self.lecture.file.save("test_lecture_file", File(f))
 
     def tearDown(self):
@@ -325,11 +325,37 @@ class TestExtractFromPdfView(TestCase):
 
     def test_view_url_accessible_by_name(self):
         login = self.client.login(username='mwj7', password='qh76T423')
-        response = self.client.get(reverse('staff:lecture_extarct', kwargs={'pk': self.lecture.id}))
-        self.assertEqual(response.status_code, 200)
+        response = self.client.get(reverse('staff:lecture_extarct', kwargs={'pk': self.lecture.id}), follow=True)
+        self.assertRedirects(response, reverse('staff:lecture_detail', kwargs={'pk': self.lecture.id}))
+
+    def test_slide_count_is_extracted(self):
+        login = self.client.login(username='mwj7', password='qh76T423')
+        response = self.client.get(reverse('staff:lecture_extarct', kwargs={'pk': self.lecture.id}), follow=True)
+        lectures = Lecture.objects.all()
+        self.assertEqual(lectures[0].slide_count, 49)#test lecture has 49 slides
+
+    def test_error_displayed_if_no_file_available_for_lecture(self):
+        pass
+
+    def test_404_returned_if_lecture_does_not_exist(self):
+        login = self.client.login(username='mwj7', password='qh76T423')
+        response = self.client.get(reverse('staff:lecture_extarct', kwargs={'pk': 543}), follow=True)
+        self.assertEqual(response.status_code, 404)
+        self.assertTemplateUsed(response, '404.html')
 
 class TestLectureFileView(TestCase):
-    pass
+    def test_view_lecture_pdf_as_staff_who_uploaded_it(self):
+        pass
+
+    def test_view_lecture_pdf_as_user_connected_to_session(self):
+        pass
+
+    def test_404_returned_if_lecture_does_not_exist(self):
+        pass
+
+    def test_not_connected_to_correct_session(self):
+        pass
+
 
 class TestSessionNewView(TestCase):
     pass

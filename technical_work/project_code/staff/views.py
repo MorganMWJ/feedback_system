@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.http import HttpResponseRedirect, JsonResponse, HttpResponseNotFound,HttpResponseBadRequest, FileResponse, HttpResponse
+from django.http import HttpResponseRedirect, JsonResponse, HttpResponseNotFound,HttpResponseBadRequest, FileResponse, HttpResponse, Http404
 from django.urls import reverse
 from django.utils import translation
 from django.utils.translation import ugettext as _
@@ -175,8 +175,8 @@ def extarct_from_pdf(request, pk=None):
 
 def lecture_file_view(request, pk=None):
     lecture = get_object_or_404(Lecture, id=pk)
-    filename = lecture.file.path
     try:
+        filename = lecture.file.path
         if request.user.is_authenticated and lecture.user==request.user:
             return FileResponse(open(filename, 'rb'), content_type='application/pdf')
         elif lecture==Session.objects.get(pk=request.session['connected_session_id']).lecture:
@@ -187,8 +187,10 @@ def lecture_file_view(request, pk=None):
     except (KeyError, Session.DoesNotExist):
         messages.error(request, _('Please connect to active session with valid feedback code'))
         return redirect(reverse('staff:connect'))
+    except ValueError:
+        raise Http404
     except FileNotFoundError:
-        raise Http404()
+        raise Http404
 
 @must_own_lecture
 @login_required(login_url='/login/')
