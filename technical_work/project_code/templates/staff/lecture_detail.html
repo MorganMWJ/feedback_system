@@ -42,10 +42,10 @@
 
       <hr class="border border-white"/>
       <div class="">
-        <label for="exampleFormControl1" class="h6">{% trans "Lecture Title" %}</label><a href="{% url 'staff:lecture_update' lecture.id %}" title="Edit this lecture's details" class="float-right">{% trans 'Edit' %}</a>
+        <label for="exampleFormControl1" class="h6">{% trans "Title" %}</label><a href="{% url 'staff:lecture_update' lecture.id %}" title="Edit this lecture's details" class="float-right">{% trans 'Edit' %}</a>
         <input class="form-control " id="exampleFormControl1" type="text" placeholder="{{lecture.title}}" readonly>
-        <label for="exampleFormControl2" class="h6">{% trans "Lecture Author" %}</label>
-        <input class="form-control" id="exampleFormControl2" type="text" placeholder="{{user.get_full_name}} {{user.email}}" readonly>
+        <label for="exampleFormControl2" class="h6">{% trans "Owner" %}</label>
+        <input class="form-control" id="exampleFormControl2" type="text" placeholder="{{lecture.user.get_full_name}} {{lecture.user.email}}" readonly>
         <label for="exampleFormControl3" class="h6">{% trans "No. Slides" %}</label><a href="{% url 'staff:lecture_extarct' lecture.id %}" title="Extract the lecture slide count from file" class="float-right">{% trans 'Extract from PDF' %}</a>
         <input class="form-control" id="exampleFormControl3" type="text" placeholder="{{lecture.slide_count}}" readonly>
         <label for="notesArea" class="h6">{% trans "Notes" %}</label>

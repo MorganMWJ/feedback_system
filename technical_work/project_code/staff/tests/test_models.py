@@ -14,6 +14,8 @@ class TestLectureModel(TestCase):
         earliestTime = (timezone.now()-timedelta(days=30))
         session = newLecture.session_set.create(code='XXX123')
         session.time_set.create(start=timezone.now())
+        session.is_running = True
+        session.save()
         self.assertEqual(newLecture.get_last_active_date(), timezone.now())
 
     def test__str__(self):
@@ -123,7 +125,7 @@ class TestTimeModel(TestCase):
     def setUp(self):
         self.user = User.objects.create(username="qn4g", password="telecom")
         self.lecture = Lecture.objects.create(title="test", slide_count=4, user=self.user)
-        self.session = Session.objects.create(code="123123", lecture=self.lecture)
+        self.session = Session.objects.create(code="123123", is_running=True, lecture=self.lecture)
 
     def test_get_runtime_of_running_time(self):
         start_time = timezone.now()-timedelta(days=3)

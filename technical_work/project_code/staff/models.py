@@ -32,10 +32,6 @@ class Lecture(models.Model):
         else:
             return None
 
-
-
-
-
     def __str__(self):
         return self.title
 
@@ -64,9 +60,6 @@ class Session(models.Model):
         times = self.time_set.all()
         total = sum([int(time.get_runtime().total_seconds()) for time in times])
         return total
-
-    def is_owned_by_user(self, logged_in_user):
-        return self.lecture.user==logged_in_user
 
     def get_first_start_time(self):
         try:
@@ -134,7 +127,7 @@ class Session(models.Model):
         ordering = ('time', )
 
 class Time(models.Model):
-    start = models.DateTimeField(auto_now_add=True)
+    start = models.DateTimeField()
     end = models.DateTimeField(null=True)
     session = models.ForeignKey(Session, on_delete=models.CASCADE)
 
