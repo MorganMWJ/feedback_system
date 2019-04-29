@@ -36,8 +36,8 @@
 {% block content %}
 <div class="container-fluid bg-light h-100">
   <div class="row h-100">
-    <div class="col-sm-3 pt-3 h-100 text-white bg-dark">
-      <a id="new_session_link" href="{% url 'staff:session_new' lecture.id %}" role="button" id="newSessionBtn" class="btn btn-block btn-lg btn-success mr-4">Add Session</a>
+    <div class="col-sm-3 pt-3 text-white bg-dark">
+      <a id="new_session_link" href="{% url 'staff:session_new' lecture.id %}" role="button" id="newSessionBtn" class="btn btn-block btn-lg btn-success mr-4">{% trans "Create Session For Feedback" %}</a>
       <div class="my-3"></div>
 
       <hr class="border border-white"/>
@@ -46,17 +46,17 @@
         <input class="form-control " id="exampleFormControl1" type="text" placeholder="{{lecture.title}}" readonly>
         <label for="exampleFormControl2" class="h6">{% trans "Owner" %}</label>
         <input class="form-control" id="exampleFormControl2" type="text" placeholder="{{lecture.user.get_full_name}} {{lecture.user.email}}" readonly>
-        <label for="exampleFormControl3" class="h6">{% trans "No. Slides" %}</label><a href="{% url 'staff:lecture_extarct' lecture.id %}" title="Extract the lecture slide count from file" class="float-right">{% trans 'Extract from PDF' %}</a>
+        <label for="exampleFormControl3" class="h6">{% trans "No. Slides" %}</label><a href="{% url 'staff:lecture_extarct' lecture.id %}" title="Extract the lecture slide count from file" class="float-right">{% trans 'Extract slide count from PDF' %}</a>
         <input class="form-control" id="exampleFormControl3" type="text" placeholder="{{lecture.slide_count}}" readonly>
         <label for="notesArea" class="h6">{% trans "Notes" %}</label>
         <textarea name="name" rows="8" cols="80" class="form-control" id="notesArea" type="text" placeholder="{{lecture.notes}}" readonly></textarea>
       </div>
       <hr class="border border-white"/>
       <div id="actionsPanel">
-        <p class="d-5">{% trans 'Select a Session' %}</p>
+        <h5>{% trans 'Click on a Session Row' %}</h5>
       </div>
     </div>
-    <div class="col-sm-9 pt-3 h-100 bg-light">
+    <div class="col-sm-9 pt-3 bg-light">
         <div>
           {% for message in messages %}
             {% if message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}

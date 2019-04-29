@@ -44,7 +44,9 @@ $(document).ready(function() {
   function displaySessionActions(){
     if(getActiveSession()!=undefined){
       var $options = $("#" + getActiveSession() + " .options").clone();
-      $('#actionsPanel').html($options);
+      if($options.length != 0){
+        $('#actionsPanel').html($options);
+      }
     }
   }
   displaySessionActions();

@@ -168,7 +168,7 @@ def extarct_from_pdf(request, pk=None):
     if lecture.file:
         lecture.slide_count = get_pdf_pages(lecture.file)
         lecture.save()
-        messages.success(request, _("Number of slides got from PDF"))
+        messages.success(request, _("Slide count extracted from uploaded PDF file") + ' (' + str(lecture.slide_count) + ')')
     else:
         messages.error(request, _("There is no PDF associated with this lecture"))
     return redirect(reverse('staff:lecture_detail', kwargs={'pk': lecture.id}))

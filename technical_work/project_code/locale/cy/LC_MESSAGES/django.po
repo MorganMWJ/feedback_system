@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-04-08 23:30+0100\n"
+"POT-Creation-Date: 2019-04-29 16:46+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -19,11 +19,11 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n==1) ? 0 : (n==2) ? 1 : (n != 8 && n != "
 "11) ? 2 : 3;\n"
 
-#: .\feedback_system\settings.py:124
+#: .\feedback_system\settings.py:125
 msgid "English"
 msgstr "Saesneg"
 
-#: .\feedback_system\settings.py:125
+#: .\feedback_system\settings.py:126
 msgid "Welsh"
 msgstr "Cymraeg"
 
@@ -43,110 +43,185 @@ msgstr "Cyfrinair"
 msgid "Your Password"
 msgstr "Eich Cyfrinair"
 
-#: .\staff\forms.py:25
+#: .\staff\forms.py:27
 msgid "Lecture/Workshop Title"
 msgstr "Teitl Darlith/y gweithdy"
 
-#: .\staff\forms.py:26
+#: .\staff\forms.py:28
 msgid "Number of Slides"
 msgstr "Nifer y sleidiau"
 
-#: .\staff\forms.py:27
+#: .\staff\forms.py:29
 msgid "Extra Notes"
 msgstr "Nodiadau Ychwanegol"
 
 #: .\staff\forms.py:30
+msgid "Lecture PDF"
+msgstr "Darlith PDF"
+
+#: .\staff\forms.py:33
 msgid "Title here..."
 msgstr "Teitl yma..."
 
-#: .\staff\forms.py:31
+#: .\staff\forms.py:34
 msgid "Slide Count here..."
 msgstr "Sleid Cyfrifwch yma..."
 
-#: .\staff\forms.py:32
+#: .\staff\forms.py:35
 msgid "Notes here..."
 msgstr "Nodiadau yma..."
 
-#: .\staff\forms.py:39 .\templates\staff\feedback.html:23
+#: .\staff\forms.py:43 .\templates\staff\feedback.html:28
 msgid "Session Code"
 msgstr "Cod Sesiwn"
 
-#: .\staff\forms.py:39
+#: .\staff\forms.py:43
 msgid "Code here..."
 msgstr "Codwch yma ..."
 
-#: .\staff\forms.py:42
+#: .\staff\forms.py:46
 msgid "Ask a question?"
 msgstr "Gofyn cwestiwn?"
 
-#: .\staff\forms.py:42
+#: .\staff\forms.py:46
 msgid "Enter a question or comment"
 msgstr "Rhowch gwestiwn neu sylw"
 
-#: .\staff\forms.py:52
+#: .\staff\forms.py:56
 msgid "Feedback for which slide"
 msgstr "Adborth ar gyfer y sleid"
 
-#: .\staff\views.py:62
-msgid "Invalid Staff Login Details"
-msgstr "Manylion Mewngofnodi Staff Annilys"
+#: .\staff\ldap_backend.py:64
+msgid "LDAP bind failure perhaps due to authentication error"
+msgstr "Mae LDAP yn rhwymo methiant efallai oherwydd gwall dilysu"
 
-#: .\staff\views.py:64 .\staff\views.py:132 .\staff\views.py:183
+#: .\staff\ldap_backend.py:69
+msgid ""
+"Failed to open socket to server probably because not on university network"
+msgstr ""
+"Wedi methu agor soced i weinydd mae'n debyg oherwydd nad yw ar rwydwaith y "
+"brifysgol"
+
+#: .\staff\views.py:72 .\staff\views.py:136 .\staff\views.py:157
 msgid "Invalid form data"
 msgstr "Data ffurflen annilys"
 
-#: .\staff\views.py:130 .\staff\views.py:181
-msgid "File has not been decrypted"
-msgstr "Nid yw'r ffeil wedi'i dadgryptio"
+#: .\staff\views.py:171
+msgid "Slide count extracted from uploaded PDF file"
+msgstr "Cyfrif sleidiau wedi'i dynnu o ffeil PDF wedi'i lwytho i fyny"
 
-#: .\staff\views.py:200
-msgid "A session is already running"
-msgstr "Mae sesiwn eisoes yn rhedeg"
+#: .\staff\views.py:173
+msgid "There is no PDF associated with this lecture"
+msgstr "Nid oes PDF yn gysylltiedig â'r ddarlith hon"
 
-#: .\staff\views.py:311
-msgid "Lecture is not active"
-msgstr "Nid yw darlith yn weithredol"
-
-#: .\staff\views.py:313
-msgid "Invalid lecture feedback code"
-msgstr "Cod adborth adborth annilys"
-
-#: .\staff\views.py:315 .\staff\views.py:412 .\staff\views.py:436
-msgid "Invalid POST Data"
-msgstr "Data POST Annilys"
-
-#: .\staff\views.py:338 .\staff\views.py:362 .\staff\views.py:414
-#: .\staff\views.py:422 .\staff\views.py:438 .\staff\views.py:448
+#: .\staff\views.py:188 .\staff\views.py:340 .\staff\views.py:365
+#: .\staff\views.py:417 .\staff\views.py:425 .\staff\views.py:441
+#: .\staff\views.py:451
 msgid "Please connect to active session with valid feedback code"
 msgstr "Cysylltwch â sesiwn  weithredol gyda chod adborth dilys"
 
-#: .\staff\views.py:352
+#: .\staff\views.py:200
+msgid "Created New Session"
+msgstr "Crëwyd Sesiwn Newydd"
+
+#: .\staff\views.py:208 .\staff\views.py:213 .\staff\views.py:224
+#: .\staff\views.py:232 .\staff\views.py:255
+#: .\templates\staff\feedback_sessions_list.html:14
+#: .\templates\staff\lecture_sessions_list.html:10
+msgid "Session"
+msgstr "Sesiwn"
+
+#: .\staff\views.py:208
+msgid "Already running"
+msgstr "Eisoes yn rhedeg"
+
+#: .\staff\views.py:213
+msgid "Started"
+msgstr "Dechreuwyd"
+
+#: .\staff\views.py:224
+msgid "Ended"
+msgstr "Diwedd"
+
+#: .\staff\views.py:232
+msgid "Deleted"
+msgstr "Wedi'i ddileu"
+
+#: .\staff\views.py:255
+msgid "New Code Generated"
+msgstr "Cynhyrchu Cod Newydd"
+
+#: .\staff\views.py:313
+msgid "Lecture is not active"
+msgstr "Nid yw darlith yn weithredol"
+
+#: .\staff\views.py:315
+msgid "Invalid lecture feedback code"
+msgstr "Cod adborth adborth annilys"
+
+#: .\staff\views.py:317 .\staff\views.py:415 .\staff\views.py:439
+msgid "Invalid POST Data"
+msgstr "Data POST Annilys"
+
+#: .\staff\views.py:354
 msgid "Session is not active"
 msgstr "Nid yw'r sesiwn yn weithredol"
 
-#: .\staff\views.py:378
+#: .\staff\views.py:381
 msgid "Please Specify Some Feedback Options"
 msgstr "Nodwch rai Opsiynau Adborth"
 
-#: .\staff\views.py:393
+#: .\staff\views.py:396
 msgid "General Feedback re-submitted"
 msgstr "Ailgyflwyno adborth cyffredinol"
 
-#: .\staff\views.py:395 .\staff\views.py:410
+#: .\staff\views.py:398 .\staff\views.py:413
 msgid "Slide "
 msgstr "Sleid"
 
-#: .\staff\views.py:408
+#: .\staff\views.py:411
 msgid "General Feedback submitted"
 msgstr "Adborth Cyffredinol a gyflwynwyd"
 
-#: .\staff\views.py:440
+#: .\staff\views.py:443 .\templates\staff\feedback.html:77
 msgid "Session not currently taking questions"
 msgstr "Nid yw'r sesiwn yn cymryd cwestiynau ar hyn o bryd"
 
-#: .\staff\views.py:456 .\staff\views.py:458
+#: .\staff\views.py:459 .\staff\views.py:461
 msgid "You can only delete questions you have posted"
 msgstr "Gallwch ond ddileu cwestiynau rydych chi wedi'u postio"
+
+#: .\templates\403.html:6
+msgid "Permission Denied"
+msgstr "Gwrthodwyd Caniatâd"
+
+#: .\templates\403.html:13 .\templates\404.html:13
+#: .\templates\staff\lecture_detail.html:27
+#: .\templates\staff\lecture_list.html:4 .\templates\staff\lecture_new.html:10
+#: .\templates\staff\login.html:12
+msgid "Lecture List"
+msgstr "Hanes y Ddarlith"
+
+#: .\templates\403.html:16 .\templates\404.html:16
+#: .\templates\staff\feedback_detail.html:20
+#: .\templates\staff\lecture_detail.html:30
+#: .\templates\staff\lecture_edit.html:13
+#: .\templates\staff\lecture_list.html:13
+#: .\templates\staff\lecture_new.html:13 .\templates\staff\login.html:15
+msgid "Logout"
+msgstr "Allgofnodi"
+
+#: .\templates\403.html:24 .\templates\404.html:24
+msgid "Connect As User"
+msgstr "Cysylltu Fel Defnyddiwr"
+
+#: .\templates\403.html:27 .\templates\404.html:27
+msgid "Login As Staff"
+msgstr "Mewngofnodi Fel Staff"
+
+#: .\templates\404.html:6
+msgid "Page Does Not Exist"
+msgstr "Dydy Tudalen ddim yn bodoli"
 
 #: .\templates\base_layout.html:20
 msgid "Lecture Feedback System"
@@ -160,31 +235,35 @@ msgstr "Cyswllt"
 msgid "Lecture Feedback"
 msgstr "Adborth Darlithoedd"
 
-#: .\templates\staff\feedback.html:12
+#: .\templates\staff\feedback.html:13 .\templates\staff\lecture_detail.html:20
+msgid "View Lecture PDF"
+msgstr "Gweld Darlith PDF"
+
+#: .\templates\staff\feedback.html:17
 msgid "Disconnect"
 msgstr "Datgysylltwch"
 
-#: .\templates\staff\feedback.html:38
+#: .\templates\staff\feedback.html:43
 msgid "Give Feedback"
 msgstr "Rhowch Adborth"
 
-#: .\templates\staff\feedback.html:45
+#: .\templates\staff\feedback.html:50
 msgid "Submit"
 msgstr "Cyflwyno"
 
-#: .\templates\staff\feedback.html:60
+#: .\templates\staff\feedback.html:65
 msgid "Ask Questions"
 msgstr "Gofyn cwestiynau"
 
-#: .\templates\staff\feedback.html:67
+#: .\templates\staff\feedback.html:72
 msgid "Post"
 msgstr "Post"
 
-#: .\templates\staff\feedback.html:72
+#: .\templates\staff\feedback.html:79
 msgid "Your Questions"
 msgstr "Eich Cwestiynau"
 
-#: .\templates\staff\feedback.html:86
+#: .\templates\staff\feedback.html:93
 msgid "Remove"
 msgstr "Dileu"
 
@@ -193,31 +272,17 @@ msgid "Feedback Detail"
 msgstr "Manylion Adborth"
 
 #: .\templates\staff\feedback_detail.html:17
-#: .\templates\staff\lecture_edit.html:11
+#: .\templates\staff\lecture_edit.html:10
 msgid "Lecture Detail"
 msgstr "Manylion y Ddarlith"
 
-#: .\templates\staff\feedback_detail.html:20
-#: .\templates\staff\lecture_detail.html:25
-#: .\templates\staff\lecture_edit.html:14
-#: .\templates\staff\lecture_list.html:13
-#: .\templates\staff\lecture_new.html:14 .\templates\staff\login.html:15
-msgid "Logout"
-msgstr "Allgofnodi"
-
 #: .\templates\staff\feedback_detail.html:34
-msgid "View the Feedback"
-msgstr "Gweld yr Adborth"
+msgid "Click on a session to view feedback data"
+msgstr "Cliciwch ar sesiwn i weld data adborth"
 
 #: .\templates\staff\feedback_sessions_list.html:7
-#: .\templates\staff\lecture_sessions_list.html:5
-msgid "Feedback Sessions"
-msgstr "Sesiynau Adborth"
-
-#: .\templates\staff\feedback_sessions_list.html:14
-#: .\templates\staff\lecture_sessions_list.html:10
-msgid "Session"
-msgstr "Sesiwn"
+msgid "Your Sessions"
+msgstr "Eich Sesiynau"
 
 #: .\templates\staff\feedback_sessions_list.html:15
 #: .\templates\staff\lecture_sessions_list.html:11
@@ -229,7 +294,7 @@ msgid "Date"
 msgstr "Dyddiad"
 
 #: .\templates\staff\feedback_sessions_list.html:51
-#: .\templates\staff\lecture_sessions_list.html:81
+#: .\templates\staff\lecture_sessions_list.html:97
 msgid "No Sessions"
 msgstr "Dim Sesiynau"
 
@@ -241,130 +306,166 @@ msgstr "Cadarnhewch Dileu"
 msgid "Lecture Feedback Detail"
 msgstr "Manylion Adborth Darlithoedd"
 
-#: .\templates\staff\lecture_detail.html:19
+#: .\templates\staff\lecture_detail.html:24
 msgid "View Feedback"
 msgstr "Gweld Adborth"
 
-#: .\templates\staff\lecture_detail.html:22
-#: .\templates\staff\lecture_list.html:4 .\templates\staff\lecture_new.html:11
-#: .\templates\staff\login.html:12
-msgid "Lecture List"
-msgstr "Hanes y Ddarlith"
-
 #: .\templates\staff\lecture_detail.html:40
-msgid "Lecture Title"
-msgstr "Teitl y Ddarlith"
+msgid "Create Session For Feedback"
+msgstr "Creu Sesiwn I Adborth"
 
-#: .\templates\staff\lecture_detail.html:40
+#: .\templates\staff\lecture_detail.html:45
+msgid "Title"
+msgstr "Teitl"
+
+#: .\templates\staff\lecture_detail.html:45
 msgid "Edit"
 msgstr "Golygu"
 
-#: .\templates\staff\lecture_detail.html:42
-msgid "Lecture Author"
-msgstr "Darlith Awdur"
+#: .\templates\staff\lecture_detail.html:47
+msgid "Owner"
+msgstr "Perchennog"
 
-#: .\templates\staff\lecture_detail.html:44
+#: .\templates\staff\lecture_detail.html:49
 msgid "No. Slides"
 msgstr "Sleidiau Nifer"
 
-#: .\templates\staff\lecture_detail.html:46
+#: .\templates\staff\lecture_detail.html:49
+msgid "Extract slide count from PDF"
+msgstr "Cyfrif sleidiau o PDF"
+
+#: .\templates\staff\lecture_detail.html:51
 msgid "Notes"
 msgstr "Nodiadau"
 
-#: .\templates\staff\lecture_detail.html:51
-msgid "Select a Session"
-msgstr "Dewiswch Sesiwn"
+#: .\templates\staff\lecture_detail.html:56
+msgid "Click on a Session Row"
+msgstr "Cliciwch ar Sesiwn Row"
 
-#: .\templates\staff\lecture_edit.html:5
-#: .\templates\staff\lecture_edit_form.html:5
-#: .\templates\staff\lecture_list.html:10 .\templates\staff\lecture_new.html:5
-msgid "New Lecture"
-msgstr "Darlith Newydd"
+#: .\templates\staff\lecture_edit.html:4
+msgid "Edit Lecture"
+msgstr "Golygu Darlith"
 
-#: .\templates\staff\lecture_edit.html:29
+#: .\templates\staff\lecture_edit.html:27
 #: .\templates\staff\lecture_edit_form.html:12
 msgid "Update"
 msgstr "Diweddariad"
 
-#: .\templates\staff\lecture_edit.html:42
-#: .\templates\staff\lecture_new.html:42
-msgid "Extract"
-msgstr "Detholiad"
+#: .\templates\staff\lecture_edit_form.html:5
+#: .\templates\staff\lecture_list.html:10 .\templates\staff\lecture_new.html:4
+msgid "New Lecture"
+msgstr "Darlith Newydd"
 
 #: .\templates\staff\lecture_list.html:24
 #: .\templates\staff\lecture_list.html:25
 msgid "Search"
 msgstr "Chwilio"
 
-#: .\templates\staff\lecture_list.html:27
-msgid "Delete Selected"
-msgstr "Dileu Dethol"
+#: .\templates\staff\lecture_list.html:48
+msgid "Creation Date"
+msgstr "Dyddiad Creu"
 
-#: .\templates\staff\lecture_list.html:56
+#: .\templates\staff\lecture_list.html:51
+msgid "Last Active Date"
+msgstr "Dyddiad Actif Diwethaf"
+
+#: .\templates\staff\lecture_list.html:58
+msgid "Delete"
+msgstr "Dileu"
+
+#: .\templates\staff\lecture_list.html:66
 msgid "No Lectures"
 msgstr "Dim Darlithoedd"
 
-#: .\templates\staff\lecture_list.html:64
+#: .\templates\staff\lecture_list.html:74
 msgid "First"
 msgstr "Gyntaf"
 
-#: .\templates\staff\lecture_list.html:65
+#: .\templates\staff\lecture_list.html:75
 msgid "previous"
 msgstr "blaenorol"
 
-#: .\templates\staff\lecture_list.html:73
+#: .\templates\staff\lecture_list.html:83
 msgid "next"
 msgstr "nesaf"
 
-#: .\templates\staff\lecture_list.html:74
+#: .\templates\staff\lecture_list.html:84
 msgid "Last"
 msgstr "Yn olaf"
 
-#: .\templates\staff\lecture_new.html:29
+#: .\templates\staff\lecture_new.html:27
 msgid "Create"
 msgstr "Creu"
 
+#: .\templates\staff\lecture_sessions_list.html:5
+msgid "Feedback Sessions"
+msgstr "Sesiynau Adborth"
+
 #: .\templates\staff\lecture_sessions_list.html:12
-msgid "Startime"
-msgstr "Amser cychwyn"
+#, fuzzy
+#| msgid "First Started"
+msgid "First Startime"
+msgstr "Cychwyn Cyntaf"
 
 #: .\templates\staff\lecture_sessions_list.html:13
-msgid "Endtime"
-msgstr "Amser olaf"
+#, fuzzy
+#| msgid "Last Ended"
+msgid "Last Endtime"
+msgstr "Wedi Gorffen"
 
 #: .\templates\staff\lecture_sessions_list.html:14
 msgid "Runtime"
 msgstr "Amser rhedeg"
 
-#: .\templates\staff\lecture_sessions_list.html:24
+#: .\templates\staff\lecture_sessions_list.html:30
 msgid "Session Running"
 msgstr "Rhedeg Sesiwn"
 
-#: .\templates\staff\lecture_sessions_list.html:43
+#: .\templates\staff\lecture_sessions_list.html:45
+msgid "End Session"
+msgstr "Sesiwn Diwedd"
+
+#: .\templates\staff\lecture_sessions_list.html:49
+msgid "Start Session"
+msgstr "Sesiwn Dechrau"
+
+#: .\templates\staff\lecture_sessions_list.html:53
+msgid "Merge with Above Session"
+msgstr "Cyfuno â Sesiwn Uwch"
+
+#: .\templates\staff\lecture_sessions_list.html:54
+msgid "Merge with Below Session"
+msgstr "Cyfuno â Sesiwn Islaw"
+
+#: .\templates\staff\lecture_sessions_list.html:59
 msgid "Disable"
 msgstr "Analluoga"
 
-#: .\templates\staff\lecture_sessions_list.html:45
+#: .\templates\staff\lecture_sessions_list.html:61
 msgid "Enable"
 msgstr "Galluogi"
 
-#: .\templates\staff\lecture_sessions_list.html:47
+#: .\templates\staff\lecture_sessions_list.html:63
 msgid "Questions"
 msgstr "Cwestiynau"
 
-#: .\templates\staff\lecture_sessions_list.html:48
+#: .\templates\staff\lecture_sessions_list.html:64
 msgid "Generate New Code"
 msgstr "Cynhyrchu Cod Newydd"
+
+#: .\templates\staff\lecture_sessions_list.html:67
+msgid "Delete Session"
+msgstr "Dileu Sesiwn"
 
 #: .\templates\staff\login.html:5
 msgid "Staff Login"
 msgstr "Mewngofnodi Staff"
 
-#: .\templates\staff\login.html:31
+#: .\templates\staff\login.html:32
 msgid "Login"
 msgstr "Mewngofnodi"
 
-#: .\templates\staff\login.html:40
+#: .\templates\staff\login.html:41
 msgid "You are already Logged In"
 msgstr "Rydych chi eisoes wedi Mewngofnodi"
 
@@ -380,9 +481,27 @@ msgstr "Anabl"
 msgid "Mark Reviewed"
 msgstr "Adolygiad"
 
-#: .\templates\staff\questions_list.html:45
+#: .\templates\staff\questions_list.html:27
 msgid "No Questions for this Session"
 msgstr "Dim Cwestiynau ar gyfer y Sesiwn hon"
+
+#~ msgid "Invalid Staff Login Details"
+#~ msgstr "Manylion Mewngofnodi Staff Annilys"
+
+#~ msgid "File has not been decrypted"
+#~ msgstr "Nid yw'r ffeil wedi'i dadgryptio"
+
+#~ msgid "View the Feedback"
+#~ msgstr "Gweld yr Adborth"
+
+#~ msgid "Lecture Title"
+#~ msgstr "Teitl y Ddarlith"
+
+#~ msgid "Lecture Author"
+#~ msgstr "Darlith Awdur"
+
+#~ msgid "Endtime"
+#~ msgstr "Amser olaf"
 
 #~ msgid "Delivery Speed"
 #~ msgstr "Cyflymder Cyflwyno"
@@ -401,12 +520,6 @@ msgstr "Dim Cwestiynau ar gyfer y Sesiwn hon"
 
 #~ msgid "Current Questions"
 #~ msgstr "Cwestiynau Cyfredol"
-
-#~ msgid "First Started"
-#~ msgstr "Cychwyn Cyntaf"
-
-#~ msgid "Last Ended"
-#~ msgstr "Wedi Gorffen"
 
 #~ msgid "Total Runtime"
 #~ msgstr "Cyfanswm amser rhedeg"

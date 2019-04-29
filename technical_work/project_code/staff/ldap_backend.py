@@ -66,7 +66,7 @@ class LDAPBackend():
         except core.exceptions.LDAPSocketOpenError as e:
             #server did not respond - cannot find server probably because not on univerity network
             print("Failed to open socket to server probably becasue not on univerity network")
-            messages.error(request, _('Failed to open socket to server probably becasue not on univerity network'))
+            messages.error(request, _('Failed to open socket to server probably because not on university network'))
             return None
 
     def get_user(self, user_id):
