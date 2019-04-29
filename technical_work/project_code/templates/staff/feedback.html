@@ -42,7 +42,7 @@
     <div class="col-sm-5 border-right border-left">
       <center><h3>{% trans "Give Feedback" %}</h3></center>
       <hr class="mt-0"/>
-      <form action="{% url 'staff:feedback_new' %}" method="post" class="px-4">
+      <form action="{% url 'staff:feedback_create' %}" method="post" class="px-4">
         {% csrf_token %}
         {% bootstrap_form feedback_form %}
         {% buttons %}
@@ -64,7 +64,7 @@
       {% if session.is_taking_questions %}
         <center><h3>{% trans "Ask Questions" %}</h3></center>
         <hr class="mt-0"/>
-        <form action="{% url 'staff:question_new' %}" method="post" class="px-4">
+        <form action="{% url 'staff:question_create' %}" method="post" class="px-4">
           {% csrf_token %}
           {% bootstrap_form question_form %}
           {% buttons %}

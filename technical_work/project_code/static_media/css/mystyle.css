@@ -1,0 +1,84 @@
+#web_app_title{
+  font-size: 200%;
+}
+/*Code to get user under navbar title*/
+#web_app_title small{
+  display:block;
+  font-size: 50%;
+}
+#id_lecture_pdf_file{
+  margin-left: 1rem;
+}
+#blackText{
+  color: black;
+}
+.rounded-bottom-right{
+  border-bottom-right-radius: 15px;
+}
+/* .nav-link{
+  font-size: 110%;
+}
+.nav-link:hover{
+  background-color: #428bca;
+} */
+div.hidden_panel
+{
+   display: none;
+}
+.fix_overflow{
+   word-wrap: break-word;
+}
+html, body {
+    height:100%;
+}
+/* .scroll{
+  overflow: scroll;
+} */
+/*Code to set background image*/
+/* body{
+  background-image: url("{% static "img/aber_landscape12.jpg" %}");
+} */
+
+
+
+
+
+
+
+
+/* SHIFT */
+div.shift-nav ul li a,
+div.shift-nav ul li a:after,
+div.shift-nav ul li a:before {
+  transition: all .5s;
+}
+
+div.shift-nav ul li a {
+  position:relative;
+  z-index: 1;
+}
+div.shift-nav ul li a:hover {
+  color: #428bca;
+}
+div.shift-nav ul li a:after {
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  margin: auto;
+  width: 100%;
+  height: 1px;
+  content: '.';
+  color: transparent;
+  background: #428bca;
+  visibility: none;
+  opacity: 0;
+  z-index: -1;
+}
+div.shift-nav ul li a:hover:after {
+  opacity: 1;
+  visibility: visible;
+  height: 100%;
+}

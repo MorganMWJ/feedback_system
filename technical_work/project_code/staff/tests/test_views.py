@@ -334,8 +334,16 @@ class TestExtractFromPdfView(TestCase):
         lectures = Lecture.objects.all()
         self.assertEqual(lectures[0].slide_count, 49)#test lecture has 49 slides
 
-    def test_error_displayed_if_no_file_available_for_lecture(self):
-        pass
+    def test_404_returned_if_no_file_available_for_lecture(self):
+        lecture_with_no_file = Lecture.objects.create(
+            title='Lecture 2',
+            slide_count=5,
+            user = self.test_user
+        )
+        login = self.client.login(username='mwj7', password='qh76T423')
+        response = self.client.get(reverse('staff:lecture_extarct', kwargs={'pk': lecture_with_no_file.id}), follow=True)
+        self.assertEqual(response.status_code, 404)
+        self.assertTemplateUsed(response, '404.html')
 
     def test_404_returned_if_lecture_does_not_exist(self):
         login = self.client.login(username='mwj7', password='qh76T423')

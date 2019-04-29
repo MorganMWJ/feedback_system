@@ -203,7 +203,6 @@ def session_new(request, pk=None):
 @must_own_session
 @login_required(login_url='/login/')
 def session_start(request, pk=None):
-    pdb.set_trace()
     session = get_object_or_404(Session, id=pk)
     if session.is_running:
         messages.error(request, _('Session') + ' ' + str(session) + ': ' + _('Already running'))
