@@ -296,7 +296,6 @@ def question_mark_reviewed(request, pk=None):
 
 def connect(request):
     context = {}
-    #pdb.set_trace()
     if request.method == 'POST':
         form = ConnectForm(request.POST)
         context['form'] = form
