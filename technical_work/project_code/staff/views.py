@@ -24,7 +24,7 @@ import datetime
 
 from staff.forms import LoginForm, LectureDetailsForm, ConnectForm, FeedbackForm, QuestionForm
 from staff.models import Lecture, Session, Time, Question, Feedback
-from staff.helpers import get_pdf_pages
+from staff.pdf_extractor import get_pdf_pages
 from staff.decorators import must_own_lecture, must_own_session, must_own_question
 from staff.templatetags.format_extras import runtime_format, question_time_format
 
@@ -452,7 +452,7 @@ def question_delete(request, pk=None):
         return redirect(reverse('staff:connect'))
 
     if 'questions_asked' in request.session:
-        if id in request.session['questions_asked']:
+        if pk in request.session['questions_asked']:
             questionToDelete = get_object_or_404(Question, id=pk)
             questionToDelete.delete()
         else:
