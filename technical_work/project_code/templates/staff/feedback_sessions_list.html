@@ -36,7 +36,7 @@
         {% endif %}
 
         <span id="session_page" class="current" value="{{ sessions.number }}">
-            Page {{ sessions.number }} of {{ sessions.paginator.num_pages }}.
+            {% trans "Page" %} {{ sessions.number }} {% trans "of" %} {{ sessions.paginator.num_pages }}.
         </span>
 
         {% if sessions.has_next %}

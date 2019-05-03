@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-04-29 16:46+0100\n"
+"POT-Creation-Date: 2019-05-03 09:35+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -44,12 +44,12 @@ msgid "Your Password"
 msgstr "Eich Cyfrinair"
 
 #: .\staff\forms.py:27
-msgid "Lecture/Workshop Title"
-msgstr "Teitl Darlith/y gweithdy"
+msgid "Lecture/Workshop Title*"
+msgstr "Teitl Darlith/y gweithdy*"
 
 #: .\staff\forms.py:28
-msgid "Number of Slides"
-msgstr "Nifer y sleidiau"
+msgid "Number of Slides*"
+msgstr "Nifer y sleidiau*"
 
 #: .\staff\forms.py:29
 msgid "Extra Notes"
@@ -263,7 +263,7 @@ msgstr "Post"
 msgid "Your Questions"
 msgstr "Eich Cwestiynau"
 
-#: .\templates\staff\feedback.html:93
+#: .\templates\staff\feedback.html:95
 msgid "Remove"
 msgstr "Dileu"
 
@@ -292,6 +292,18 @@ msgstr "Côd"
 #: .\templates\staff\feedback_sessions_list.html:16
 msgid "Date"
 msgstr "Dyddiad"
+
+#: .\templates\staff\feedback_sessions_list.html:39
+#: .\templates\staff\lecture_list.html:79
+#: .\templates\staff\lecture_sessions_list.html:85
+msgid "Page"
+msgstr "Tudalen"
+
+#: .\templates\staff\feedback_sessions_list.html:39
+#: .\templates\staff\lecture_list.html:79
+#: .\templates\staff\lecture_sessions_list.html:85
+msgid "of"
+msgstr "o"
 
 #: .\templates\staff\feedback_sessions_list.html:51
 #: .\templates\staff\lecture_sessions_list.html:97

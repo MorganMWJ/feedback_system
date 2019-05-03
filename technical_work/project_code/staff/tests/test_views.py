@@ -8,6 +8,11 @@ from staff.models import Lecture, Session
 from django.core.files import File
 # import pdb
 
+#change these variables to use your login details when testing the system
+#they will no longer work in production once Undergraduate login is disabled
+TEST_USERNAME = "mwj7"
+TEST_PASSWORD = "qh76T423"
+
 class TestLoginView(TestCase):
     def setUp(self):
         pass
@@ -36,11 +41,11 @@ class TestLoginView(TestCase):
         self.assertEqual(str(messages[0]), 'Invalid form data')
 
     def test_view_post_with_valid_login(self):
-        response = self.client.post(reverse('staff:login'), {'uid' : 'mwj7', 'pswd': 'qh76T423'})
+        response = self.client.post(reverse('staff:login'), {'uid' : TEST_USERNAME, 'pswd': TEST_PASSWORD})
         self.assertRedirects(response, reverse('staff:lecture_list'))
 
     def test_view_post_with_valid_login_successful_redirect_to_next(self):
-        response = self.client.post(reverse('staff:login'), {'uid': 'mwj7', 'pswd': 'qh76T423', 'next': '/en/lecture/new/'})
+        response = self.client.post(reverse('staff:login'), {'uid': TEST_USERNAME, 'pswd': TEST_PASSWORD, 'next': '/en/lecture/new/'})
         self.assertRedirects(response, reverse('staff:lecture_create'))
 
 class TestLogoutView(TestCase):
@@ -54,7 +59,7 @@ class TestLectureListView(TestCase):
     def setUpTestData(cls):
         number_of_lectures = 13
 
-        test_user1 = User.objects.create_user(username='mwj7', password='qh76T423')
+        test_user1 = User.objects.create_user(username=TEST_USERNAME, password=TEST_PASSWORD)
         test_user1.save()
 
         #add the 13 lectures
@@ -70,11 +75,11 @@ class TestLectureListView(TestCase):
         self.assertRedirects(response, '/login/?next=/en/lectures/', status_code=302, target_status_code=302)
 
     def test_logged_in_uses_correct_template(self):
-        login = self.client.login(username='mwj7', password='qh76T423')
+        login = self.client.login(username=TEST_USERNAME, password=TEST_PASSWORD)
         response = self.client.get(reverse('staff:lecture_list'))
 
         # Check our user is logged in
-        self.assertEqual(str(response.context['user']), 'mwj7')
+        self.assertEqual(str(response.context['user']), TEST_USERNAME)
         # Check that we got a response "success"
         self.assertEqual(response.status_code, 200)
 
@@ -82,17 +87,17 @@ class TestLectureListView(TestCase):
         self.assertTemplateUsed(response, 'staff/lecture_list.html')
 
     def test_view_url_exists_at_desired_location(self):
-        login = self.client.login(username='mwj7', password='qh76T423')
+        login = self.client.login(username=TEST_USERNAME, password=TEST_PASSWORD)
         response = self.client.get('/en/lectures/')
         self.assertEqual(response.status_code, 200)
 
     def test_view_url_accessible_by_name(self):
-        login = self.client.login(username='mwj7', password='qh76T423')
+        login = self.client.login(username=TEST_USERNAME, password=TEST_PASSWORD)
         response = self.client.get(reverse('staff:lecture_list'))
         self.assertEqual(response.status_code, 200)
 
     def test_pagination_is_eight(self):
-        login = self.client.login(username='mwj7', password='qh76T423')
+        login = self.client.login(username=TEST_USERNAME, password=TEST_PASSWORD)
         response = self.client.get(reverse('staff:lecture_list'))
         self.assertEqual(response.status_code, 200)
         self.assertTrue('is_paginated' in response.context)
@@ -100,7 +105,7 @@ class TestLectureListView(TestCase):
         self.assertTrue(len(response.context['object_list']) == 8)
 
     def test_lists_all_authors(self):
-        login = self.client.login(username='mwj7', password='qh76T423')
+        login = self.client.login(username=TEST_USERNAME, password=TEST_PASSWORD)
         # Get second page and confirm it has (exactly) remaining 5 items
         response = self.client.get(reverse('staff:lecture_list')+'?page=2')
         self.assertEqual(response.status_code, 200)
@@ -109,14 +114,14 @@ class TestLectureListView(TestCase):
         self.assertEqual(len(response.context['object_list']), 5)
 
     def test_search_lecture_by_name(self):
-        login = self.client.login(username='mwj7', password='qh76T423')
+        login = self.client.login(username=TEST_USERNAME, password=TEST_PASSWORD)
         response = self.client.get(reverse('staff:lecture_list')+'?q=Lecture 2')
         self.assertEqual(len(response.context['object_list']), 1)
         self.assertEqual(response.context['object_list'][0].title, 'Lecture 2')
 
 class TestLectureDetailView(TestCase):
     def setUp(self):
-        test_user1 = User.objects.create_user(username='mwj7', password='qh76T423')
+        test_user1 = User.objects.create_user(username=TEST_USERNAME, password=TEST_PASSWORD)
         test_user1.save()
 
         self.lecture = Lecture.objects.create(
@@ -135,13 +140,13 @@ class TestLectureDetailView(TestCase):
 
 
     def test_view_url_accessible_by_name(self):
-        login = self.client.login(username='mwj7', password='qh76T423')
+        login = self.client.login(username=TEST_USERNAME, password=TEST_PASSWORD)
         response = self.client.get(reverse('staff:lecture_detail', kwargs={'pk': self.lecture.id}))
         self.assertEqual(response.status_code, 200)
 
 
     def test_sessions_are_listed(self):
-        login = self.client.login(username='mwj7', password='qh76T423')
+        login = self.client.login(username=TEST_USERNAME, password=TEST_PASSWORD)
         response = self.client.get(reverse('staff:lecture_detail', kwargs={'pk': self.lecture.id}))
         self.assertEqual(response.status_code, 200)
         self.assertTrue('sessions' in response.context)
@@ -149,7 +154,7 @@ class TestLectureDetailView(TestCase):
 
 class TestLectureDeleteView(TestCase):
     def setUp(self):
-        test_user1 = User.objects.create_user(username='mwj7', password='qh76T423')
+        test_user1 = User.objects.create_user(username=TEST_USERNAME, password=TEST_PASSWORD)
         test_user1.save()
         self.test_user = test_user1
 
@@ -172,18 +177,18 @@ class TestLectureDeleteView(TestCase):
 
 
     def test_view_url_accessible_by_name(self):
-        login = self.client.login(username='mwj7', password='qh76T423')
+        login = self.client.login(username=TEST_USERNAME, password=TEST_PASSWORD)
         response = self.client.get(reverse('staff:lecture_delete', kwargs={'pk': self.lecture.id}))
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'staff/lecture_confirm_delete.html')
 
     def test_lecture_gets_deleted(self):
-        login = self.client.login(username='mwj7', password='qh76T423')
+        login = self.client.login(username=TEST_USERNAME, password=TEST_PASSWORD)
         response = self.client.post(reverse('staff:lecture_delete', kwargs={'pk': self.lecture.id}))
         self.assertEqual(len(Lecture.objects.all()),0)
 
     def test_redirect_after_delete(self):
-        login = self.client.login(username='mwj7', password='qh76T423')
+        login = self.client.login(username=TEST_USERNAME, password=TEST_PASSWORD)
         response = self.client.post(reverse('staff:lecture_delete', kwargs={'pk': self.lecture.id}), follow=True)
         self.assertRedirects(response, reverse('staff:lecture_list'), status_code=302, target_status_code=200)
 
@@ -194,24 +199,24 @@ class TestLectureCreateView(TestCase):
         self.assertRedirects(response, '/en/login/?next=%2Fen%2Flecture%2Fnew%2F')
 
     def test_view_url_accessible_by_name(self):
-        login = self.client.login(username='mwj7', password='qh76T423')
+        login = self.client.login(username=TEST_USERNAME, password=TEST_PASSWORD)
         response = self.client.get(reverse('staff:lecture_create'))
         self.assertEqual(response.status_code, 200)
 
     def test_view_uses_correct_template(self):
-        login = self.client.login(username='mwj7', password='qh76T423')
+        login = self.client.login(username=TEST_USERNAME, password=TEST_PASSWORD)
         response = self.client.get(reverse('staff:lecture_create'))
         self.assertTemplateUsed(response, 'staff/lecture_new.html')
 
     def test_view_post_with_invalid_data(self):
-        login = self.client.login(username='mwj7', password='qh76T423')
+        login = self.client.login(username=TEST_USERNAME, password=TEST_PASSWORD)
         response = self.client.post(reverse('staff:lecture_create'), {'wrong' : 'foobar'})
         messages = list(response.context['messages'])
         self.assertEqual(len(messages), 1)
         self.assertEqual(str(messages[0]), 'Invalid form data')
 
     def test_view_with_valid_data_for_creating_lecture(self):
-        login = self.client.login(username='mwj7', password='qh76T423')
+        login = self.client.login(username=TEST_USERNAME, password=TEST_PASSWORD)
         title = 'My Lecture'
         slide_count = 3
         notes = 'Awesome notes'
@@ -222,7 +227,7 @@ class TestLectureCreateView(TestCase):
         self.assertEqual(new_lecture.notes, notes)
 
     def test_view_with_valid_data_for_creating_lecture_including_pdf_file(self):
-        login = self.client.login(username='mwj7', password='qh76T423')
+        login = self.client.login(username=TEST_USERNAME, password=TEST_PASSWORD)
         title = 'My Lecture'
         slide_count = 3
         notes = 'Awesome notes'
@@ -237,7 +242,7 @@ class TestLectureCreateView(TestCase):
 
 class TestLectureUpdateView(TestCase):
     def setUp(self):
-        test_user1 = User.objects.create_user(username='mwj7', password='qh76T423')
+        test_user1 = User.objects.create_user(username=TEST_USERNAME, password=TEST_PASSWORD)
         test_user1.save()
         self.test_user = test_user1
 
@@ -256,24 +261,24 @@ class TestLectureUpdateView(TestCase):
         self.assertRedirects(response, '/en/login/?next=%2Fen%2Flecture%2F'+ str(self.lecture.id) +'%2Fedit%2F')
 
     def test_view_url_accessible_by_name(self):
-        login = self.client.login(username='mwj7', password='qh76T423')
+        login = self.client.login(username=TEST_USERNAME, password=TEST_PASSWORD)
         response = self.client.get(reverse('staff:lecture_update', kwargs={'pk': self.lecture.id}))
         self.assertEqual(response.status_code, 200)
 
     def test_view_uses_correct_template(self):
-        login = self.client.login(username='mwj7', password='qh76T423')
+        login = self.client.login(username=TEST_USERNAME, password=TEST_PASSWORD)
         response = self.client.get(reverse('staff:lecture_update', kwargs={'pk': self.lecture.id}))
         self.assertTemplateUsed(response, 'staff/lecture_edit.html')
 
     def test_view_post_with_invalid_data(self):
-        login = self.client.login(username='mwj7', password='qh76T423')
+        login = self.client.login(username=TEST_USERNAME, password=TEST_PASSWORD)
         response = self.client.post(reverse('staff:lecture_update', kwargs={'pk': self.lecture.id}), {'wrong' : 'foobar'}, follow=True)
         messages = list(response.context['messages'])
         self.assertEqual(len(messages), 1)
         self.assertEqual(str(messages[0]), 'Invalid form data')
 
     def test_view_with_valid_data_for_updating_lecture(self):
-        login = self.client.login(username='mwj7', password='qh76T423')
+        login = self.client.login(username=TEST_USERNAME, password=TEST_PASSWORD)
         title = 'My Lecture'
         slide_count = 3
         notes = 'Awesome notes'
@@ -284,7 +289,7 @@ class TestLectureUpdateView(TestCase):
         self.assertEqual(updated_lecture.notes, notes)
 
     def test_view_with_valid_data_for_updating_lecture_including_pdf_file(self):
-        login = self.client.login(username='mwj7', password='qh76T423')
+        login = self.client.login(username=TEST_USERNAME, password=TEST_PASSWORD)
         title = 'My Lecture'
         slide_count = 3
         notes = 'Awesome notes'
@@ -300,7 +305,7 @@ class TestLectureUpdateView(TestCase):
 
 class TestExtractFromPdfView(TestCase):
     def setUp(self):
-        test_user1 = User.objects.create_user(username='mwj7', password='qh76T423')
+        test_user1 = User.objects.create_user(username=TEST_USERNAME, password=TEST_PASSWORD)
         test_user1.save()
         self.test_user = test_user1
 
@@ -324,18 +329,18 @@ class TestExtractFromPdfView(TestCase):
         self.assertRedirects(response, '/en/login/?next=%2Fen%2Flecture%2F'+ str(self.lecture.id) +'%2Fextract%2F')
 
     def test_view_url_accessible_by_name(self):
-        login = self.client.login(username='mwj7', password='qh76T423')
+        login = self.client.login(username=TEST_USERNAME, password=TEST_PASSWORD)
         response = self.client.get(reverse('staff:lecture_extarct', kwargs={'pk': self.lecture.id}), follow=True)
         self.assertRedirects(response, reverse('staff:lecture_detail', kwargs={'pk': self.lecture.id}))
 
     def test_slide_count_is_extracted(self):
-        login = self.client.login(username='mwj7', password='qh76T423')
+        login = self.client.login(username=TEST_USERNAME, password=TEST_PASSWORD)
         response = self.client.get(reverse('staff:lecture_extarct', kwargs={'pk': self.lecture.id}), follow=True)
         lectures = Lecture.objects.all()
         self.assertEqual(lectures[0].slide_count, 49)#test lecture has 49 slides
 
     def test_404_returned_if_lecture_does_not_exist(self):
-        login = self.client.login(username='mwj7', password='qh76T423')
+        login = self.client.login(username=TEST_USERNAME, password=TEST_PASSWORD)
         response = self.client.get(reverse('staff:lecture_extarct', kwargs={'pk': 543}), follow=True)
         self.assertEqual(response.status_code, 404)
         self.assertTemplateUsed(response, '404.html')

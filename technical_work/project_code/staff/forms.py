@@ -24,8 +24,8 @@ class LectureDetailsForm(forms.ModelForm):
         model = Lecture
         fields = ['title', 'slide_count', 'notes', 'file',]
         labels = {
-            'title': _('Lecture/Workshop Title'),
-            'slide_count': _('Number of Slides'),
+            'title': _('Lecture/Workshop Title*'),
+            'slide_count': _('Number of Slides*'),
             'notes': _('Extra Notes'),
             'file': _('Lecture PDF')
         }
