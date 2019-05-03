@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-05-03 09:35+0100\n"
+"POT-Creation-Date: 2019-05-03 10:48+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -263,7 +263,7 @@ msgstr "Post"
 msgid "Your Questions"
 msgstr "Eich Cwestiynau"
 
-#: .\templates\staff\feedback.html:95
+#: .\templates\staff\feedback.html:100
 msgid "Remove"
 msgstr "Dileu"
 
@@ -280,6 +280,30 @@ msgstr "Manylion y Ddarlith"
 msgid "Click on a session to view feedback data"
 msgstr "Cliciwch ar sesiwn i weld data adborth"
 
+#: .\templates\staff\feedback_detail.html:43
+msgid "All Feedback"
+msgstr "Pob Adborth"
+
+#: .\templates\staff\feedback_detail.html:44
+msgid "General Feedback Only"
+msgstr "Adborth Cyffredinol yn Unig"
+
+#: .\templates\staff\feedback_detail.html:46
+msgid "Slide"
+msgstr "Sleid"
+
+#: .\templates\staff\feedback_detail.html:46
+msgid "Feedback Only"
+msgstr "Adborth yn Unig"
+
+#: .\templates\staff\feedback_detail.html:50
+msgid "Pie Charts"
+msgstr "Siartiau Pie"
+
+#: .\templates\staff\feedback_detail.html:51
+msgid "Bar Charts"
+msgstr "Siartiau Bar"
+
 #: .\templates\staff\feedback_sessions_list.html:7
 msgid "Your Sessions"
 msgstr "Eich Sesiynau"
@@ -293,19 +317,19 @@ msgstr "Côd"
 msgid "Date"
 msgstr "Dyddiad"
 
-#: .\templates\staff\feedback_sessions_list.html:39
+#: .\templates\staff\feedback_sessions_list.html:41
 #: .\templates\staff\lecture_list.html:79
 #: .\templates\staff\lecture_sessions_list.html:85
 msgid "Page"
 msgstr "Tudalen"
 
-#: .\templates\staff\feedback_sessions_list.html:39
+#: .\templates\staff\feedback_sessions_list.html:41
 #: .\templates\staff\lecture_list.html:79
 #: .\templates\staff\lecture_sessions_list.html:85
 msgid "of"
 msgstr "o"
 
-#: .\templates\staff\feedback_sessions_list.html:51
+#: .\templates\staff\feedback_sessions_list.html:53
 #: .\templates\staff\lecture_sessions_list.html:97
 msgid "No Sessions"
 msgstr "Dim Sesiynau"

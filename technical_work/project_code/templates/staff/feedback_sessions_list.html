@@ -18,11 +18,13 @@
     </thead>
     <tbody class="bg-light">
       {% for session in sessions %}
-      <tr id="{{ session.id }}" title="Click to view this session's feedback" class="session_row {% if forloop.last %}bg-info{% endif %}">
-        <th>{% session_numbering forloop.counter sessions.number per_page %}</th>
-        <td>{{ session.code }}</td>
-        <td>{{ session.get_first_start_time|date:'d M, Y' }}</td>
-      </tr>
+      {% if session.get_first_start_time %}
+        <tr id="{{ session.id }}" title="Click to view this session's feedback" class="session_row {% if forloop.last %}bg-info{% endif %}">
+          <th>{% session_numbering forloop.counter sessions.number per_page %}</th>
+          <td>{{ session.code }}</td>
+          <td>{{ session.get_first_start_time|date:'d M, Y' }}</td>
+        </tr>
+      {% endif %}
       {% endfor %}
     </tbody>
   </table>

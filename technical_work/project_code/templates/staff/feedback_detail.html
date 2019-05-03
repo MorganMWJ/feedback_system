@@ -40,15 +40,15 @@
         </div>
         <div class="col-sm-3">
           <select id="feedback_choice" class="float-right">
-            <option value="all">All Feedback</option>
-            <option value="general">General Feedback Only</option>
+            <option value="all">{% trans "All Feedback" %}</option>
+            <option value="general">{% trans "General Feedback Only" %}</option>
             {% for i in i|rjust:lecture.slide_count %}
-                <option value="{{ forloop.counter }}">Slide {{ forloop.counter }} Feedback Only</option>
+                <option value="{{ forloop.counter }}">{% trans "Slide" %} {{ forloop.counter }} {% trans "Feedback Only" %}</option>
             {% endfor %}
           </select>
           <select id="chart_choice" class="float-right">
-            <option value="pie">Pie Charts</option>
-            <option value="bar">Bar Charts</option>
+            <option value="pie">{% trans "Pie Charts" %}</option>
+            <option value="bar">{% trans "Bar Charts" %}</option>
           </select>
         </div>
       </div>

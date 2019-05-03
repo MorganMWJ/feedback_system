@@ -1,4 +1,9 @@
 Django==2.1.5
+django-autofixture==0.12.1
+django-bootstrap3==11.0.0
+djangorestframework==3.9.2
+ldap3==2.6
 psycopg2==2.7.7
+pyasn1==0.4.5
 PyPDF2==1.26.0
 pytz==2018.9
